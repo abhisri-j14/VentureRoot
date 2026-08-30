@@ -13,6 +13,14 @@ const config: Config = {
         secondary: { DEFAULT: "#200813", muted: "#475569" },
         background: "#f4fce8",
         surface: "#ffffff",
+        vr: {
+          blue: { dark: "#0b0c42", DEFAULT: "#094f9e", soft: "#8e90f5", light: "#b6e5fc" },
+          violet: { DEFAULT: "#2d0957", light: "#dfc5fc" },
+          teal: { DEFAULT: "#4ab7bd" },
+          yellow: { DEFAULT: "#d1b113", light: "#fffc9e" },
+          red: { dark: "#b01f09", DEFAULT: "#c4591b", light: "#ffd8c9" },
+          pink: { DEFAULT: "#b51052", light: "#fcd9e7" },
+        },
         accent: {
           lime: "#C8F89B",
           alice: "#E5EEFF",

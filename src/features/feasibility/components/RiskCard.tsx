@@ -10,8 +10,6 @@ import { useAuthStore } from "@/stores/useAuthStore";
 
 export const RiskCard = ({ data }: { data?: RiskItem[] }) => {
   const { t } = useTranslation();
-  const role = useAuthStore((s) => s.role);
-  const isSimple = role === "ENTREPRENEUR";
   const [expandedRisks, setExpandedRisks] = useState<Record<string, boolean>>({});
 
   const toggleRisk = (id: string) => {
@@ -21,10 +19,10 @@ export const RiskCard = ({ data }: { data?: RiskItem[] }) => {
   if (!data || data.length === 0) return null;
 
   const severityColors = {
-    Low: "bg-blue-100 text-blue-800 border-blue-200",
-    Medium: "bg-amber-100 text-amber-800 border-amber-200",
-    High: "bg-orange-100 text-orange-800 border-orange-200",
-    Critical: "bg-red-100 text-red-800 border-red-200",
+    Low: "bg-slate-100 text-secondary-muted border-slate-200",
+    Medium: "bg-vr-yellow-light text-vr-yellow border-vr-yellow/30",
+    High: "bg-vr-red-light/50 text-vr-red border-vr-red/30",
+    Critical: "bg-vr-red-light text-vr-red-dark border-vr-red/50",
   };
 
   return (
@@ -38,7 +36,7 @@ export const RiskCard = ({ data }: { data?: RiskItem[] }) => {
 
       <div className="flex flex-col gap-4">
         {data.map((risk) => {
-          const isExpanded = !isSimple || expandedRisks[risk.id];
+          const isExpanded = expandedRisks[risk.id];
           return (
             <div key={risk.id} className="p-4 border border-slate-200 rounded-xl bg-white shadow-sm flex flex-col gap-3">
               <div className="flex items-start justify-between">
@@ -51,7 +49,7 @@ export const RiskCard = ({ data }: { data?: RiskItem[] }) => {
                 </span>
               </div>
               
-              <p className={`text-secondary leading-relaxed ${isSimple ? "text-base" : "text-sm"}`}>{risk.explanation}</p>
+              <p className="text-secondary leading-relaxed text-base">{risk.explanation}</p>
               
               {isExpanded && (
                 <>
@@ -86,15 +84,13 @@ export const RiskCard = ({ data }: { data?: RiskItem[] }) => {
                 </>
               )}
 
-              {isSimple && (
-                <button 
-                  onClick={() => toggleRisk(risk.id)}
-                  className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-light transition-colors self-start mt-2"
-                >
-                  {isExpanded ? t("evidence.simple.viewDetails") : t("evidence.simple.why")}
-                  {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                </button>
-              )}
+              <button 
+                onClick={() => toggleRisk(risk.id)}
+                className="flex items-center gap-1 mt-2 text-xs font-semibold text-primary hover:text-primary-light transition-colors"
+              >
+                {isExpanded ? t("evidence.simple.viewDetails") : t("evidence.simple.why")}
+                {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+              </button>
             </div>
           );
         })}

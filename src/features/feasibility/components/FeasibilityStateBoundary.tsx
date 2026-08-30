@@ -38,7 +38,7 @@ export const FeasibilityStateBoundary = ({ status, children }: FeasibilityStateB
 
       {status === "ERROR" && (
         <>
-          <AlertCircle className="w-10 h-10 text-red-500 mb-4" />
+          <AlertCircle className="w-10 h-10 text-vr-red-dark mb-4" />
           <h3 className="text-lg font-heading font-bold text-secondary">Analysis Failed</h3>
           <p className="text-secondary-muted mt-2 max-w-md">
             We encountered an issue while generating the intelligence report. Please try again later.

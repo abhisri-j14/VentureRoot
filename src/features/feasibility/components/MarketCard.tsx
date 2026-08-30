@@ -8,12 +8,8 @@ import { EvidenceBadge } from "@/components/evidence/EvidenceBadge";
 import { ConfidenceIndicator } from "@/components/evidence/ConfidenceIndicator";
 import { WhyPanel } from "@/components/evidence/WhyPanel";
 import { useTranslation } from "@/features/i18n/hooks/useTranslation";
-import { useAuthStore } from "@/stores/useAuthStore";
-
 export const MarketCard = ({ data }: { data?: MarketAnalysis }) => {
   const { t } = useTranslation();
-  const role = useAuthStore((s) => s.role);
-  const isSimple = role === "ENTREPRENEUR";
   const [showDetails, setShowDetails] = useState(false);
 
   if (!data) return null;
@@ -22,14 +18,14 @@ export const MarketCard = ({ data }: { data?: MarketAnalysis }) => {
     <BentoCard className="col-span-12 md:col-span-8 flex flex-col h-full">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
         <div className="flex items-center gap-2">
-          <div className="p-2 bg-blue-100 rounded-lg shrink-0">
-            <Users className="w-5 h-5 text-blue-600" />
+          <div className="p-2 bg-vr-teal-light/30 rounded-lg shrink-0">
+            <Users className="w-5 h-5 text-vr-teal" />
           </div>
           <h3 className="text-xl font-heading font-bold text-secondary">
-            {isSimple ? t("dashboard.simple.demand") : t("feasi.market")}
+            {t("dashboard.simple.demand")}
           </h3>
         </div>
-        {!isSimple && data.confidence && (
+        {showDetails && data.confidence && (
           <div className="w-full sm:w-auto sm:max-w-xs shrink-0">
             <ConfidenceIndicator 
               score={data.confidence.score}
@@ -40,7 +36,7 @@ export const MarketCard = ({ data }: { data?: MarketAnalysis }) => {
         )}
       </div>
 
-      {(!isSimple || showDetails) && (
+      {showDetails && (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
             <div className="flex flex-col gap-1 p-4 bg-slate-50 rounded-xl border border-slate-100">
@@ -69,7 +65,7 @@ export const MarketCard = ({ data }: { data?: MarketAnalysis }) => {
               <ul className="flex flex-col gap-2">
                 {data.customerSegments.map((segment, idx) => (
                   <li key={idx} className="flex items-start gap-2 text-sm text-secondary">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-vr-teal mt-1.5 shrink-0" />
                     {segment}
                   </li>
                 ))}
@@ -93,21 +89,19 @@ export const MarketCard = ({ data }: { data?: MarketAnalysis }) => {
         </>
       )}
 
-      {isSimple && (
-        <button 
-          onClick={() => setShowDetails(!showDetails)}
-          className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-light transition-colors self-start mb-4"
-        >
-          {showDetails ? t("evidence.simple.viewDetails") : t("evidence.simple.why")}
-          {showDetails ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </button>
-      )}
+      <button 
+        onClick={() => setShowDetails(!showDetails)}
+        className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-light transition-colors self-start mb-4 mt-6"
+      >
+        {showDetails ? t("evidence.simple.viewDetails") : t("evidence.simple.why")}
+        {showDetails ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+      </button>
 
-      {(!isSimple || showDetails) && data.why && (
+      {showDetails && data.why && (
         <WhyPanel summary={data.why.summary} factors={data.why.factors} />
       )}
 
-      {(!isSimple || showDetails) && data.evidence && data.evidence.length > 0 && (
+      {showDetails && data.evidence && data.evidence.length > 0 && (
         <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap gap-2 items-center">
           <span className="text-xs font-medium text-secondary-muted uppercase tracking-wider">{t("feasi.evidence")}:</span>
           {data.evidence.map((ev, idx) => (

@@ -67,7 +67,7 @@ function LoginPageContent() {
       if (redirectUrl) {
         router.push(redirectUrl);
       } else {
-        router.push("/role-selection");
+        router.push("/dashboard");
       }
     } catch (error: any) {
       // If the backend is completely unreachable (Network Error) during frontend-only dev,
@@ -79,7 +79,7 @@ function LoginPageContent() {
         if (redirectUrl) {
           router.push(redirectUrl);
         } else {
-          router.push("/role-selection");
+          router.push("/dashboard");
         }
       } else {
         setGlobalError(error?.message || "Invalid credentials or server error");

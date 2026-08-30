@@ -30,7 +30,6 @@ import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 import { useUIStore } from "@/stores/useUIStore";
 import { LocationIntelligenceMap } from "@/features/location/components/LocationIntelligenceMap";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { ReviewControls } from "@/features/reviews/ReviewControls";
 import { MockDisclaimer } from "@/components/ui/mock-disclaimer";
 
 export interface BusinessDetails {
@@ -97,9 +96,6 @@ export const BusinessDetailsView = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [business, setBusiness] = useState<BusinessDetails>(MOCK_BUSINESS_DETAILS);
   const { t } = useTranslation();
-  
-  const role = useAuthStore((s) => s.role);
-  const isSimple = role === "ENTREPRENEUR";
 
   // State for toggling evidence view in simple mode
   const [showEvidence, setShowEvidence] = useState(false);
@@ -155,7 +151,6 @@ export const BusinessDetailsView = () => {
         </div>
       </div>
 
-      <ReviewControls />
 
       <BentoGrid>
         {/* ── 2. Business Overview & 7. Input Summary Grouping ── */}
@@ -245,7 +240,7 @@ export const BusinessDetailsView = () => {
           <div className="flex flex-col gap-4 text-sm">
             <div>
               <p className="text-secondary-muted font-medium mb-1">
-                {isSimple ? t("business.simple.equity") : t("business.availEquity")}
+                {t("business.simple.equity")}
               </p>
               {isEditing ? (
                 <input 
@@ -260,7 +255,7 @@ export const BusinessDetailsView = () => {
             </div>
             <div>
               <p className="text-secondary-muted font-medium mb-1">
-                {isSimple ? t("business.simple.investment") : t("business.expInvest")}
+                {t("business.simple.investment")}
               </p>
               {isEditing ? (
                 <input 
@@ -274,22 +269,7 @@ export const BusinessDetailsView = () => {
                 <p className="font-semibold text-secondary" suppressHydrationWarning>{business.capital.expectedInvestment ? `₹${business.capital.expectedInvestment.toLocaleString('en-IN')}` : t("business.notSpec")}</p>
               )}
             </div>
-            {!isSimple && (
-              <div>
-                <p className="text-secondary-muted font-medium mb-1">{t("business.workingCap")}</p>
-                {isEditing ? (
-                  <input 
-                    type="number" 
-                    value={business.capital.workingCapital || ""}
-                    onChange={(e) => setBusiness(p => ({ ...p, capital: { ...p.capital, workingCapital: Number(e.target.value) } }))}
-                    className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:border-primary"
-                    placeholder="Optional"
-                  />
-                ) : (
-                  <p className="font-semibold text-secondary" suppressHydrationWarning>{business.capital.workingCapital ? `₹${business.capital.workingCapital.toLocaleString('en-IN')}` : t("business.notSpec")}</p>
-                )}
-              </div>
-            )}
+
           </div>
         </BentoCard>
 
@@ -302,7 +282,7 @@ export const BusinessDetailsView = () => {
           <div className="flex flex-col gap-4 text-sm">
             <div>
               <p className="text-secondary-muted font-medium mb-1">
-                {isSimple ? t("business.simple.revenue") : t("business.wizard.revenue")}
+                {t("business.simple.revenue")}
               </p>
               {isEditing ? (
                 <input 

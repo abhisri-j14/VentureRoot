@@ -12,8 +12,6 @@ import { useAuthStore } from "@/stores/useAuthStore";
 
 export const OpportunityCard = ({ data }: { data?: OpportunityAnalysis }) => {
   const { t } = useTranslation();
-  const role = useAuthStore((s) => s.role);
-  const isSimple = role === "ENTREPRENEUR";
   const [showDetails, setShowDetails] = useState(false);
 
   if (!data) return null;
@@ -29,7 +27,7 @@ export const OpportunityCard = ({ data }: { data?: OpportunityAnalysis }) => {
             <h3 className="text-xl font-heading font-bold text-secondary">{t("feasi.opp")}</h3>
           </div>
         </div>
-        {!isSimple && data.confidence && (
+        {showDetails && data.confidence && (
           <ConfidenceIndicator 
             score={data.confidence.score}
             level={data.confidence.level}
@@ -38,11 +36,11 @@ export const OpportunityCard = ({ data }: { data?: OpportunityAnalysis }) => {
         )}
       </div>
 
-      <p className={`text-secondary font-medium leading-relaxed ${isSimple ? "text-lg" : ""} mb-6`}>
+      <p className="text-secondary font-medium leading-relaxed text-lg mb-6">
         {data.summary}
       </p>
 
-      {(!isSimple || showDetails) && (
+      {showDetails && (
         <div className="flex flex-col gap-4 flex-1 mb-6">
           <div className="bg-white/60 p-3 rounded-lg border border-amber-100/50">
             <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider mb-1">{t("feasi.unmet")}</p>
@@ -63,21 +61,19 @@ export const OpportunityCard = ({ data }: { data?: OpportunityAnalysis }) => {
         </div>
       )}
 
-      {isSimple && (
-        <button 
-          onClick={() => setShowDetails(!showDetails)}
-          className="flex items-center gap-2 text-sm font-medium text-amber-700 hover:text-amber-800 transition-colors self-start mb-4"
-        >
-          {showDetails ? t("evidence.simple.viewDetails") : t("evidence.simple.why")}
-          {showDetails ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </button>
-      )}
+      <button 
+        onClick={() => setShowDetails(!showDetails)}
+        className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-light transition-colors self-start mb-4 mt-6"
+      >
+        {showDetails ? t("evidence.simple.viewDetails") : t("evidence.simple.why")}
+        {showDetails ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+      </button>
 
-      {(!isSimple || showDetails) && data.why && (
+      {showDetails && data.why && (
         <WhyPanel summary={data.why.summary} factors={data.why.factors} />
       )}
 
-      {(!isSimple || showDetails) && data.evidence && data.evidence.length > 0 && (
+      {showDetails && data.evidence && data.evidence.length > 0 && (
         <div className="mt-4 pt-4 border-t border-amber-200/50 flex flex-wrap gap-2 items-center">
           <span className="text-xs font-medium text-amber-700 uppercase tracking-wider">{t("feasi.evidence")}:</span>
           {data.evidence.map((ev: any, idx: number) => (

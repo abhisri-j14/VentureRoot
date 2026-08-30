@@ -16,8 +16,6 @@ interface SWOTCardProps {
 
 export const SWOTCard = ({ data }: { data?: SWOTAnalysis }) => {
   const { t } = useTranslation();
-  const role = useAuthStore((s) => s.role);
-  const isSimple = role === "ENTREPRENEUR";
   const [showDetails, setShowDetails] = useState(false);
 
   if (!data) return null;
@@ -31,7 +29,7 @@ export const SWOTCard = ({ data }: { data?: SWOTAnalysis }) => {
           </div>
           <h3 className="text-xl font-heading font-bold text-secondary">{t("feasi.swot")}</h3>
         </div>
-        {!isSimple && data.confidence && (
+        {showDetails && data.confidence && (
           <div className="w-full sm:w-auto sm:max-w-xs shrink-0">
             <ConfidenceIndicator 
               score={data.confidence.score}
@@ -42,18 +40,18 @@ export const SWOTCard = ({ data }: { data?: SWOTAnalysis }) => {
         )}
       </div>
 
-      {(!isSimple || showDetails) && (
+      {showDetails && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           {/* Strengths */}
-          <div className="p-5 bg-green-50/70 border border-green-100 rounded-xl h-full">
-            <div className="flex items-center gap-2 mb-3">
-              <ArrowUpRight className="w-5 h-5 text-green-600" />
-              <h4 className="font-bold text-green-800">{t("feasi.strengths")}</h4>
+          <div className="p-5 bg-primary/5 border border-primary/20 rounded-xl h-full">
+            <div className="flex items-center gap-2 mb-4">
+              <ArrowUpRight className="w-5 h-5 text-primary" />
+              <h4 className="font-bold text-primary">{t("feasi.strengths")}</h4>
             </div>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-3">
               {data.strengths.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-sm text-green-900">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 mt-1.5 shrink-0" />
+                <li key={idx} className="flex items-start gap-2 text-sm text-secondary">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -61,15 +59,15 @@ export const SWOTCard = ({ data }: { data?: SWOTAnalysis }) => {
           </div>
 
           {/* Weaknesses */}
-          <div className="p-5 bg-red-50/70 border border-red-100 rounded-xl h-full">
-            <div className="flex items-center gap-2 mb-3">
-              <ArrowDownRight className="w-5 h-5 text-red-600" />
-              <h4 className="font-bold text-red-800">{t("feasi.weaknesses")}</h4>
+          <div className="p-5 bg-vr-red-light/20 border border-vr-red-light/50 rounded-xl h-full">
+            <div className="flex items-center gap-2 mb-4">
+              <ArrowDownRight className="w-5 h-5 text-vr-red" />
+              <h4 className="font-bold text-vr-red-dark">{t("feasi.weaknesses")}</h4>
             </div>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-3">
               {data.weaknesses.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-sm text-red-900">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1.5 shrink-0" />
+                <li key={idx} className="flex items-start gap-2 text-sm text-secondary">
+                  <span className="w-1.5 h-1.5 rounded-full bg-vr-red mt-1.5 shrink-0" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -77,15 +75,15 @@ export const SWOTCard = ({ data }: { data?: SWOTAnalysis }) => {
           </div>
 
           {/* Opportunities */}
-          <div className="p-5 bg-blue-50/70 border border-blue-100 rounded-xl h-full">
-            <div className="flex items-center gap-2 mb-3">
-              <ShieldCheck className="w-5 h-5 text-blue-600" />
-              <h4 className="font-bold text-blue-800">{t("feasi.swotOpp")}</h4>
+          <div className="p-5 bg-vr-teal-light/20 border border-vr-teal-light/50 rounded-xl h-full">
+            <div className="flex items-center gap-2 mb-4">
+              <ShieldCheck className="w-5 h-5 text-vr-teal" />
+              <h4 className="font-bold text-vr-teal">{t("feasi.swotOpp")}</h4>
             </div>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-3">
               {data.opportunities.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-sm text-blue-900">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 shrink-0" />
+                <li key={idx} className="flex items-start gap-2 text-sm text-secondary">
+                  <span className="w-1.5 h-1.5 rounded-full bg-vr-teal mt-1.5 shrink-0" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -93,15 +91,15 @@ export const SWOTCard = ({ data }: { data?: SWOTAnalysis }) => {
           </div>
 
           {/* Threats */}
-          <div className="p-5 bg-orange-50/70 border border-orange-100 rounded-xl h-full">
-            <div className="flex items-center gap-2 mb-3">
-              <Flame className="w-5 h-5 text-orange-600" />
-              <h4 className="font-bold text-orange-800">{t("feasi.swotThreats")}</h4>
+          <div className="p-5 bg-vr-yellow-light/20 border border-vr-yellow-light/50 rounded-xl h-full">
+            <div className="flex items-center gap-2 mb-4">
+              <Flame className="w-5 h-5 text-vr-yellow" />
+              <h4 className="font-bold text-vr-yellow">{t("feasi.swotThreats")}</h4>
             </div>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-3">
               {data.threats.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-sm text-orange-900">
-                  <span className="w-1.5 h-1.5 rounded-full bg-orange-400 mt-1.5 shrink-0" />
+                <li key={idx} className="flex items-start gap-2 text-sm text-secondary">
+                  <span className="w-1.5 h-1.5 rounded-full bg-vr-yellow mt-1.5 shrink-0" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -110,21 +108,19 @@ export const SWOTCard = ({ data }: { data?: SWOTAnalysis }) => {
         </div>
       )}
 
-      {isSimple && (
-        <button 
-          onClick={() => setShowDetails(!showDetails)}
-          className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-light transition-colors self-start mb-4"
-        >
-          {showDetails ? t("evidence.simple.viewDetails") : t("evidence.simple.why")}
-          {showDetails ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </button>
-      )}
+      <button 
+        onClick={() => setShowDetails(!showDetails)}
+        className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-light transition-colors self-start mb-4 mt-6"
+      >
+        {showDetails ? t("evidence.simple.viewDetails") : t("evidence.simple.why")}
+        {showDetails ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+      </button>
 
-      {(!isSimple || showDetails) && data.why && (
+      {showDetails && data.why && (
         <WhyPanel summary={data.why.summary} factors={data.why.factors} />
       )}
 
-      {(!isSimple || showDetails) && data.evidence && data.evidence.length > 0 && (
+      {showDetails && data.evidence && data.evidence.length > 0 && (
         <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap gap-2 items-center">
           <span className="text-xs font-medium text-secondary-muted uppercase tracking-wider">{t("feasi.evidence")}:</span>
           {data.evidence.map((ev, idx) => (

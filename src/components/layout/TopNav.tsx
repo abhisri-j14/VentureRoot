@@ -1,37 +1,33 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { User, ChevronRight, Shield, ChevronDown, LogOut, Settings, Globe } from "lucide-react";
-import { useAuthStore, UserRole } from "@/stores/useAuthStore";
+import { User, ChevronDown, LogOut, Settings, Globe, Menu, X, Home, Briefcase, PlusCircle, BarChart2, FileText, MessageSquare } from "lucide-react";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { useTranslation } from "@/features/i18n/hooks/useTranslation";
+import { LanguageSwitcher } from "@/features/i18n/components/LanguageSwitcher";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { ROLE_CONFIG, AVAILABLE_ROLES } from "@/features/auth/config/roles";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const TopNav = () => {
-  const router = useRouter();
-  const role = useAuthStore((s) => s.role);
   const user = useAuthStore((s) => s.user);
-  const switchRole = useAuthStore((s) => s.switchRole);
   const { t } = useTranslation();
   const pathname = usePathname();
 
-  const [isRoleOpen, setIsRoleOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const roleRef = useRef<HTMLDivElement>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const profileRef = useRef<HTMLDivElement>(null);
 
   // Close dropdowns on outside click or Escape
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (roleRef.current && !roleRef.current.contains(event.target as Node)) setIsRoleOpen(false);
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) setIsProfileOpen(false);
     };
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setIsRoleOpen(false);
         setIsProfileOpen(false);
+        setIsMobileMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -42,151 +38,201 @@ export const TopNav = () => {
     };
   }, []);
 
-  // Simple breadcrumb logic based on pathname
-  let breadcrumb = t("nav.dashboard");
-  if (pathname.includes("/profile")) breadcrumb = t("nav.profile");
-  else if (pathname.includes("/business/create")) breadcrumb = t("nav.newBusiness");
-  else if (pathname.includes("/business/compare")) breadcrumb = t("nav.compare");
-  else if (pathname.includes("/business/") && pathname.includes("/feasibility")) breadcrumb = t("nav.feasibility");
-  else if (pathname.includes("/business/") && pathname.includes("/finance")) breadcrumb = t("nav.finance");
-  else if (pathname.includes("/business/") && pathname.includes("/roadmap")) breadcrumb = t("nav.roadmap");
-  else if (pathname.includes("/business/")) breadcrumb = t("nav.myBusiness");
-  else if (pathname.includes("/reports")) breadcrumb = t("nav.reports");
-  else if (pathname.includes("/advisor")) breadcrumb = t("nav.advisor");
-  else if (pathname.includes("/reviews")) breadcrumb = t("nav.businessReviews" as any);
-  else if (pathname.includes("/admin")) breadcrumb = t("nav.adminConsole" as any);
+  const NAV_ITEMS = [
+    { href: "/dashboard", tKey: "nav.dashboard", icon: Home },
+    { href: "/profile", tKey: "nav.profile", icon: User },
+    { href: "/business/123", tKey: "nav.myBusiness", icon: Briefcase },
+    { href: "/business/create", tKey: "nav.newBusiness", icon: PlusCircle },
+    { href: "/business/compare", tKey: "nav.compare", icon: BarChart2 },
+    { href: "/reports", tKey: "nav.reports", icon: FileText },
+    { href: "/advisor", tKey: "nav.advisor", icon: MessageSquare },
+  ];
 
-  const handleRoleChange = (newRole: UserRole) => {
-    switchRole(newRole);
-    setIsRoleOpen(false);
-    const landingRoute = ROLE_CONFIG[newRole].landingRoute;
-    router.push(landingRoute);
-  };
-
-  const activeRoleLabel = AVAILABLE_ROLES.find((r) => r.id === role)?.label || "Role";
+  const activeRoleLabel = "Entrepreneur";
 
   return (
-    <header className="h-20 bg-[#f4fce8] border-b border-[#200813]/[0.03] flex items-center justify-between px-8 z-30 relative">
-      {/* Left — page context */}
-      <div className="flex items-center gap-2">
-        <Link href="/dashboard" className="text-[#200813] hover:text-[#1E6702] transition-all duration-300 font-heading font-bold text-xl hover:scale-105 tracking-wide origin-left">
-          Dashboard
-        </Link>
-        {pathname !== "/dashboard" && pathname !== "/role-selection" && (
-          <>
-            <ChevronRight className="w-4 h-4 text-[#200813]/30" />
-            <span className="font-semibold text-[#200813] tracking-wide text-sm">{breadcrumb}</span>
-          </>
-        )}
-      </div>
+    <motion.header
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="px-4 md:px-6 pt-4 w-full z-50 relative"
+    >
+      <nav className="w-full bg-[#1E6702] rounded-2xl md:rounded-[20px] py-2 px-3 md:px-5 flex items-center justify-between shadow-[inset_0px_1px_0px_rgba(255,255,255,0.15),0px_10px_30px_-5px_rgba(0,0,0,0.15),0px_4px_10px_-4px_rgba(0,0,0,0.1)] border-b border-[#144a01]/60 relative z-50">
+        
+        {/* Ambient Hover Light (Soft Localized Highlight) */}
+        <div className="absolute inset-0 overflow-hidden rounded-2xl md:rounded-[20px] pointer-events-none">
+          <div className="absolute top-0 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50" />
+        </div>
 
-      {/* Right — controls */}
-      <div className="flex items-center gap-4">
-        {/* Role Switcher */}
-        <div className="relative" ref={roleRef}>
-          <button
-            onClick={() => setIsRoleOpen(!isRoleOpen)}
-            className="flex items-center gap-2 bg-white rounded-xl shadow-sm border border-black/5 px-3 py-2 hover:border-[#1E6702]/30 hover:bg-[#FFFBE7]/50 transition-all focus:outline-none"
-            aria-expanded={isRoleOpen}
-            aria-haspopup="true"
+        {/* Left: Logo */}
+        <div className="flex items-center relative z-10">
+          <Link 
+            href="/" 
+            className="group bg-[#FFFBE7] px-3 py-1.5 rounded-[12px] flex items-center justify-center shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05),0_2px_5px_rgba(0,0,0,0.1)] border border-black/5 hover:-translate-y-[1px] hover:scale-[1.02] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-300 active:scale-[0.98]"
           >
-            <Shield className="w-3.5 h-3.5 text-[#1E6702]" />
-            <span className="text-xs font-bold text-[#200813]">{activeRoleLabel}</span>
-            <motion.div animate={{ rotate: isRoleOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-              <ChevronDown className="w-3.5 h-3.5 text-[#200813]/40" />
+            <img src="/logo-wordmark.png" alt="VentureRoot Logo" className="h-4 md:h-[18px] w-auto object-contain mix-blend-multiply group-hover:brightness-95 transition-all duration-300" />
+          </Link>
+        </div>
+
+        {/* Center: Nav Links (Desktop) */}
+        <div className="hidden lg:flex items-center gap-1.5 relative z-10" onMouseLeave={() => setHoveredIndex(null)}>
+          {NAV_ITEMS.map((link, idx) => {
+            const basePath = link.href.split("?")[0];
+            const isActive =
+              (basePath === "/dashboard" && pathname === "/dashboard") ||
+              (basePath === "/profile" && pathname === "/profile") ||
+              (basePath !== "/dashboard" && basePath !== "/profile" && pathname.startsWith(basePath));
+
+            return (
+              <Link 
+                key={link.href}
+                href={link.href} 
+                onMouseEnter={() => setHoveredIndex(idx)}
+                className={`group relative px-4 py-2 text-[13px] font-semibold transition-all duration-300 active:scale-[0.97] flex items-center gap-2 rounded-full ${isActive ? "text-[#FFFBE7]" : "text-white/80 hover:text-white"}`}
+              >
+                {/* Active state Tubelight pill */}
+                {isActive && (
+                  <motion.div
+                    layoutId="dashboard-navbar-active-pill"
+                    className="absolute inset-0 bg-white/10 rounded-full border border-white/10"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  >
+                    <div className="absolute -top-[1px] left-1/2 -translate-x-1/2 w-6 h-[2px] bg-[#FFFBE7] rounded-t-full shadow-[0_0_12px_3px_rgba(255,251,231,0.4)]" />
+                    <div className="absolute -bottom-[1px] left-1/2 -translate-x-1/2 w-3 h-[1px] bg-[#FFFBE7]/50 rounded-b-full shadow-[0_0_8px_1px_rgba(255,251,231,0.2)]" />
+                  </motion.div>
+                )}
+                
+                {/* Hover state pill (only for inactive items) */}
+                {hoveredIndex === idx && !isActive && (
+                  <motion.div
+                    layoutId="dashboard-navbar-hover-pill"
+                    className="absolute inset-0 bg-white/5 rounded-full"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <link.icon className={`w-[15px] h-[15px] relative z-10 transition-transform duration-300 ${!isActive && hoveredIndex === idx ? "scale-110" : ""}`} />
+                <span className={`relative z-10 transition-transform duration-300 ${!isActive && hoveredIndex === idx ? "scale-[1.02]" : ""}`}>{t(link.tKey as any)}</span>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Right: Actions (Desktop & Mobile trigger) */}
+        <div className="flex items-center gap-3 relative z-10">
+          <div className="hidden md:block transition-all duration-300 hover:-translate-y-[1px] hover:scale-[1.01] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] rounded-lg">
+            <LanguageSwitcher />
+          </div>
+          
+          {/* Profile Dropdown */}
+          <div className="relative" ref={profileRef}>
+            <button
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
+              className="flex items-center gap-2 md:gap-2.5 group focus:outline-none bg-[#FFFBE7] border border-black/5 px-2 py-1.5 md:pl-2 md:pr-3 rounded-full shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05),0_2px_5px_rgba(0,0,0,0.1)] hover:-translate-y-[1px] hover:scale-[1.02] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-300 active:scale-[0.98]"
+              aria-expanded={isProfileOpen}
+            >
+              <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-[#1E6702] flex items-center justify-center text-white shadow-inner transition-transform duration-300 group-hover:scale-[1.04]">
+                <User className="w-3.5 h-3.5" />
+              </div>
+              <div className="hidden md:flex items-center gap-1">
+                <span className="text-[13px] font-bold text-[#200813] truncate max-w-[100px] group-hover:text-[#1E6702] transition-colors duration-300">
+                  {user?.name || "Guest"}
+                </span>
+                <motion.div animate={{ rotate: isProfileOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                  <ChevronDown className="w-3 h-3 text-[#200813]/40 group-hover:text-[#1E6702] transition-colors duration-300" />
+                </motion.div>
+              </div>
+            </button>
+
+            <AnimatePresence>
+              {isProfileOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute right-0 mt-3 w-56 bg-white/95 backdrop-blur-xl rounded-[20px] shadow-[0_12px_45px_-10px_rgba(32,8,19,0.15)] border border-white/50 overflow-hidden z-50 p-1.5 origin-top-right"
+                >
+                  <div className="px-4 py-3 border-b border-black/5">
+                    <p className="text-sm font-bold text-[#200813] truncate">{user?.name || "Guest"}</p>
+                    <p className="text-xs font-medium text-[#200813]/50 mt-0.5">{activeRoleLabel}</p>
+                  </div>
+                  
+                  <div className="py-1">
+                    <Link href="/profile" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-2.5 w-full text-left px-3 py-2.5 text-[13px] font-semibold text-[#200813]/70 hover:bg-[#FFFBE7] hover:text-[#1E6702] rounded-xl transition-all duration-200">
+                      <User className="w-[15px] h-[15px]" /> {t("nav.profile" as any) || "My Profile"}
+                    </Link>
+                    <button onClick={() => setIsProfileOpen(false)} className="flex items-center gap-2.5 w-full text-left px-3 py-2.5 text-[13px] font-semibold text-[#200813]/70 hover:bg-[#FFFBE7] hover:text-[#1E6702] rounded-xl transition-all duration-200">
+                      <Settings className="w-[15px] h-[15px]" /> Settings
+                    </button>
+                    <button onClick={() => setIsProfileOpen(false)} className="md:hidden flex items-center gap-2.5 w-full text-left px-3 py-2.5 text-[13px] font-semibold text-[#200813]/70 hover:bg-[#FFFBE7] hover:text-[#1E6702] rounded-xl transition-all duration-200">
+                      <Globe className="w-[15px] h-[15px]" /> Language
+                    </button>
+                  </div>
+                  
+                  <div className="py-1 border-t border-black/5 mt-1">
+                    <Link href="/login" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-2.5 w-full text-left px-3 py-2.5 text-[13px] font-semibold text-[#200813]/60 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all duration-200">
+                      <LogOut className="w-[15px] h-[15px]" /> Sign Out
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden p-2 text-white/80 hover:bg-white/10 hover:text-white rounded-md transition-colors active:scale-95"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <motion.div animate={{ rotate: isMobileMenuOpen ? 90 : 0 }} transition={{ duration: 0.2 }}>
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </motion.div>
           </button>
-          
-          <AnimatePresence>
-            {isRoleOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.15, ease: "easeOut" }}
-                className="absolute right-0 mt-2 w-48 bg-white/95 backdrop-blur-md rounded-xl shadow-[0_10px_40px_-10px_rgba(32,8,19,0.12)] border border-black/5 overflow-hidden z-50"
-              >
-                <div className="py-1">
-                  {AVAILABLE_ROLES.map((r, i) => (
-                    <motion.button
-                      key={r.id}
-                      initial={{ opacity: 0, x: -5 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.05, duration: 0.15 }}
-                      onClick={() => handleRoleChange(r.id)}
-                      className={`w-full text-left px-4 py-2.5 text-xs font-semibold transition-colors flex items-center justify-between ${
-                        r.id === role 
-                          ? "bg-[#FFFBE7] text-[#1E6702]" 
-                          : "text-[#200813]/70 hover:bg-[#FFFBE7]/50 hover:text-[#200813]"
+        </div>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0, y: -10 }}
+            animate={{ opacity: 1, height: "auto", y: 0 }}
+            exit={{ opacity: 0, height: 0, y: -10 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="lg:hidden absolute top-[76px] left-4 right-4 bg-[#1E6702] rounded-[20px] shadow-[inset_0px_1px_0px_rgba(255,255,255,0.15),0px_12px_35px_-5px_rgba(0,0,0,0.2)] border border-[#144a01]/60 overflow-hidden z-40"
+          >
+            <div className="px-3 py-4 flex flex-col gap-1.5">
+              {NAV_ITEMS.map((link, idx) => {
+                const basePath = link.href.split("?")[0];
+                const isActive =
+                  (basePath === "/dashboard" && pathname === "/dashboard") ||
+                  (basePath === "/profile" && pathname === "/profile") ||
+                  (basePath !== "/dashboard" && basePath !== "/profile" && pathname.startsWith(basePath));
+
+                return (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 + 0.1, duration: 0.2 }}
+                  >
+                    <Link
+                      href={link.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3.5 rounded-[14px] text-sm font-semibold transition-all duration-300 ${
+                        isActive ? "bg-[#FFFBE7] text-[#1E6702] shadow-[0_2px_8px_rgba(0,0,0,0.1)]" : "text-white/80 hover:bg-white/10 hover:text-white"
                       }`}
                     >
-                      {r.label}
-                      {r.id === role && <div className="w-1.5 h-1.5 rounded-full bg-[#1E6702]" />}
-                    </motion.button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Profile */}
-        <div className="relative border-l border-black/5 pl-5 ml-1" ref={profileRef}>
-          <button
-            onClick={() => setIsProfileOpen(!isProfileOpen)}
-            className="flex items-center gap-3 group focus:outline-none"
-            aria-expanded={isProfileOpen}
-            aria-haspopup="true"
-          >
-            <div className="w-9 h-9 rounded-full bg-[#1E6702] flex items-center justify-center text-white shadow-md transition-transform duration-300 group-hover:scale-[1.04]">
-              <User className="w-4 h-4" />
+                      <link.icon className={`w-[18px] h-[18px] ${isActive ? "text-[#1E6702]" : "text-white/70"}`} />
+                      {t(link.tKey as any)}
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </div>
-            <div className="flex items-center gap-1">
-              <span className="text-sm font-bold text-[#200813] group-hover:text-[#1E6702] transition-colors">
-                {user?.name || "Guest"}
-              </span>
-              <motion.div animate={{ rotate: isProfileOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                <ChevronDown className="w-3.5 h-3.5 text-[#200813]/30 group-hover:text-[#1E6702]/50 transition-colors" />
-              </motion.div>
-            </div>
-          </button>
-
-          <AnimatePresence>
-            {isProfileOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.15, ease: "easeOut" }}
-                className="absolute right-0 mt-3 w-56 bg-white/80 backdrop-blur-xl rounded-[20px] shadow-[0_12px_45px_-10px_rgba(32,8,19,0.15)] border border-white/50 overflow-hidden z-50 p-1"
-              >
-                <div className="px-4 py-3 border-b border-black/5">
-                  <p className="text-sm font-bold text-[#200813]">{user?.name || "Guest"}</p>
-                  <p className="text-xs font-medium text-[#200813]/50 mt-0.5">{activeRoleLabel}</p>
-                </div>
-                
-                <div className="py-1">
-                  <Link href="/profile" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-2.5 w-full text-left px-3 py-2 text-xs font-semibold text-[#200813]/70 hover:bg-[#FFFBE7] hover:text-[#1E6702] rounded-xl transition-colors">
-                    <User className="w-3.5 h-3.5" /> {t("nav.profile" as any) || "My Profile"}
-                  </Link>
-                  <button onClick={() => setIsProfileOpen(false)} className="flex items-center gap-2.5 w-full text-left px-3 py-2 text-xs font-semibold text-[#200813]/70 hover:bg-[#FFFBE7] hover:text-[#1E6702] rounded-xl transition-colors">
-                    <Settings className="w-3.5 h-3.5" /> Settings
-                  </button>
-                  <button onClick={() => setIsProfileOpen(false)} className="flex items-center gap-2.5 w-full text-left px-3 py-2 text-xs font-semibold text-[#200813]/70 hover:bg-[#FFFBE7] hover:text-[#1E6702] rounded-xl transition-colors">
-                    <Globe className="w-3.5 h-3.5" /> Language
-                  </button>
-                </div>
-                
-                <div className="py-1 border-t border-black/5 mt-1">
-                  <Link href="/login" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-2.5 w-full text-left px-3 py-2 text-xs font-semibold text-[#200813]/60 hover:bg-red-50 hover:text-red-600 rounded-xl transition-colors">
-                    <LogOut className="w-3.5 h-3.5" /> Sign Out
-                  </Link>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
-    </header>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 };

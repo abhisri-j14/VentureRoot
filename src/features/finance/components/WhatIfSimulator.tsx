@@ -7,8 +7,6 @@ import { financeApi } from "../api/financeApi";
 
 export const WhatIfSimulator = () => {
   const { t } = useTranslation();
-  const role = useAuthStore((s) => s.role);
-  const isSimple = role === "ENTREPRENEUR";
   
   const [loanAmount, setLoanAmount] = useState(500000);
   const [interestRate, setInterestRate] = useState(9);
@@ -49,7 +47,7 @@ export const WhatIfSimulator = () => {
       <div className="w-full md:w-1/2 flex flex-col gap-6">
         <div>
           <label className="block text-sm font-medium text-secondary-muted mb-2" suppressHydrationWarning>
-            {isSimple ? "Money you may need" : "Loan Amount"}: ₹{loanAmount.toLocaleString('en-IN')}
+            Money you may need: ₹{loanAmount.toLocaleString('en-IN')}
           </label>
           <input
             type="range"
@@ -64,7 +62,7 @@ export const WhatIfSimulator = () => {
         
         <div>
           <label className="block text-sm font-medium text-secondary-muted mb-2">
-            {isSimple ? "Yearly Interest" : "Interest Rate"}: {interestRate}%
+            Yearly Interest: {interestRate}%
           </label>
           <input
             type="range"
@@ -80,7 +78,7 @@ export const WhatIfSimulator = () => {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-secondary-muted mb-2">
-              {isSimple ? "Time to Repay" : "Tenure (Months)"}
+              Time to Repay
             </label>
             <select
               value={tenure}
@@ -97,7 +95,7 @@ export const WhatIfSimulator = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-secondary-muted mb-2">
-              {isSimple ? "Time before paying" : "Moratorium"}
+              Time before paying
             </label>
             <select
               value={moratorium}
@@ -114,7 +112,7 @@ export const WhatIfSimulator = () => {
 
         <div>
           <label className="block text-sm font-medium text-secondary-muted mb-2" suppressHydrationWarning>
-            {isSimple ? "Expected money coming in" : "Monthly Revenue"}: ₹{revenue.toLocaleString('en-IN')}
+            Expected money coming in: ₹{revenue.toLocaleString('en-IN')}
           </label>
           <input
             type="range"
@@ -129,7 +127,7 @@ export const WhatIfSimulator = () => {
         
         <div>
           <label className="block text-sm font-medium text-secondary-muted mb-2" suppressHydrationWarning>
-            {isSimple ? "Expected money going out" : "Monthly Expenses"}: ₹{expenses.toLocaleString('en-IN')}
+            Expected money going out: ₹{expenses.toLocaleString('en-IN')}
           </label>
           <input
             type="range"
@@ -155,34 +153,34 @@ export const WhatIfSimulator = () => {
       <div className="w-full md:w-1/2">
         <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 h-full flex flex-col">
           <h3 className="text-lg font-heading font-semibold text-secondary mb-4">
-            {isSimple ? "What might happen" : "Simulation Results"}
+            What might happen
           </h3>
           
           <div className="grid grid-cols-1 gap-4 flex-1">
             <div className="p-4 bg-white rounded-lg border border-slate-200 flex justify-between items-center">
               <span className="text-sm font-medium text-secondary-muted">
-                {isSimple ? "If things go great" : "Best Case Scenario"}
+                If things go great
               </span>
               <span className="text-sm font-bold text-slate-400">Awaiting simulation</span>
             </div>
             
             <div className="p-4 bg-white rounded-lg border border-slate-200 flex justify-between items-center">
               <span className="text-sm font-medium text-secondary-muted">
-                {isSimple ? "What we expect" : "Expected Case Scenario"}
+                What we expect
               </span>
               <span className="text-sm font-bold text-slate-400">Awaiting simulation</span>
             </div>
             
             <div className="p-4 bg-white rounded-lg border border-slate-200 flex justify-between items-center">
               <span className="text-sm font-medium text-secondary-muted">
-                {isSimple ? "If things go poorly" : "Worst Case Scenario"}
+                If things go poorly
               </span>
               <span className="text-sm font-bold text-slate-400">Awaiting simulation</span>
             </div>
 
             <div className="p-4 bg-white rounded-lg border border-slate-200 flex justify-between items-center mt-auto">
               <span className="text-sm font-medium text-secondary-muted">
-                {isSimple ? "Is it safe?" : "Loan Risk Assessment"}
+                Is it safe?
               </span>
               <span className="text-sm font-bold text-slate-400">Awaiting simulation</span>
             </div>

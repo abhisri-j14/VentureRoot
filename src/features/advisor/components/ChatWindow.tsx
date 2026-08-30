@@ -83,8 +83,8 @@ export const ChatWindow = () => {
       {/* Header */}
       <div className="flex justify-between items-center p-4 border-b border-slate-200 bg-slate-50">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-            <Bot className="w-5 h-5 text-primary" />
+          <div className="w-8 h-8 rounded-full bg-vr-violet-light/30 flex items-center justify-center">
+            <Bot className="w-5 h-5 text-vr-violet" />
           </div>
           <div>
             <h3 className="font-semibold text-secondary">AI Business Advisor</h3>
@@ -116,7 +116,7 @@ export const ChatWindow = () => {
                   <User className="w-5 h-5 text-secondary-muted" />
                 </div>
               ) : (
-                <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-vr-violet text-white flex items-center justify-center shadow-sm">
                   <Bot className="w-5 h-5" />
                 </div>
               )}
@@ -162,7 +162,7 @@ export const ChatWindow = () => {
         {isStreaming && (
           <div className="flex gap-4 max-w-[85%] self-start">
             <div className="shrink-0 mt-1">
-              <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-vr-violet text-white flex items-center justify-center shadow-sm">
                 <Bot className="w-5 h-5" />
               </div>
             </div>

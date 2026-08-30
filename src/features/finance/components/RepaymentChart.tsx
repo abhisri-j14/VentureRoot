@@ -37,8 +37,8 @@ export const RepaymentChart = () => {
             contentStyle={{ borderRadius: "8px", border: "1px solid #e2e8f0", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}
           />
           <Legend wrapperStyle={{ paddingTop: "20px" }} />
-          <Bar dataKey="principal" name="Principal (₹)" stackId="a" fill="#1b4332" radius={[0, 0, 4, 4]} />
-          <Bar dataKey="interest" name="Interest (₹)" stackId="a" fill="#059669" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="principal" name="Principal (₹)" stackId="a" fill="#094f9e" radius={[0, 0, 4, 4]} />
+          <Bar dataKey="interest" name="Interest (₹)" stackId="a" fill="#8e90f5" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
       <div className="flex justify-center mt-4">

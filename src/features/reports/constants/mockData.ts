@@ -32,7 +32,7 @@ export const MOCK_REPORTS: Report[] = [
     id: "rep-102",
     title: "Retail Store Feasibility Check",
     businessId: "biz-02",
-    businessName: "Kisan Mart",
+    businessName: "Entrepreneur Mart",
     location: "Rural Hub, Block A",
     status: "DRAFT",
     createdAt: "2026-08-25T14:30:00Z",

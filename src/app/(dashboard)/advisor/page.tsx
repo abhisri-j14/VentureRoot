@@ -13,16 +13,16 @@ export default function AdvisorPage() {
       </div>
 
       <div className="mb-6 hidden md:flex gap-3 overflow-x-auto pb-2">
-        <button className="whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white text-sm font-medium text-secondary-muted hover:border-primary hover:text-primary transition-colors">
+        <button className="whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white text-sm font-medium text-secondary-muted hover:border-vr-violet hover:text-vr-violet hover:bg-vr-violet-light/10 transition-colors">
           Should I start this business here?
         </button>
-        <button className="whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white text-sm font-medium text-secondary-muted hover:border-primary hover:text-primary transition-colors">
+        <button className="whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white text-sm font-medium text-secondary-muted hover:border-vr-violet hover:text-vr-violet hover:bg-vr-violet-light/10 transition-colors">
           What are my biggest local risks?
         </button>
-        <button className="whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white text-sm font-medium text-secondary-muted hover:border-primary hover:text-primary transition-colors">
+        <button className="whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white text-sm font-medium text-secondary-muted hover:border-vr-violet hover:text-vr-violet hover:bg-vr-violet-light/10 transition-colors">
           How can I improve my market reach?
         </button>
-        <button className="whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white text-sm font-medium text-secondary-muted hover:border-primary hover:text-primary transition-colors">
+        <button className="whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white text-sm font-medium text-secondary-muted hover:border-vr-violet hover:text-vr-violet hover:bg-vr-violet-light/10 transition-colors">
           Which financing option suits me?
         </button>
       </div>
