@@ -7,9 +7,10 @@ interface TextEffectProps {
   children: React.ReactNode;
   per?: "char" | "word";
   preset?: "fade" | "blur" | "slide";
+  trigger?: boolean;
 }
 
-export function TextEffect({ children, per = "char", preset = "fade" }: TextEffectProps) {
+export function TextEffect({ children, per = "char", preset = "fade", trigger = true }: TextEffectProps) {
   const container: Variants = {
     hidden: { opacity: 0 },
     show: {
@@ -57,7 +58,7 @@ export function TextEffect({ children, per = "char", preset = "fade" }: TextEffe
     <motion.span
       variants={container}
       initial="hidden"
-      animate="show"
+      animate={trigger ? "show" : "hidden"}
       className="inline-block"
     >
       {renderChildren(children)}

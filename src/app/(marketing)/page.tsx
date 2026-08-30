@@ -28,16 +28,49 @@ import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 import { CleanNavbar } from "@/components/ui/clean-navbar";
 import { RippleButton } from "@/components/ui/ripple-button";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { TextEffect } from "@/components/ui/text-effect";
+import CloudLoader from "@/components/ui/quantum-cloud-loader";
 
 export default function LandingPage() {
   const { t } = useTranslation();
   const isAuthenticated = useAuthStore((state) => !!state.token);
+  const [isPreloading, setIsPreloading] = React.useState(true);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setIsPreloading(false), 2200);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <main className="flex-1 flex flex-col items-center w-full">
+    <>
+      <AnimatePresence>
+        {isPreloading && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#FFFBE7]"
+          >
+            <CloudLoader />
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="mt-6 flex items-center justify-center bg-[#FFFBE7]"
+            >
+              <img 
+                src="/logo-wordmark.png" 
+                alt="VentureRoot Logo" 
+                className="h-8 md:h-10 w-auto object-contain mix-blend-multiply opacity-90" 
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="flex flex-col min-h-screen bg-background">
+        <main className="flex-1 flex flex-col items-center w-full">
         {/* ── 1. Hero Section (Card Layout) ── */}
         <div className="w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
           <section className="relative w-full rounded-[2rem] overflow-hidden bg-background shadow-lg shadow-secondary/5 border border-secondary/10 min-h-[85vh] flex flex-col">
@@ -61,7 +94,7 @@ export default function LandingPage() {
               <div className="flex-1 flex flex-col items-center text-center max-w-full md:max-w-3xl lg:max-w-4xl mx-auto pt-4 md:pt-10">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  animate={isPreloading ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }}
                   transition={{ duration: 0.6 }}
                   className="mb-5 inline-flex items-center px-3 py-1 rounded-full bg-secondary/5 border border-secondary/10 text-secondary text-[10px] md:text-[11px] font-bold uppercase tracking-widest shadow-sm backdrop-blur-sm"
                 >
@@ -70,7 +103,7 @@ export default function LandingPage() {
 
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  animate={isPreloading ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.1 }}
                   className="text-4xl md:text-[46px] lg:text-[50px] font-heading font-semibold text-secondary leading-tight tracking-tight [text-shadow:_0_2px_15px_rgba(255,255,255,0.8)] max-w-[800px]"
                 >
@@ -79,7 +112,7 @@ export default function LandingPage() {
 
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  animate={isPreloading ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                   className="text-[15px] md:text-[16px] text-secondary/80 mt-5 font-normal leading-relaxed max-w-full lg:max-w-[650px] [text-shadow:_0_1px_10px_rgba(255,255,255,1)]"
                 >
@@ -88,19 +121,19 @@ export default function LandingPage() {
 
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  animate={isPreloading ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.3 }}
                   className="flex flex-col sm:flex-row gap-3.5 mt-8 w-full sm:w-auto justify-center"
                 >
                   <RippleButton
-                    href={isAuthenticated ? "/register" : "/login?redirect=/register"}
+                    href={isAuthenticated ? "/dashboard" : "/register"}
                     rippleColor="bg-white/30"
                     className="bg-secondary text-background px-6 py-2.5 rounded-xl font-semibold text-[13px] md:text-sm hover:bg-secondary/90 transition-all shadow-md hover:-translate-y-0.5 flex items-center justify-center gap-1.5"
                   >
                     {t("landing.analyzeBtn")} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </RippleButton>
                   <RippleButton
-                    href={isAuthenticated ? "/dashboard" : "/login?redirect=/dashboard"}
+                    href={isAuthenticated ? "/dashboard" : "/register"}
                     rippleColor="bg-secondary/15"
                     className="bg-white/50 backdrop-blur-md border border-secondary/10 text-secondary px-6 py-2.5 rounded-xl font-semibold text-[13px] md:text-sm hover:bg-white/80 transition-all shadow-sm hover:-translate-y-0.5 flex items-center justify-center gap-1.5"
                   >
@@ -125,7 +158,7 @@ export default function LandingPage() {
                 </span>
               </div>
               <h2 className="text-3xl md:text-4xl lg:text-[2.5rem] font-sans font-bold text-[#200813] tracking-tight mb-4">
-                <TextEffect per='char' preset='fade'>
+                <TextEffect per='char' preset='fade' trigger={!isPreloading}>
                   Smart tools for your next local venture.
                 </TextEffect>
               </h2>
@@ -765,6 +798,7 @@ export default function LandingPage() {
         </motion.div>
       </footer>
     </div>
+    </>
   );
 }
 
