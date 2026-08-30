@@ -1,0 +1,74 @@
+import { Roadmap } from "../types";
+
+export const MOCK_ACTION_ROADMAP: Roadmap = {
+  id: "rdmp-01",
+  businessId: "biz-01",
+  businessName: "Sanjay Dairy & Co",
+  location: "Kolhapur District, Maharashtra",
+  actions: [
+    {
+      id: "act-1",
+      order: 1,
+      title: "Validate Local Milk Demand",
+      description: "Confirm actual daily consumption potential with nearby sweet shops and retail vendors.",
+      whatToDo: "Visit 5 local sweet shops and 10 retail grocery stores in a 5km radius to ask about their daily unadulterated milk requirements.",
+      expectedOutcome: "A confirmed list of at least 3 initial bulk buyers.",
+      timeframe: "1-2 weeks",
+      priority: "HIGH",
+      category: "MARKET",
+      status: "NOT_STARTED",
+      confidence: {
+        score: 88,
+        level: "HIGH",
+        reasons: ["Strong local preference for fresh dairy", "Historical data on sweet shop density"]
+      },
+      why: {
+        summary: "Securing bulk buyers early minimizes inventory wastage.",
+        factors: ["Perishable nature of milk", "High competition for retail shelf space"]
+      },
+      evidence: [
+        { type: "FACT", label: "Sweet shops make up 40% of local bulk buys", source: "District Commerce Data" }
+      ]
+    },
+    {
+      id: "act-2",
+      order: 2,
+      title: "Compare Fodder Suppliers",
+      description: "Identify and negotiate with suitable local cattle feed suppliers to reduce operational costs.",
+      whatToDo: "Get quotes from 3 different wholesale fodder suppliers. Compare prices for dry fodder vs green fodder.",
+      expectedOutcome: "A signed 3-month contract with the most cost-effective supplier.",
+      timeframe: "1 week",
+      priority: "HIGH",
+      category: "SUPPLY",
+      status: "NOT_STARTED"
+    },
+    {
+      id: "act-3",
+      order: 3,
+      title: "Arrange Initial Capital",
+      description: "Secure funding for the first batch of 10 cows and basic shed infrastructure.",
+      whatToDo: "Apply for the NABARD Dairy Entrepreneurship Development Scheme (DEDS). Prepare the required project report.",
+      expectedOutcome: "Loan sanction and initial disbursement.",
+      timeframe: "3-4 weeks",
+      priority: "MEDIUM",
+      category: "FINANCE",
+      status: "NOT_STARTED",
+      why: {
+        summary: "NABARD schemes offer significant subsidies for rural dairy setups.",
+        factors: ["Lower interest rates", "Back-ended capital subsidy"]
+      }
+    },
+    {
+      id: "act-4",
+      order: 4,
+      title: "Acquire Necessary Licenses",
+      description: "Ensure all local panchayat and FSSAI registrations are completed.",
+      whatToDo: "Submit application for basic FSSAI registration and obtain a No Objection Certificate (NOC) from the Gram Panchayat.",
+      expectedOutcome: "Legal clearance to operate and sell dairy products.",
+      timeframe: "2-3 weeks",
+      priority: "HIGH",
+      category: "COMPLIANCE",
+      status: "NOT_STARTED"
+    }
+  ]
+};
