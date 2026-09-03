@@ -10,30 +10,10 @@ import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 import { motion } from "framer-motion";
 import { profileApi } from "../api/profileApi";
 
+import { getLocationHierarchy, useLocationSearch } from "@/lib/data/locations";
+
 // Minimal Mock Data for UI interaction
-const MOCK_LOCATION_DATA = {
-  states: ["Maharashtra", "Gujarat"],
-  districts: {
-    Maharashtra: ["Pune", "Satara"],
-    Gujarat: ["Surat", "Ahmedabad"],
-  } as Record<string, string[]>,
-  blocks: {
-    Pune: ["Haveli", "Khed"],
-    Satara: ["Karad", "Wai"],
-    Surat: ["Choryasi", "Olpad"],
-    Ahmedabad: ["Daskroi", "Sanand"],
-  } as Record<string, string[]>,
-  villages: {
-    Haveli: ["Khadakwasla", "Donje"],
-    Khed: ["Alandi", "Chakan"],
-    Karad: ["Kale", "Malkapur"],
-    Wai: ["Bhuinj", "Pachwad"],
-    Choryasi: ["Bhatha", "Kawas"],
-    Olpad: ["Sayan", "Kim"],
-    Daskroi: ["Aslali", "Bareja"],
-    Sanand: ["Sari", "Modasar"],
-  } as Record<string, string[]>,
-};
+const MOCK_LOCATION_DATA = getLocationHierarchy();
 
 export const OnboardingFlow = () => {
   const router = useRouter();
@@ -45,12 +25,8 @@ export const OnboardingFlow = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showSearchResults, setShowSearchResults] = useState(false);
 
-  // Mock Search Results for autocomplete
-  const MOCK_SEARCH_RESULTS = [
-    { label: "Chakan, Khed, Pune, Maharashtra", data: { state: "Maharashtra", district: "Pune", block: "Khed", village: "Chakan" } },
-    { label: "Khadakwasla, Haveli, Pune, Maharashtra", data: { state: "Maharashtra", district: "Pune", block: "Haveli", village: "Khadakwasla" } },
-    { label: "Pune City, Pune, Maharashtra", data: { state: "Maharashtra", district: "Pune", block: "", village: "" } },
-  ];
+  // Search Results for autocomplete
+  const { data: MOCK_SEARCH_RESULTS } = useLocationSearch(searchTerm);
 
   const {
     register,

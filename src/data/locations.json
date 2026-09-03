@@ -1,0 +1,30 @@
+{
+  "hierarchy": {
+    "states": ["Maharashtra", "Gujarat"],
+    "districts": {
+      "Maharashtra": ["Pune", "Satara"],
+      "Gujarat": ["Surat", "Ahmedabad"]
+    },
+    "blocks": {
+      "Pune": ["Haveli", "Khed"],
+      "Satara": ["Karad", "Wai"],
+      "Surat": ["Choryasi", "Olpad"],
+      "Ahmedabad": ["Daskroi", "Sanand"]
+    },
+    "villages": {
+      "Haveli": ["Khadakwasla", "Donje"],
+      "Khed": ["Alandi", "Chakan"],
+      "Karad": ["Kale", "Malkapur"],
+      "Wai": ["Bhuinj", "Pachwad"],
+      "Choryasi": ["Bhatha", "Kawas"],
+      "Olpad": ["Sayan", "Kim"],
+      "Daskroi": ["Aslali", "Bareja"],
+      "Sanand": ["Sari", "Modasar"]
+    }
+  },
+  "searchResults": [
+    { "label": "Chakan, Khed, Pune, Maharashtra", "data": { "state": "Maharashtra", "district": "Pune", "block": "Khed", "village": "Chakan" } },
+    { "label": "Khadakwasla, Haveli, Pune, Maharashtra", "data": { "state": "Maharashtra", "district": "Pune", "block": "Haveli", "village": "Khadakwasla" } },
+    { "label": "Pune City, Pune, Maharashtra", "data": { "state": "Maharashtra", "district": "Pune", "block": "", "village": "" } }
+  ]
+}

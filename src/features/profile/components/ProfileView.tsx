@@ -8,31 +8,21 @@ import { BentoCard } from "@/components/layout/BentoCard";
 import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 import { MockDisclaimer } from "@/components/ui/mock-disclaimer";
 
-const MOCK_PROFILE = {
-  fullName: "Ravi Kumar",
-  email: "ravi.kumar@example.com",
-  phone: "+91 9876543210",
-  location: {
-    state: "Maharashtra",
-    district: "Pune",
-    block: "Khed",
-    village: "Chakan",
-  },
-  financial: {
-    availableCapital: 500000,
-    income: 25000,
-  },
-  experience: {
-    businessExperience: "3-5 years",
-    skills: "Agriculture, Supply Chain",
-    education: "B.Com",
-  },
-};
+import { useProfile } from "@/lib/data/users";
 
 export const ProfileView = () => {
+  const { data: fetchedProfile, isLoading } = useProfile();
   const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState(MOCK_PROFILE);
+  const [profile, setProfile] = useState<any>(fetchedProfile);
   const { t } = useTranslation();
+
+  React.useEffect(() => {
+    if (fetchedProfile) {
+      setProfile(fetchedProfile);
+    }
+  }, [fetchedProfile]);
+
+  if (!profile) return null;
 
   const handleSave = () => {
     // UI-only mock update
@@ -95,7 +85,7 @@ export const ProfileView = () => {
                 <input 
                   type="text" 
                   value={profile.fullName}
-                  onChange={(e) => setProfile(p => ({ ...p, fullName: e.target.value }))}
+                  onChange={(e) => setProfile((p: any) => ({ ...p, fullName: e.target.value }))}
                   className="w-full border border-slate-300 rounded p-1.5 outline-none focus:border-primary"
                 />
               ) : (
@@ -108,7 +98,7 @@ export const ProfileView = () => {
                 <input 
                   type="email" 
                   value={profile.email}
-                  onChange={(e) => setProfile(p => ({ ...p, email: e.target.value }))}
+                  onChange={(e) => setProfile((p: any) => ({ ...p, email: e.target.value }))}
                   className="w-full border border-slate-300 rounded p-1.5 outline-none focus:border-primary"
                 />
               ) : (
@@ -121,7 +111,7 @@ export const ProfileView = () => {
                 <input 
                   type="tel" 
                   value={profile.phone}
-                  onChange={(e) => setProfile(p => ({ ...p, phone: e.target.value }))}
+                  onChange={(e) => setProfile((p: any) => ({ ...p, phone: e.target.value }))}
                   className="w-full border border-slate-300 rounded p-1.5 outline-none focus:border-primary"
                 />
               ) : (
@@ -175,7 +165,7 @@ export const ProfileView = () => {
                 <input 
                   type="number" 
                   value={profile.financial.availableCapital}
-                  onChange={(e) => setProfile(p => ({ ...p, financial: { ...p.financial, availableCapital: Number(e.target.value) } }))}
+                  onChange={(e) => setProfile((p: any) => ({ ...p, financial: { ...p.financial, availableCapital: Number(e.target.value) } }))}
                   className="w-full border border-slate-300 rounded p-1.5 outline-none focus:border-primary"
                 />
               ) : (
@@ -188,7 +178,7 @@ export const ProfileView = () => {
                 <input 
                   type="number" 
                   value={profile.financial.income}
-                  onChange={(e) => setProfile(p => ({ ...p, financial: { ...p.financial, income: Number(e.target.value) } }))}
+                  onChange={(e) => setProfile((p: any) => ({ ...p, financial: { ...p.financial, income: Number(e.target.value) } }))}
                   className="w-full border border-slate-300 rounded p-1.5 outline-none focus:border-primary"
                 />
               ) : (
@@ -210,7 +200,7 @@ export const ProfileView = () => {
               {isEditing ? (
                 <select 
                   value={profile.experience.businessExperience}
-                  onChange={(e) => setProfile(p => ({ ...p, experience: { ...p.experience, businessExperience: e.target.value } }))}
+                  onChange={(e) => setProfile((p: any) => ({ ...p, experience: { ...p.experience, businessExperience: e.target.value } }))}
                   className="w-full border border-slate-300 rounded p-1.5 outline-none focus:border-primary"
                 >
                   <option value="None">None</option>
@@ -228,7 +218,7 @@ export const ProfileView = () => {
                 <input 
                   type="text" 
                   value={profile.experience.skills}
-                  onChange={(e) => setProfile(p => ({ ...p, experience: { ...p.experience, skills: e.target.value } }))}
+                  onChange={(e) => setProfile((p: any) => ({ ...p, experience: { ...p.experience, skills: e.target.value } }))}
                   className="w-full border border-slate-300 rounded p-1.5 outline-none focus:border-primary"
                 />
               ) : (
@@ -241,7 +231,7 @@ export const ProfileView = () => {
                 <input 
                   type="text" 
                   value={profile.experience.education}
-                  onChange={(e) => setProfile(p => ({ ...p, experience: { ...p.experience, education: e.target.value } }))}
+                  onChange={(e) => setProfile((p: any) => ({ ...p, experience: { ...p.experience, education: e.target.value } }))}
                   className="w-full border border-slate-300 rounded p-1.5 outline-none focus:border-primary"
                 />
               ) : (

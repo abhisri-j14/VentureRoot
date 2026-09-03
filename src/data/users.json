@@ -1,0 +1,29 @@
+{
+  "currentUser": {
+    "id": "user-ent-001",
+    "name": "Ravi Kumar",
+    "email": "ravi@example.com",
+    "roleLabel": "Entrepreneur",
+    "location": "Bankura, West Bengal"
+  },
+  "profile": {
+    "fullName": "Ravi Kumar",
+    "email": "ravi.kumar@example.com",
+    "phone": "+91 9876543210",
+    "location": {
+      "state": "Maharashtra",
+      "district": "Pune",
+      "block": "Khed",
+      "village": "Chakan"
+    },
+    "financial": {
+      "availableCapital": 500000,
+      "income": 25000
+    },
+    "experience": {
+      "businessExperience": "3-5 years",
+      "skills": "Agriculture, Supply Chain",
+      "education": "B.Com"
+    }
+  }
+}

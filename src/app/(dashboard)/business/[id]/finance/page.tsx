@@ -52,7 +52,7 @@ export default function FinancePage() {
       <BentoGrid>
         {/* ROW 1: Repayment Schedule */}
         <BentoCard title="Repayment Schedule" className="col-span-12">
-          <RepaymentChart />
+          <RepaymentChart businessId={id} />
         </BentoCard>
 
         {/* ROW 2: What-If Business Simulator */}

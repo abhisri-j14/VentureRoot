@@ -1,0 +1,8 @@
+{
+  "repaymentSchedule": [
+    { "period": "Q1", "principal": 0, "interest": 15000, "isMoratorium": true },
+    { "period": "Q2", "principal": 0, "interest": 15000, "isMoratorium": true },
+    { "period": "Q3", "principal": 25000, "interest": 14000, "isMoratorium": false },
+    { "period": "Q4", "principal": 25000, "interest": 13000, "isMoratorium": false }
+  ]
+}

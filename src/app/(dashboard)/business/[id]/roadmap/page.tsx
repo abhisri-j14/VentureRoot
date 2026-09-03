@@ -2,9 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "@/features/i18n/hooks/useTranslation";
-import { MOCK_ACTION_ROADMAP } from "@/features/roadmap/constants/mockData";
+import _MOCK_ACTION_ROADMAP from "@/data/roadmap.json";
 import { RoadmapTimeline } from "@/features/roadmap/components/RoadmapTimeline";
+import { Roadmap } from "@/features/roadmap/types";
 import { MapPin, Briefcase, ArrowLeft, FileText, CheckCircle2 } from "lucide-react";
+
+const MOCK_ACTION_ROADMAP = _MOCK_ACTION_ROADMAP as unknown as Roadmap;
 import Link from "next/link";
 import { useParams } from "next/navigation";
 

@@ -13,58 +13,45 @@ import { MarketCard } from "@/features/feasibility/components/MarketCard";
 import { OpportunityCard } from "@/features/feasibility/components/OpportunityCard";
 import { CompetitionCard } from "@/features/feasibility/components/CompetitionCard";
 import { SWOTCard } from "@/features/feasibility/components/SWOTCard";
+import { MockDisclaimer } from "@/components/ui/mock-disclaimer";
 import { RiskCard } from "@/features/feasibility/components/RiskCard";
 import { PricingCard } from "@/features/feasibility/components/PricingCard";
 
-import { MockDisclaimer } from "@/components/ui/mock-disclaimer";
 import { 
-  MOCK_MARKET_DATA, 
-  MOCK_OPPORTUNITY_DATA, 
-  MOCK_COMPETITION_DATA, 
-  MOCK_SWOT_DATA, 
-  MOCK_RISK_DATA, 
-  MOCK_PRICING_DATA 
-} from "@/features/feasibility/constants/mockData";
-import { FeasibilityData } from "@/features/feasibility/types";
-import { feasibilityApi } from "@/features/feasibility/api/feasibilityApi";
+  FeasibilityData, 
+  MarketAnalysis, 
+  OpportunityAnalysis, 
+  CompetitionAnalysis, 
+  SWOTAnalysis, 
+  RiskItem, 
+  PricingAnalysis 
+} from "@/features/feasibility/types";
+
+import { useFeasibility } from "@/lib/data/feasibility";
 import { useEffect } from "react";
 
 export default function FeasibilityPage() {
   const params = useParams();
-  const id = params?.id || "123";
+  const id = params?.id as string || "123";
 
-  const [feasibilityData, setFeasibilityData] = useState<FeasibilityData>({
-    status: "LOADING", // Start in loading state
-    market: MOCK_MARKET_DATA,
-    opportunity: MOCK_OPPORTUNITY_DATA,
-    competition: MOCK_COMPETITION_DATA,
-    swot: MOCK_SWOT_DATA,
-    risks: MOCK_RISK_DATA,
-    pricing: MOCK_PRICING_DATA,
-  });
+  const { data: fetchedFeasibility, isLoading } = useFeasibility(id);
+  const [feasibilityData, setFeasibilityData] = useState<FeasibilityData | null>(null);
 
   useEffect(() => {
-    let isMounted = true;
-    
-    // Fire the GET request on mount
-    feasibilityApi.getFeasibility(id as string)
-      .then((res) => {
-        if (!isMounted) return;
-        console.log("Feasibility request sent successfully. Response consumption blocked.");
-        // TODO: BACKEND CONFIRMATION REQUIRED
-        // Response schema is unknown. Cannot map to FeasibilityData interface.
-        // We fallback to displaying the mock data successfully.
-        setFeasibilityData(prev => ({ ...prev, status: "SUCCESS" }));
-      })
-      .catch((err) => {
-        if (!isMounted) return;
-        
-        console.warn("Backend request failed or offline. Proceeding with mock data for UI testing.");
-        setFeasibilityData(prev => ({ ...prev, status: "SUCCESS" }));
+    if (fetchedFeasibility) {
+      setFeasibilityData({
+        status: "SUCCESS",
+        market: fetchedFeasibility.market as MarketAnalysis,
+        opportunity: fetchedFeasibility.opportunity as OpportunityAnalysis,
+        competition: fetchedFeasibility.competition as CompetitionAnalysis,
+        swot: fetchedFeasibility.swot as unknown as SWOTAnalysis,
+        risks: fetchedFeasibility.risks as RiskItem[],
+        pricing: fetchedFeasibility.pricing as unknown as PricingAnalysis,
       });
-      
-    return () => { isMounted = false; };
-  }, [id]);
+    }
+  }, [fetchedFeasibility]);
+
+  if (!feasibilityData) return null;
 
   return (
     <div className="flex flex-col gap-8 pb-10 max-w-6xl mx-auto w-full">

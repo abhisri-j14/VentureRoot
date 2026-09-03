@@ -4,23 +4,23 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 import { ReportList } from "@/features/reports/components/ReportList";
 import { ReportGenerator } from "@/features/reports/components/ReportGenerator";
-import { MOCK_REPORTS } from "@/features/reports/constants/mockData";
 import { FileText, Plus } from "lucide-react";
+import { useReports } from "@/lib/data/reports";
 import { Report } from "@/features/reports/types";
-import { reportApi } from "@/features/reports/api/reportApi";
 
 export default function ReportsPage() {
   const { t } = useTranslation();
+  const { data: fetchedReports, isLoading } = useReports();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState<"ALL" | "FEASIBILITY" | "BUSINESS_PLAN" | "MARKET_RESEARCH">("ALL");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [reports, setReports] = useState<Report[]>(MOCK_REPORTS);
+  const [reports, setReports] = useState<Report[]>([]);
 
   useEffect(() => {
-    reportApi.list()
-      .then(() => console.log("Report list request sent. Response consumption blocked."))
-      .catch((err) => {
-        console.warn("Backend request failed or offline. Proceeding with mock data for UI testing.");
-      });
-  }, []);
+    if (fetchedReports) {
+      setReports(fetchedReports as Report[]);
+    }
+  }, [fetchedReports]);
 
   const handleGenerateComplete = () => {
     setIsGenerating(false);

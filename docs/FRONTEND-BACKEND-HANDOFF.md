@@ -4,6 +4,7 @@
 - **Project Name:** VentureRoot
 - **Purpose:** A local business planning platform tailored for non-metro Indian markets.
 - **Target Users:** First-time entrepreneurs, small business owners, local investors.
+- **Architecture Notes:** The application operates strictly on a **Single-User Architecture** (`ENTREPRENEUR`). All previous multi-role logic (Admin, Analyst, Mentor) and Role-Based Access Control (RBAC) have been completely removed.
 - **Major Capabilities:** AI business advisor, feasibility scoring, financial simulation, location intelligence.
 - **Frontend Architecture:** Next.js 16 (App Router), React, Tailwind CSS, Framer Motion, Zustand.
 - **API Architecture:** Centralized Axios client (`src/lib/api/client.ts`) communicating over REST (`/api/v1`).
@@ -12,7 +13,6 @@
 **AUTH**
 - `/login` (Login flow)
 - `/register` (Registration flow)
-- `/role-selection` (User role onboarding)
 - `/onboarding` (Profile completion)
 
 **DASHBOARD**
@@ -21,8 +21,6 @@
 - `/advisor` (AI Advisor Chat UI)
 - `/reports` (List of saved reports)
 - `/reports/[id]` (Detailed view of a specific report)
-- `/admin` (Admin dashboard layout)
-- `/reviews` (User reviews/ratings view)
 
 **BUSINESS**
 - `/business/create` (Business creation wizard)
@@ -45,7 +43,7 @@
 - Business summary dashboards.
 
 **FEASIBILITY**
-- Feasibility scoring view with SWOT and Market insights.
+- Feasibility scoring view with SWOT and Market insights (Unified view for all metrics).
 
 **FINANCE**
 - "What-If" interactive simulator (Loan, Interest, Revenue).
@@ -159,6 +157,7 @@ None. All endpoints currently implemented in the frontend are inferred or awaiti
 - `src/features/feasibility/components/FeasibilityView.tsx`: `MOCK_FEASIBILITY_DATA` (Feeds the charts, SWOT, and market analysis visuals).
 - `src/features/advisor/components/ChatWindow.tsx`: `mockResponse` bubble (Displays a placeholder AI response in the UI).
 - `src/features/finance/components/WhatIfSimulator.tsx`: `mockRepaymentData` (Provides points for the Recharts graph).
+- `src/features/business/components/BusinessDetailsView.tsx`: `MOCK_BUSINESS_DETAILS` (Provides static business structure).
 
 **B. TEMPORARY API/NETWORK BEHAVIOR (Fallback Logic)**
 - Form submissions (`Login`, `Register`, `BusinessWizard`, `Onboarding`, `Chat`, `Finance`) catch Network Errors when the backend is offline, print a `console.warn`, and execute `.push(mockRoute)` to keep the application navigating properly in the development environment.
@@ -180,6 +179,7 @@ None. All endpoints currently implemented in the frontend are inferred or awaiti
 - **Feasibility UI (`feasibility/page.tsx`)** → `feasibilityApi.getFeasibility()` → `GET /feasibility/{businessId}` (Request connected)
 
 ## 11 — RESPONSE CONTRACT BLOCKERS
+*(These are the APIs left disconnected due to missing backend schema)*
 **AUTH**
 - Login response: Frontend needs to know the exact field name containing the JWT (e.g. `.token`, `.access_token`).
 
@@ -248,6 +248,7 @@ The frontend team does **NOT** require details on:
 - Underlying Database schemas or ORM mappings.
 - Internal ML model architecture, LLM configurations, or vector stores.
 - Microservice internal communication patterns.
+- Role-based permissions, as the application is now firmly a **Single-User (Entrepreneur)** interface.
 The frontend strictly relies on **Request payloads, HTTP Status codes, Response structures, and Error schemas**.
 
 ## 16 — CURRENT INTEGRATION STATUS

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { 
   Building2, 
@@ -62,39 +62,21 @@ export interface BusinessDetails {
   };
 }
 
-const MOCK_BUSINESS_DETAILS: BusinessDetails = {
-  id: "123",
-  name: "Green Valley Dairy",
-  category: "Agriculture & Allied",
-  subcategory: "Dairy Farming",
-  description: "A small-scale commercial dairy farm focusing on high-yield buffalo milk production for local cooperative supply.",
-  status: "Ready",
-  location: {
-    state: "Maharashtra",
-    district: "Pune",
-    block: "Khed",
-    // village is intentionally omitted to demonstrate graceful incomplete data UI
-  },
-  capital: {
-    availableMargin: 150000,
-    expectedInvestment: 800000,
-    workingCapital: 50000,
-  },
-  operations: {
-    expectedRevenue: 45000,
-    expectedPrice: 55, // INR/liter
-    productionQuantity: 30, // liters/day
-  },
-  resources: {
-    land: "0.5 Acre owned",
-    equipment: "Basic shed exists",
-    existingResources: "Water connection, grid electricity",
-  },
-};
+import { useBusinessDetails } from "@/lib/data/businesses";
+import { useParams } from "next/navigation";
 
 export const BusinessDetailsView = () => {
+  const params = useParams();
+  const id = params?.id as string || "123";
+  const { data: fetchedBusiness, isLoading } = useBusinessDetails(id);
   const [isEditing, setIsEditing] = useState(false);
-  const [business, setBusiness] = useState<BusinessDetails>(MOCK_BUSINESS_DETAILS);
+  const [business, setBusiness] = useState<BusinessDetails | null>(null);
+
+  useEffect(() => {
+    if (fetchedBusiness) {
+      setBusiness(fetchedBusiness);
+    }
+  }, [fetchedBusiness]);
   const { t } = useTranslation();
 
   // State for toggling evidence view in simple mode
@@ -104,6 +86,10 @@ export const BusinessDetailsView = () => {
     console.log("Mock save business edit:", business);
     setIsEditing(false);
   };
+
+  if (!business) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col gap-8 w-full max-w-6xl mx-auto">
@@ -166,7 +152,7 @@ export const BusinessDetailsView = () => {
               {isEditing ? (
                 <textarea 
                   value={business.description}
-                  onChange={(e) => setBusiness(p => ({ ...p, description: e.target.value }))}
+                  onChange={(e) => setBusiness(p => p ? ({ ...p, description: e.target.value }) : null)}
                   className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:border-primary min-h-[80px]"
                 />
               ) : (
@@ -246,7 +232,7 @@ export const BusinessDetailsView = () => {
                 <input 
                   type="number" 
                   value={business.capital.availableMargin}
-                  onChange={(e) => setBusiness(p => ({ ...p, capital: { ...p.capital, availableMargin: Number(e.target.value) } }))}
+                  onChange={(e) => setBusiness(p => p ? ({ ...p, capital: { ...p.capital, availableMargin: Number(e.target.value) } }) : null)}
                   className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:border-primary"
                 />
               ) : (
@@ -261,7 +247,7 @@ export const BusinessDetailsView = () => {
                 <input 
                   type="number" 
                   value={business.capital.expectedInvestment || ""}
-                  onChange={(e) => setBusiness(p => ({ ...p, capital: { ...p.capital, expectedInvestment: Number(e.target.value) } }))}
+                  onChange={(e) => setBusiness(p => p ? ({ ...p, capital: { ...p.capital, expectedInvestment: Number(e.target.value) } }) : null)}
                   className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:border-primary"
                   placeholder="Optional"
                 />
@@ -288,7 +274,7 @@ export const BusinessDetailsView = () => {
                 <input 
                   type="number" 
                   value={business.operations.expectedRevenue}
-                  onChange={(e) => setBusiness(p => ({ ...p, operations: { ...p.operations, expectedRevenue: Number(e.target.value) } }))}
+                  onChange={(e) => setBusiness(p => p ? ({ ...p, operations: { ...p.operations, expectedRevenue: Number(e.target.value) } }) : null)}
                   className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:border-primary"
                 />
               ) : (
@@ -301,7 +287,7 @@ export const BusinessDetailsView = () => {
                 <input 
                   type="number" 
                   value={business.operations.expectedPrice || ""}
-                  onChange={(e) => setBusiness(p => ({ ...p, operations: { ...p.operations, expectedPrice: Number(e.target.value) } }))}
+                  onChange={(e) => setBusiness(p => p ? ({ ...p, operations: { ...p.operations, expectedPrice: Number(e.target.value) } }) : null)}
                   className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:border-primary"
                 />
               ) : (
@@ -314,7 +300,7 @@ export const BusinessDetailsView = () => {
                 <input 
                   type="number" 
                   value={business.operations.productionQuantity || ""}
-                  onChange={(e) => setBusiness(p => ({ ...p, operations: { ...p.operations, productionQuantity: Number(e.target.value) } }))}
+                  onChange={(e) => setBusiness(p => p ? ({ ...p, operations: { ...p.operations, productionQuantity: Number(e.target.value) } }) : null)}
                   className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:border-primary"
                 />
               ) : (
@@ -337,7 +323,7 @@ export const BusinessDetailsView = () => {
                 <input 
                   type="text" 
                   value={business.resources.land || ""}
-                  onChange={(e) => setBusiness(p => ({ ...p, resources: { ...p.resources, land: e.target.value } }))}
+                  onChange={(e) => setBusiness(p => p ? ({ ...p, resources: { ...p.resources, land: e.target.value } }) : null)}
                   className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:border-primary"
                 />
               ) : (
@@ -350,7 +336,7 @@ export const BusinessDetailsView = () => {
                 <input 
                   type="text" 
                   value={business.resources.equipment || ""}
-                  onChange={(e) => setBusiness(p => ({ ...p, resources: { ...p.resources, equipment: e.target.value } }))}
+                  onChange={(e) => setBusiness(p => p ? ({ ...p, resources: { ...p.resources, equipment: e.target.value } }) : null)}
                   className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:border-primary"
                 />
               ) : (
@@ -363,7 +349,7 @@ export const BusinessDetailsView = () => {
                 <input 
                   type="text" 
                   value={business.resources.existingResources || ""}
-                  onChange={(e) => setBusiness(p => ({ ...p, resources: { ...p.resources, existingResources: e.target.value } }))}
+                  onChange={(e) => setBusiness(p => p ? ({ ...p, resources: { ...p.resources, existingResources: e.target.value } }) : null)}
                   className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:border-primary"
                 />
               ) : (

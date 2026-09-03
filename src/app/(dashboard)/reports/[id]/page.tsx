@@ -1,31 +1,42 @@
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import { ReportDetailView } from "@/features/reports/components/ReportDetailView";
-import { MOCK_REPORTS } from "@/features/reports/constants/mockData";
+import { Report } from "@/features/reports/types";
 import { notFound } from "next/navigation";
+import { getReportDetails } from "@/lib/data/reports";
 
-export default async function ReportDetailPage({
+export default function ReportDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
-  
-  // Find report in mock data
-  const report = MOCK_REPORTS.find(r => r.id === id);
-  
-  if (!report) {
-    // If not in standard mock data, we could just render a placeholder 
-    // or return 404. Since we simulate adding new reports, 
-    // let's fallback to the first mock report if not found for demo purposes,
-    // but ideally we'd use local storage or real API.
-    // We will just show the first mock report for newly generated ones so it doesn't crash.
-    const fallbackReport = {
-      ...MOCK_REPORTS[0],
-      id: id,
-      title: "Generated Report Snapshot",
-    };
-    return <ReportDetailView report={fallbackReport} />;
-  }
+  const [report, setReport] = useState<Report | null>(null);
+  const [id, setId] = useState<string | null>(null);
+
+  useEffect(() => {
+    params.then(p => setId(p.id));
+  }, [params]);
+
+  useEffect(() => {
+    if (id) {
+      getReportDetails(id).then(r => {
+        if (r) setReport(r as Report);
+        else {
+           setReport({
+             id: id,
+             title: "Generated Report Snapshot",
+             businessId: "biz-mock",
+             businessName: "Mock Business",
+             status: "READY",
+             createdAt: new Date().toISOString(),
+             type: "Comprehensive Advisory",
+           });
+        }
+      });
+    }
+  }, [id]);
+
+  if (!report) return null;
 
   return <ReportDetailView report={report} />;
 }

@@ -24,30 +24,19 @@ import { motion } from "framer-motion";
 import { CountUp } from "@/components/ui/CountUp";
 import { FeasibilityRing, EditorialDonutChart, MiniSparkline } from "@/components/ui/charts";
 import { MockDisclaimer } from "@/components/ui/mock-disclaimer";
+import businessesData from "@/data/businesses.json";
 
 export default function DashboardPage() {
   const { t } = useTranslation();
   const [showEvidence, setShowEvidence] = useState(false);
 
-  const mockCapexBreakdown = [
-    { name: "Equipment", value: 400000 },
-    { name: "Setup", value: 150000 },
-    { name: "Inventory", value: 200000 },
-    { name: "Working Capital", value: 100000 },
-  ];
-
+  const { dashboard } = businessesData;
+  const mockCapexBreakdown = dashboard.capexBreakdown;
   const totalCapex = 8.5; // Lakhs
   const loanAmount = 7.65; // Lakhs
   const ltvPercentage = (loanAmount / totalCapex) * 100;
 
-  const mockDemandTrend = [
-    { month: 'Jan', demand: 60 },
-    { month: 'Feb', demand: 65 },
-    { month: 'Mar', demand: 75 },
-    { month: 'Apr', demand: 82 },
-    { month: 'May', demand: 88 },
-    { month: 'Jun', demand: 95 },
-  ];
+  const mockDemandTrend = dashboard.demandTrend;
 
   const summaryCards: any[] = [
     { 

@@ -13,15 +13,12 @@ import {
 } from "recharts";
 import { MockDisclaimer } from "@/components/ui/mock-disclaimer";
 
-/* ── Static mock data — to be replaced by POST /api/v1/finance/repayment endpoint ── */
-const mockRepaymentData = [
-  { period: "Q1", principal: 0, interest: 15000, isMoratorium: true },
-  { period: "Q2", principal: 0, interest: 15000, isMoratorium: true },
-  { period: "Q3", principal: 25000, interest: 14000, isMoratorium: false },
-  { period: "Q4", principal: 25000, interest: 13000, isMoratorium: false },
-];
+import { useRepaymentSchedule } from "@/lib/data/finance";
 
-export const RepaymentChart = () => {
+export const RepaymentChart = ({ businessId }: { businessId: string }) => {
+  const { data: mockRepaymentData, isLoading } = useRepaymentSchedule(businessId);
+
+  if (!mockRepaymentData || mockRepaymentData.length === 0) return null;
   return (
     <div className="w-full h-full min-h-[300px]">
       <ResponsiveContainer width="100%" height={300}>

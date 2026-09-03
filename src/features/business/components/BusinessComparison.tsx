@@ -4,12 +4,13 @@ import React from "react";
 import { EvidenceBadge } from "@/components/evidence/EvidenceBadge";
 import { useTranslation, TranslationKey } from "@/features/i18n/hooks/useTranslation";
 import { EditorialRadarChart } from "@/components/ui/charts";
-
 import { MockDisclaimer } from "@/components/ui/mock-disclaimer";
+
+import { useBusinessesComparison } from "@/lib/data/businesses";
 
 // Static mock data for UI demonstration only. No logic or backend calculations present.
 // To be replaced by backend API endpoints during the integration phase.
-const getMockData = (t: (key: TranslationKey) => string | undefined) => ({
+const getMockData = (t: (key: TranslationKey) => string | undefined, businesses: any[]) => ({
   categories: [
     { key: "score", label: t("business.compare.score") || "Feasibility Score" },
     { key: "demand", label: t("business.compare.demand") || "Market Demand" },
@@ -21,58 +22,13 @@ const getMockData = (t: (key: TranslationKey) => string | undefined) => ({
     { key: "potentialLoan", label: t("business.compare.loan") || "Potential Loan" },
     { key: "localOpportunity", label: t("business.compare.localOpp") || "Local Opportunity" },
   ],
-  businesses: [
-    {
-      id: "b1",
-      name: "Dairy Farming",
-      values: {
-        score: { value: "82/100", highlight: true, evidence: { type: "PREDICTION", label: "High" } },
-        demand: { value: "High", highlight: true, evidence: { type: "FACT", label: "Verified" } },
-        competition: { value: "Moderate", highlight: false, evidence: { type: "ESTIMATE", label: "Local" } },
-        investment: { value: "₹5.5L", highlight: false },
-        revenue: { value: "₹65k", highlight: false, evidence: { type: "ESTIMATE", label: "Projected" } },
-        risk: { value: "Low", highlight: true },
-        recommendedCapital: { value: "₹4.8L", highlight: false },
-        potentialLoan: { value: "₹4.2L", highlight: false },
-        localOpportunity: { value: "Strong", highlight: true, evidence: { type: "PREDICTION", label: "AI" } },
-      }
-    },
-    {
-      id: "b2",
-      name: "Retail Store",
-      values: {
-        score: { value: "65/100", highlight: false, evidence: { type: "PREDICTION", label: "Moderate" } },
-        demand: { value: "Moderate", highlight: false, evidence: { type: "ESTIMATE", label: "Projected" } },
-        competition: { value: "High", highlight: false, evidence: { type: "FACT", label: "Verified" } },
-        investment: { value: "₹3.0L", highlight: true },
-        revenue: { value: "₹45k", highlight: false, evidence: { type: "ESTIMATE", label: "Projected" } },
-        risk: { value: "Moderate", highlight: false },
-        recommendedCapital: { value: "₹2.5L", highlight: true },
-        potentialLoan: { value: "₹2.0L", highlight: false },
-        localOpportunity: { value: "Average", highlight: false, evidence: { type: "PREDICTION", label: "AI" } },
-      }
-    },
-    {
-      id: "b3",
-      name: "Tailoring",
-      values: {
-        score: { value: "71/100", highlight: false, evidence: { type: "PREDICTION", label: "Good" } },
-        demand: { value: "Stable", highlight: false, evidence: { type: "ESTIMATE", label: "Trend" } },
-        competition: { value: "Low", highlight: true, evidence: { type: "FACT", label: "Verified" } },
-        investment: { value: "₹1.5L", highlight: true },
-        revenue: { value: "₹35k", highlight: false, evidence: { type: "ESTIMATE", label: "Projected" } },
-        risk: { value: "Low", highlight: true },
-        recommendedCapital: { value: "₹1.2L", highlight: true },
-        potentialLoan: { value: "₹1.0L", highlight: false },
-        localOpportunity: { value: "Good", highlight: false, evidence: { type: "PREDICTION", label: "AI" } },
-      }
-    }
-  ]
+  businesses
 });
 
 export const BusinessComparison = () => {
   const { t } = useTranslation();
-  const data = getMockData(t);
+  const { data: businessesData, isLoading } = useBusinessesComparison();
+  const data = getMockData(t, businessesData);
 
   return (
     <div className="flex flex-col w-full overflow-hidden">
