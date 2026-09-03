@@ -1,10 +1,11 @@
-import { NextResponse } from "next/server";
+import env from "@/config/env";
 
 export async function GET() {
-  return NextResponse.json({
+  return Response.json({
     success: true,
-    message: "VentureRoot API is running",
-    version: "v1",
-    timestamp: new Date().toISOString(),
+    message: `${env.appName} is healthy`,
+    data: {
+      status: "UP",
+    },
   });
 }
