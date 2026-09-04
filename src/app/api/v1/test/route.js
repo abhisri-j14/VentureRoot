@@ -2,12 +2,27 @@ import { getTest } from "@/controllers/test.controller";
 import { testSchema } from "@/validators/test/test.validator";
 import { successResponse } from "@/utils/api-response";
 import { errorResponse } from "@/utils/api-error";
+import { handleError } from "@/utils/error-handler";
 
-export async function GET() {
-  const response = await getTest();
+import { getRequestId } from "@/middlewares/request-id.middleware";
 
-  return successResponse(response);
+export async function GET(request) {
+  const requestId = getRequestId(request);
+
+  try {
+    const response = await getTest();
+
+    return successResponse({
+      ...response,
+        requestId
+    });
+  } catch (error) {
+    console.error(`[${requestId}]`, error);
+
+    return handleError(error);
+  }
 }
+
 
 export async function POST(request) {
   const body = await request.json();
