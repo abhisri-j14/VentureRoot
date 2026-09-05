@@ -47,4 +47,8 @@ export async function refreshUserSession(refreshToken) {
 
   return data;
 }
-
+export async function logoutUser() {
+  return {
+    loggedOut: true,
+  };
+}

@@ -2,6 +2,7 @@ import { registerUser } from "@/services/auth.service";
 import {loginUser} from "@/services/auth.service";
 import { getCurrentUser } from "@/services/auth.service";
 import {refreshUserSession} from "@/services/auth.service";
+import { logoutUser } from "@/services/auth.service";
 
 export async function register(data) {
   const result = await registerUser(data);
@@ -34,6 +35,14 @@ export async function refresh(refreshToken) {
 
   return {
     message: "Session refreshed successfully",
+    data: result,
+  };
+}
+export async function logout() {
+  const result = await logoutUser();
+
+  return {
+    message: "Logout successful",
     data: result,
   };
 }
