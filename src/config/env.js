@@ -38,6 +38,9 @@ const env = {
   appUrl: parsedEnv.data.APP_URL,
 
   apiPrefix: parsedEnv.data.API_PREFIX,
+  supabaseUrl: parsedEnv.data.SUPABASE_URL,
+  supabasePublishableKey:
+    parsedEnv.data.SUPABASE_PUBLISHABLE_KEY,
 };
 
 export default env;

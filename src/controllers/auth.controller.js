@@ -1,6 +1,7 @@
 import { registerUser } from "@/services/auth.service";
 import {loginUser} from "@/services/auth.service";
 import { getCurrentUser } from "@/services/auth.service";
+
 import {refreshUserSession} from "@/services/auth.service";
 import { logoutUser } from "@/services/auth.service";
 
@@ -20,9 +21,7 @@ export async function login(data) {
     data: result,
   };
 }
-export async function me(accessToken) {
-  const user = await getCurrentUser(accessToken);
-
+export async function me(user) {
   return {
     message: "Current user fetched successfully",
     data: {
@@ -31,18 +30,23 @@ export async function me(accessToken) {
   };
 }
 export async function refresh(refreshToken) {
-  const result = await refreshUserSession(refreshToken);
+  const result =
+    await refreshUserSession(refreshToken);
 
   return {
     message: "Session refreshed successfully",
-    data: result,
+    data: {
+      user: result.user,
+      session: result.session,
+    },
   };
 }
-export async function logout() {
-  const result = await logoutUser();
-
+export async function logout(user) {
   return {
     message: "Logout successful",
-    data: result,
+    data: {
+      loggedOut: true,
+      userId: user.id,
+    },
   };
 }
