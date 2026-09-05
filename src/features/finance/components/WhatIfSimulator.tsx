@@ -1,195 +1,187 @@
 "use client";
 
 import React, { useState } from "react";
-import { useAuthStore } from "@/stores/useAuthStore";
-import { useTranslation } from "@/features/i18n/hooks/useTranslation";
-import { financeApi } from "../api/financeApi";
+
+// ── Standard EMI formula (frontend-only, no API) ─────────────────────────────
+function calcEMI(principal: number, annualRate: number, tenureMonths: number): number {
+  if (annualRate === 0) return principal / tenureMonths;
+  const r = annualRate / 12 / 100;
+  return Math.round((principal * r * Math.pow(1 + r, tenureMonths)) / (Math.pow(1 + r, tenureMonths) - 1));
+}
+
+function fmt(n: number) {
+  return "₹" + n.toLocaleString("en-IN");
+}
+
+// ── Scenario labels ───────────────────────────────────────────────────────────
+const SCENARIOS = [
+  { key: "optimistic", label: "If sales go well",    revenueMultiplier: 1.25, bg: "#e0ffde", border: "#86efac" },
+  { key: "base",       label: "Expected situation",  revenueMultiplier: 1.0,  bg: "#deefff", border: "#93c5fd" },
+  { key: "pessimistic",label: "If sales are lower",  revenueMultiplier: 0.75, bg: "#f8e8ff", border: "#d8b4fe" },
+];
 
 export const WhatIfSimulator = () => {
-  const { t } = useTranslation();
-  
-  const [loanAmount, setLoanAmount] = useState(500000);
-  const [interestRate, setInterestRate] = useState(9);
-  const [tenure, setTenure] = useState(60);
-  const [moratorium, setMoratorium] = useState(6);
-  const [revenue, setRevenue] = useState(50000);
-  const [expenses, setExpenses] = useState(30000);
-  
-  const [isSimulating, setIsSimulating] = useState(false);
 
-  const handleSimulate = async () => {
-    setIsSimulating(true);
-    
-    try {
-      await financeApi.simulate({
-        loanAmount,
-        interestRate,
-        tenure,
-        moratorium,
-        revenue,
-        expenses,
-      });
+  const [loanAmount,    setLoanAmount]    = useState(500000);
+  const [interestRate,  setInterestRate]  = useState(9);
+  const [tenure,        setTenure]        = useState(60);
+  const [moratorium,    setMoratorium]    = useState(6);
+  const [revenue,       setRevenue]       = useState(50000);
+  const [expenses,      setExpenses]      = useState(30000);
 
-      // TODO: BACKEND CONFIRMATION REQUIRED
-      // Response schema is unknown. Cannot consume response to render results.
-      setIsSimulating(false);
-      alert("Simulation payload sent to API successfully. Backend integration pending.");
-    } catch (error: any) {
-      console.warn("Backend request failed or offline. Simulation currently unavailable.");
-      alert("Simulation failed: Backend offline. Please try again later.");
-      setIsSimulating(false);
-    }
-  };
+  const activeMonths = tenure - moratorium;
+  const emi = calcEMI(loanAmount, interestRate, activeMonths > 0 ? activeMonths : tenure);
+  const totalPaid = emi * (tenure - moratorium) + (loanAmount * (interestRate / 100 / 12)) * moratorium;
+  const totalInterest = Math.round(totalPaid - loanAmount);
 
   return (
-    <div className="flex flex-col md:flex-row gap-8">
-      {/* Controls */}
+    <div className="flex flex-col md:flex-row gap-10">
+
+      {/* ── Left: Controls ─────────────────────────────────────────── */}
       <div className="w-full md:w-1/2 flex flex-col gap-6">
+
         <div>
-          <label className="block text-sm font-medium text-secondary-muted mb-2" suppressHydrationWarning>
-            Money you may need: ₹{loanAmount.toLocaleString('en-IN')}
-          </label>
-          <input
-            type="range"
-            min="50000"
-            max="2000000"
-            step="50000"
-            value={loanAmount}
-            onChange={(e) => setLoanAmount(Number(e.target.value))}
-            className="w-full accent-primary"
-          />
+          <div className="flex justify-between mb-1.5">
+            <label className="text-sm font-semibold text-gray-700">Money you may need</label>
+            <span className="text-sm font-bold text-gray-900" suppressHydrationWarning>{fmt(loanAmount)}</span>
+          </div>
+          <input type="range" min="50000" max="2000000" step="50000"
+            value={loanAmount} onChange={e => setLoanAmount(Number(e.target.value))}
+            className="w-full accent-primary h-1.5 rounded-full" />
+          <div className="flex justify-between text-xs text-gray-400 mt-1">
+            <span>₹50,000</span><span>₹20,00,000</span>
+          </div>
         </div>
-        
+
         <div>
-          <label className="block text-sm font-medium text-secondary-muted mb-2">
-            Yearly Interest: {interestRate}%
-          </label>
-          <input
-            type="range"
-            min="1"
-            max="24"
-            step="0.5"
-            value={interestRate}
-            onChange={(e) => setInterestRate(Number(e.target.value))}
-            className="w-full accent-primary"
-          />
+          <div className="flex justify-between mb-1.5">
+            <label className="text-sm font-semibold text-gray-700">Yearly interest rate</label>
+            <span className="text-sm font-bold text-gray-900">{interestRate}%</span>
+          </div>
+          <input type="range" min="1" max="24" step="0.5"
+            value={interestRate} onChange={e => setInterestRate(Number(e.target.value))}
+            className="w-full accent-primary h-1.5 rounded-full" />
+          <div className="flex justify-between text-xs text-gray-400 mt-1">
+            <span>1%</span><span>24%</span>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-secondary-muted mb-2">
-              Time to Repay
-            </label>
-            <select
-              value={tenure}
-              onChange={(e) => setTenure(Number(e.target.value))}
-              className="w-full rounded-md border border-slate-300 p-2 bg-white"
-            >
-              <option value="12">12 Months</option>
-              <option value="24">24 Months</option>
-              <option value="36">36 Months</option>
-              <option value="48">48 Months</option>
-              <option value="60">60 Months</option>
-              <option value="84">84 Months</option>
+            <label className="text-sm font-semibold text-gray-700 block mb-1.5">Time to repay</label>
+            <select value={tenure} onChange={e => setTenure(Number(e.target.value))}
+              className="w-full rounded-lg border border-slate-200 p-2.5 text-sm bg-white text-gray-900 focus:ring-1 focus:ring-primary outline-none">
+              {[12,24,36,48,60,84].map(m => <option key={m} value={m}>{m} months</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-secondary-muted mb-2">
-              Time before paying
-            </label>
-            <select
-              value={moratorium}
-              onChange={(e) => setMoratorium(Number(e.target.value))}
-              className="w-full rounded-md border border-slate-300 p-2 bg-white"
-            >
-              <option value="0">None</option>
-              <option value="3">3 Months</option>
-              <option value="6">6 Months</option>
-              <option value="12">12 Months</option>
+            <label className="text-sm font-semibold text-gray-700 block mb-1.5">Payment pause</label>
+            <select value={moratorium} onChange={e => setMoratorium(Number(e.target.value))}
+              className="w-full rounded-lg border border-slate-200 p-2.5 text-sm bg-white text-gray-900 focus:ring-1 focus:ring-primary outline-none">
+              <option value={0}>None</option>
+              <option value={3}>3 months</option>
+              <option value={6}>6 months</option>
+              <option value={12}>12 months</option>
             </select>
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-secondary-muted mb-2" suppressHydrationWarning>
-            Expected money coming in: ₹{revenue.toLocaleString('en-IN')}
-          </label>
-          <input
-            type="range"
-            min="5000"
-            max="500000"
-            step="5000"
-            value={revenue}
-            onChange={(e) => setRevenue(Number(e.target.value))}
-            className="w-full accent-primary"
-          />
+          <div className="flex justify-between mb-1.5">
+            <label className="text-sm font-semibold text-gray-700">Expected monthly income</label>
+            <span className="text-sm font-bold text-gray-900" suppressHydrationWarning>{fmt(revenue)}</span>
+          </div>
+          <input type="range" min="5000" max="500000" step="5000"
+            value={revenue} onChange={e => setRevenue(Number(e.target.value))}
+            className="w-full accent-primary h-1.5 rounded-full" />
         </div>
-        
+
         <div>
-          <label className="block text-sm font-medium text-secondary-muted mb-2" suppressHydrationWarning>
-            Expected money going out: ₹{expenses.toLocaleString('en-IN')}
-          </label>
-          <input
-            type="range"
-            min="5000"
-            max="500000"
-            step="5000"
-            value={expenses}
-            onChange={(e) => setExpenses(Number(e.target.value))}
-            className="w-full accent-primary"
-          />
+          <div className="flex justify-between mb-1.5">
+            <label className="text-sm font-semibold text-gray-700">Expected monthly expenses</label>
+            <span className="text-sm font-bold text-gray-900" suppressHydrationWarning>{fmt(expenses)}</span>
+          </div>
+          <input type="range" min="5000" max="500000" step="5000"
+            value={expenses} onChange={e => setExpenses(Number(e.target.value))}
+            className="w-full accent-primary h-1.5 rounded-full" />
         </div>
-        
-        <button
-          onClick={handleSimulate}
-          disabled={isSimulating}
-          className="mt-4 w-full py-3 rounded-lg bg-primary text-white font-medium hover:bg-primary-light transition-colors disabled:opacity-70"
-        >
-          {isSimulating ? "Simulating..." : "Run Simulation"}
-        </button>
-      </div>
 
-      {/* Results */}
-      <div className="w-full md:w-1/2">
-        <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 h-full flex flex-col">
-          <h3 className="text-lg font-heading font-semibold text-secondary mb-4">
-            What might happen
-          </h3>
-          
-          <div className="grid grid-cols-1 gap-4 flex-1">
-            <div className="p-4 bg-white rounded-lg border border-slate-200 flex justify-between items-center">
-              <span className="text-sm font-medium text-secondary-muted">
-                If things go great
-              </span>
-              <span className="text-sm font-bold text-slate-400">Awaiting simulation</span>
-            </div>
-            
-            <div className="p-4 bg-white rounded-lg border border-slate-200 flex justify-between items-center">
-              <span className="text-sm font-medium text-secondary-muted">
-                What we expect
-              </span>
-              <span className="text-sm font-bold text-slate-400">Awaiting simulation</span>
-            </div>
-            
-            <div className="p-4 bg-white rounded-lg border border-slate-200 flex justify-between items-center">
-              <span className="text-sm font-medium text-secondary-muted">
-                If things go poorly
-              </span>
-              <span className="text-sm font-bold text-slate-400">Awaiting simulation</span>
-            </div>
-
-            <div className="p-4 bg-white rounded-lg border border-slate-200 flex justify-between items-center mt-auto">
-              <span className="text-sm font-medium text-secondary-muted">
-                Is it safe?
-              </span>
-              <span className="text-sm font-bold text-slate-400">Awaiting simulation</span>
+        {/* Key output summary */}
+        <div className="grid grid-cols-3 gap-px bg-slate-100 rounded-xl overflow-hidden border border-slate-100 mt-2">
+          <div className="bg-[#f4fce8] px-4 py-4 text-center">
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Monthly EMI</div>
+            <div className="text-2xl font-black text-primary" suppressHydrationWarning>{fmt(emi)}</div>
+          </div>
+          <div className="bg-[#deefff] px-4 py-4 text-center">
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Net surplus</div>
+            <div className={`text-2xl font-black ${(revenue - expenses - emi) >= 0 ? "text-primary" : "text-red-600"}`} suppressHydrationWarning>
+              {fmt(revenue - expenses - emi)}
             </div>
           </div>
-          
-          <p className="text-xs text-secondary-muted mt-4 text-center">
-            These values will be generated by the backend financial engine upon running the simulation.
+          <div className="bg-[#f8e8ff] px-4 py-4 text-center">
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Total interest</div>
+            <div className="text-2xl font-black text-[#094f9e]" suppressHydrationWarning>{fmt(totalInterest)}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Right: Scenario Results ─────────────────────────────────── */}
+      <div className="w-full md:w-1/2 flex flex-col gap-4">
+        <div>
+          <h3 className="text-base font-bold text-gray-900 mb-1">What may happen?</h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Illustrative result using your inputs above. Adjust the sliders to see how different situations affect repayment.
           </p>
         </div>
+
+        {SCENARIOS.map(sc => {
+          const adjRevenue = Math.round(revenue * sc.revenueMultiplier);
+          const surplus = adjRevenue - expenses - emi;
+          const canRepay = surplus >= 0;
+          const isBase = sc.key === "base";
+          return (
+            <div key={sc.key}
+              style={{ background: sc.bg, borderLeftColor: sc.border }}
+              className="rounded-xl border-l-4 border border-slate-200 p-4 flex items-center justify-between gap-4 transition-colors shadow-sm">
+              <div className="flex flex-col gap-0.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-gray-900">{sc.label}</span>
+                  {isBase && <span className="text-[10px] font-bold bg-white/70 text-blue-700 px-2 py-0.5 rounded-full border border-blue-200">Base case</span>}
+                </div>
+                <span className="text-xs text-gray-500">
+                  Monthly income: <span className="font-semibold text-gray-800" suppressHydrationWarning>{fmt(adjRevenue)}</span>
+                </span>
+              </div>
+              <div className="flex flex-col items-end gap-1 shrink-0">
+                <span className={`text-lg font-black ${canRepay ? "text-green-700" : "text-red-600"}`} suppressHydrationWarning>
+                  {surplus >= 0 ? "+" : ""}{fmt(surplus)}/mo
+                </span>
+                <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${
+                  canRepay
+                    ? "bg-white/70 text-green-700 border-green-300"
+                    : "bg-white/70 text-red-700 border-red-300"
+                }`}>
+                  {canRepay ? "Manageable" : "Tight"}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Is it safe? */}
+        <div className="mt-2 rounded-xl border border-transparent bg-[#7a3f12] text-white p-4 flex items-center gap-3">
+          <div className={`w-3 h-3 rounded-full shrink-0 ${(revenue - expenses - emi) >= 0 ? "bg-white" : "bg-red-400"}`} />
+          <div>
+            <span className="text-sm font-bold">Is repayment manageable? </span>
+            <span className={`text-sm font-semibold ${(revenue - expenses - emi) >= 0 ? "text-white/90" : "text-red-300"}`} suppressHydrationWarning>
+              {(revenue - expenses - emi) >= 0 ? "Yes, based on current inputs." : "Tight — consider reducing loan or expenses."}
+            </span>
+          </div>
+        </div>
+
+        <p className="text-xs text-gray-400 mt-1 italic">
+          Illustrative result using sample financial data. Actual figures depend on final loan terms and business performance.
+        </p>
       </div>
     </div>
   );

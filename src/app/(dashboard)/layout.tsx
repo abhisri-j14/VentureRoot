@@ -13,9 +13,9 @@ export default function DashboardLayout({
     <ProtectedRoute>
       <div className="flex flex-col min-h-screen bg-[#f4fce8] relative">
         <DashboardBackground />
-        <div className="flex-1 flex flex-col relative z-10 w-full max-w-[1600px] mx-auto">
+        <div className="flex-1 flex flex-col relative z-10 w-full mx-auto">
           <TopNav />
-          <main className="flex-1 p-4 md:p-6 lg:p-8 relative z-10">{children}</main>
+          <main className="flex-1 w-full relative z-10">{children}</main>
         </div>
       </div>
     </ProtectedRoute>

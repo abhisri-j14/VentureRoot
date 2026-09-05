@@ -1,117 +1,411 @@
 "use client";
 
-import React from "react";
-import { EvidenceBadge } from "@/components/evidence/EvidenceBadge";
-import { useTranslation, TranslationKey } from "@/features/i18n/hooks/useTranslation";
+import React, { useState } from "react";
+import { X, Plus, ChevronDown, BarChart2, Leaf, Check } from "lucide-react";
 import { EditorialRadarChart } from "@/components/ui/charts";
-import { MockDisclaimer } from "@/components/ui/mock-disclaimer";
 
-import { useBusinessesComparison } from "@/lib/data/businesses";
+// ── Hardcoded business pool (replaces backend) ─────────────────────────────
+const ALL_BUSINESSES = [
+  {
+    id: "b1",
+    name: "Dairy Farming & Milk Chilling",
+    score: 82,
+    viability: "HIGHEST VIABILITY",
+    color: "#79912a",
+    dot: "#22c55e",
+    financials: { projectCost: "₹10,00,000", margin10: "₹1,00,000", sca: "₹9,00,000" },
+    netProfitMargin: "18% – 24%",
+    monthlyProfit: "₹36,000 / month",
+    breakEven: "5 Months",
+    localSaturation: "High (Sweetmaker contracts)",
+    operationalComplexity: "Moderate (Chilling & feed)",
+    keyLocalRisk: "Fodder price surge & milk sourcing during summer droughts.",
+    radar: { feasibility: 82, marketDemand: 88, competition: 40, investment: 70, riskLevel: 20, localOpportunity: 85 },
+  },
+  {
+    id: "b2",
+    name: "Kirana & FMCG Village Store",
+    score: 74,
+    viability: null,
+    color: "#d97706",
+    dot: "#f59e0b",
+    financials: { projectCost: "₹3,50,000", margin10: "₹35,000", sca: "₹3,15,000" },
+    netProfitMargin: "12% – 15%",
+    monthlyProfit: "₹16,500 / month",
+    breakEven: "4 Months",
+    localSaturation: "Moderate (Village households)",
+    operationalComplexity: "Low (Counter retail)",
+    keyLocalRisk: "Credit book defaults (udhaar) and high competitor density.",
+    radar: { feasibility: 74, marketDemand: 60, competition: 65, investment: 80, riskLevel: 45, localOpportunity: 70 },
+  },
+  {
+    id: "b3",
+    name: "Textiles & Tailoring Center",
+    score: 79,
+    viability: null,
+    color: "#2563eb",
+    dot: "#3b82f6",
+    financials: { projectCost: "₹1,20,000", margin10: "₹12,000", sca: "₹1,08,000" },
+    netProfitMargin: "26% – 32%",
+    monthlyProfit: "₹14,200 / month",
+    breakEven: "3 Months",
+    localSaturation: "Seasonal (Weddings & Uniforms)",
+    operationalComplexity: "Low (Handcraft sewing)",
+    keyLocalRisk: "Seasonal slowdown outside harvest & wedding cycles.",
+    radar: { feasibility: 79, marketDemand: 72, competition: 30, investment: 50, riskLevel: 30, localOpportunity: 78 },
+  },
+  {
+    id: "b4",
+    name: "Mini Oil Expeller & Flour Mill",
+    score: 85,
+    viability: null,
+    color: "#7c3aed",
+    dot: "#a78bfa",
+    financials: { projectCost: "₹7,50,000", margin10: "₹75,000", sca: "₹6,75,000" },
+    netProfitMargin: "22% – 28%",
+    monthlyProfit: "₹32,000 / month",
+    breakEven: "6 Months",
+    localSaturation: "High (Farmer custom milling)",
+    operationalComplexity: "Moderate (Machinery & 3-phase)",
+    keyLocalRisk: "Three-phase electrical grid instability & motor maintenance.",
+    radar: { feasibility: 85, marketDemand: 78, competition: 55, investment: 65, riskLevel: 35, localOpportunity: 80 },
+  },
+  {
+    id: "b5",
+    name: "Poultry & Egg Distribution",
+    score: 71,
+    viability: null,
+    color: "#dc2626",
+    dot: "#f87171",
+    financials: { projectCost: "₹2,80,000", margin10: "₹28,000", sca: "₹2,52,000" },
+    netProfitMargin: "15% – 20%",
+    monthlyProfit: "₹22,000 / month",
+    breakEven: "7 Months",
+    localSaturation: "Low (Underserved market)",
+    operationalComplexity: "High (Bio-security & feed)",
+    keyLocalRisk: "Bird flu outbreaks and erratic feed price fluctuations.",
+    radar: { feasibility: 71, marketDemand: 65, competition: 35, investment: 60, riskLevel: 55, localOpportunity: 68 },
+  },
+];
 
-// Static mock data for UI demonstration only. No logic or backend calculations present.
-// To be replaced by backend API endpoints during the integration phase.
-const getMockData = (t: (key: TranslationKey) => string | undefined, businesses: any[]) => ({
-  categories: [
-    { key: "score", label: t("business.compare.score") || "Feasibility Score" },
-    { key: "demand", label: t("business.compare.demand") || "Market Demand" },
-    { key: "competition", label: t("business.compare.competition") || "Competition" },
-    { key: "investment", label: t("business.compare.investment") || "Estimated Investment" },
-    { key: "revenue", label: t("business.compare.revenue") || "Expected Monthly Revenue" },
-    { key: "risk", label: t("business.compare.risk") || "Risk Level" },
-    { key: "recommendedCapital", label: t("business.compare.recCapital") || "Recommended Capital" },
-    { key: "potentialLoan", label: t("business.compare.loan") || "Potential Loan" },
-    { key: "localOpportunity", label: t("business.compare.localOpp") || "Local Opportunity" },
-  ],
-  businesses
-});
+type Business = typeof ALL_BUSINESSES[0];
 
-export const BusinessComparison = () => {
-  const { t } = useTranslation();
-  const { data: businessesData, isLoading } = useBusinessesComparison();
-  const data = getMockData(t, businessesData);
+// ── Dropdown component for business selection ──────────────────────────────
+const BusinessSelector = ({
+  selected,
+  allBusinesses,
+  onToggle,
+  onAdd,
+  onRemove,
+}: {
+  selected: Business[];
+  allBusinesses: Business[];
+  onToggle: (id: string) => void;
+  onAdd: () => void;
+  onRemove: (id: string) => void;
+}) => {
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   return (
-    <div className="flex flex-col w-full overflow-hidden">
-      <div className="mb-6 p-4 bg-blue-50/50 border border-blue-100 rounded-xl flex items-center justify-between">
-        <p className="text-sm text-blue-800 font-medium flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-          {t("business.compare.title")}
-        </p>
-      </div>
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400 shrink-0 leading-tight">
+        Select Candidates<br />to Evaluate:
+      </span>
 
-      {/* ── Visual Comparison Overview ── */}
-      <div className="w-full max-w-3xl mx-auto h-[400px] mb-12">
-        <EditorialRadarChart 
-          data={[
-            { metric: 'Feasibility Score', subject: 82, comparison: 65 },
-            { metric: 'Market Demand', subject: 90, comparison: 50 },
-            { metric: 'Competition', subject: 40, comparison: 80 },
-            { metric: 'Investment Score', subject: 70, comparison: 60 },
-            { metric: 'Risk Level', subject: 20, comparison: 50 },
-            { metric: 'Local Opportunity', subject: 85, comparison: 55 },
-          ]}
-          nameKey="metric"
-          subjectKey="subject"
-          comparisonKey="comparison"
-        />
-        <div className="flex justify-center gap-8 mt-4 text-sm font-medium">
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-sm bg-[#1E6702]"></span>
-            <span className="text-secondary">Dairy Farming (Selected)</span>
+      {selected.map((b) => (
+        <div key={b.id} className="relative">
+          <div
+            className="flex items-center gap-2 bg-[#79912a] text-white rounded-lg px-3.5 py-2 text-[13px] font-semibold shadow-sm cursor-pointer select-none"
+            onClick={() => setOpenDropdown(openDropdown === b.id ? null : b.id)}
+          >
+            <span className="max-w-[160px] truncate">{b.name}</span>
+            <ChevronDown className={`w-3.5 h-3.5 opacity-70 transition-transform ${openDropdown === b.id ? "rotate-180" : ""}`} />
+            <button
+              className="ml-1 opacity-70 hover:opacity-100 hover:text-red-300 transition-colors"
+              onClick={(e) => { e.stopPropagation(); onRemove(b.id); setOpenDropdown(null); }}
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-sm border-2 border-dashed border-[#200813] bg-transparent"></span>
-            <span className="text-secondary-muted">Retail Store (Comparison)</span>
-          </div>
-        </div>
-      </div>
 
-      <div className="w-full overflow-x-auto pb-4">
-        <div className="min-w-[800px] w-full">
-          {/* Header Row */}
-          <div className="grid grid-cols-4 gap-6 mb-6">
-            <div className="col-span-1 flex items-end pb-3 border-b border-slate-200">
-              <span className="text-sm font-semibold text-secondary-muted uppercase tracking-wider">{t("business.compare.metrics")}</span>
+          {openDropdown === b.id && (
+            <div className="absolute top-full left-0 mt-1 z-50 bg-white border border-gray-200 rounded-xl shadow-xl py-1.5 min-w-[220px]">
+              {allBusinesses.map((ab) => {
+                const isSelected = selected.some((s) => s.id === ab.id);
+                return (
+                  <button
+                    key={ab.id}
+                    className="w-full flex items-center justify-between gap-3 px-4 py-2.5 text-[13px] text-gray-700 hover:bg-gray-50 font-medium transition-colors"
+                    onClick={() => { onToggle(ab.id); setOpenDropdown(null); }}
+                  >
+                    <span className="flex items-center gap-2">
+                      <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: ab.dot }} />
+                      {ab.name}
+                    </span>
+                    {isSelected && <Check className="w-4 h-4 text-[#79912a] shrink-0" />}
+                  </button>
+                );
+              })}
             </div>
-            {data.businesses.map(b => (
-              <div key={b.id} className="col-span-1 bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center shadow-sm">
-                <h3 className="text-lg font-heading font-bold text-secondary">{b.name}</h3>
-              </div>
-            ))}
-          </div>
+          )}
+        </div>
+      ))}
 
-          {/* Data Rows */}
-          <div className="flex flex-col gap-2">
-            {data.categories.map(category => (
-              <div 
-                key={category.key} 
-                className="grid grid-cols-4 gap-6 py-4 border-b border-slate-100 last:border-0 hover:bg-slate-50/80 transition-colors rounded-xl px-2"
-              >
-                <div className="col-span-1 flex items-center">
-                  <span className="text-sm font-medium text-secondary">{category.label}</span>
-                </div>
-                
-                {data.businesses.map(b => {
-                  const cell = b.values[category.key as keyof typeof b.values] as any;
-                  return (
-                    <div key={`${b.id}-${category.key}`} className="col-span-1 flex flex-col items-center justify-center gap-2 text-center">
-                      <span className={`text-base font-semibold ${cell.highlight ? 'text-primary' : 'text-secondary'}`}>
-                        {cell.value}
-                      </span>
-                      {cell.evidence && (
-                        <EvidenceBadge type={cell.evidence.type} label={cell.evidence.label} />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="flex justify-end mt-4">
-          <MockDisclaimer text="Currently showing mock data • Competitor analysis API integration pending" />
-        </div>
-      </div>
+      {selected.length < ALL_BUSINESSES.length && (
+        <button
+          className="flex items-center gap-2 border-2 border-dashed border-gray-300 rounded-lg px-3.5 py-2 text-[13px] font-semibold text-gray-500 hover:border-[#79912a] hover:text-[#79912a] transition-colors"
+          onClick={onAdd}
+        >
+          <Plus className="w-4 h-4" /> Add Business
+        </button>
+      )}
     </div>
   );
 };
+
+// ── Row label component ────────────────────────────────────────────────────
+const RowLabel = ({ label }: { label: string }) => (
+  <div className="col-span-1 flex items-center py-4 border-b border-gray-200">
+    <span className="text-[13px] font-extrabold text-gray-900 uppercase tracking-wide">{label}</span>
+  </div>
+);
+
+// ── Main component ─────────────────────────────────────────────────────────
+export const BusinessComparison = () => {
+  const [selectedIds, setSelectedIds] = useState<string[]>(["b1", "b2", "b3", "b4"]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const activeBiz = ALL_BUSINESSES.filter((b) => selectedIds.includes(b.id));
+
+  const handleToggle = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id)
+        ? prev.length > 1 ? prev.filter((s) => s !== id) : prev // keep at least 1
+        : prev.length < 4 ? [...prev, id] : prev               // max 4
+    );
+  };
+
+  const handleRemove = (id: string) => {
+    setSelectedIds((prev) => prev.length > 1 ? prev.filter((s) => s !== id) : prev);
+  };
+
+  const handleAdd = () => {
+    const next = ALL_BUSINESSES.find((b) => !selectedIds.includes(b.id));
+    if (next) setSelectedIds((prev) => [...prev, next.id]);
+  };
+
+  const cols = activeBiz.length;
+
+  return (
+    <div className="w-full flex flex-col gap-5" onClick={() => setDropdownOpen(false)}>
+
+      {/* ── PAGE HEADER ─────────────────────────────────────────── */}
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-serif font-bold text-[#1a1a1a] leading-tight mb-1">Compare Business Ideas</h1>
+          <p className="text-[15px] text-gray-500 font-medium">Compare potential enterprises side by side before making a decision.</p>
+        </div>
+        <div className="flex items-center gap-2 opacity-75 shrink-0">
+          <Leaf className="w-6 h-6 text-[#79912a]" />
+          <span className="font-serif italic text-[15px] text-gray-500 text-right leading-snug">
+            "Better Decisions<br />Stronger Tomorrows"
+          </span>
+        </div>
+      </div>
+
+      {/* ── SELECTOR BAR ─────────────────────────────────────────── */}
+      <div onClick={(e) => e.stopPropagation()}>
+        <BusinessSelector
+          selected={activeBiz}
+          allBusinesses={ALL_BUSINESSES}
+          onToggle={handleToggle}
+          onAdd={handleAdd}
+          onRemove={handleRemove}
+        />
+      </div>
+
+      {/* ── RADAR CHART ──────────────────────────────────────────── */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <BarChart2 className="w-5 h-5 text-[#79912a]" />
+          <span className="text-[15px] font-bold text-gray-900">Visual Comparison</span>
+          <span className="text-[13px] text-gray-400 font-medium ml-1 hidden md:block">Compare key parameters across all selected business ideas.</span>
+        </div>
+        <div className="flex flex-col lg:flex-row gap-6 items-center">
+          <div className="w-full lg:w-[380px] h-[260px] shrink-0">
+            <EditorialRadarChart
+              data={[
+                { metric: "Feasibility Score", subject: activeBiz[0]?.radar.feasibility || 0, comparison: activeBiz[1]?.radar.feasibility || 0 },
+                { metric: "Market Demand",      subject: activeBiz[0]?.radar.marketDemand || 0, comparison: activeBiz[1]?.radar.marketDemand || 0 },
+                { metric: "Competition",         subject: activeBiz[0]?.radar.competition || 0, comparison: activeBiz[1]?.radar.competition || 0 },
+                { metric: "Investment Score",    subject: activeBiz[0]?.radar.investment || 0, comparison: activeBiz[1]?.radar.investment || 0 },
+                { metric: "Risk Level",          subject: activeBiz[0]?.radar.riskLevel || 0, comparison: activeBiz[1]?.radar.riskLevel || 0 },
+                { metric: "Local Opportunity",   subject: activeBiz[0]?.radar.localOpportunity || 0, comparison: activeBiz[1]?.radar.localOpportunity || 0 },
+              ]}
+              nameKey="metric"
+              subjectKey="subject"
+              comparisonKey="comparison"
+            />
+          </div>
+          <div className="flex flex-col gap-3 flex-1 w-full">
+            <div className="flex flex-wrap gap-x-6 gap-y-2">
+              {activeBiz.map((b) => (
+                <div key={b.id} className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: b.dot }} />
+                  <span className="text-[13px] font-semibold text-gray-700">{b.name}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-2 bg-[#f4fce8] rounded-xl p-4 border border-[#e6f0d1] flex items-center gap-3">
+              <Leaf className="w-4 h-4 text-[#79912a] shrink-0" />
+              <p className="font-serif italic text-[14px] text-[#79912a]">"Compare today, build a brighter tomorrow."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── FULL-WIDTH COMPARISON TABLE ───────────────────────────── */}
+      <div className="w-full overflow-x-auto">
+        <div
+          className="min-w-[600px] w-full rounded-2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.07)] border border-white/80"
+          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px)" }}
+        >
+
+          {/* ── HEADER ROW: business names ── */}
+          <div
+            className="grid border-b-[3px] border-[#79912a]"
+            style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}
+          >
+            {/* Label column header */}
+            <div className="px-5 py-5 bg-[#79912a]">
+              <span className="text-[11px] font-extrabold uppercase tracking-[0.15em] text-white/60">Metric</span>
+            </div>
+            {activeBiz.map((b) => (
+              <div
+                key={b.id}
+                className="flex flex-col items-center justify-center px-4 py-5 border-l border-[#79912a]/20"
+                style={{ background: "rgba(27,78,51,0.06)" }}
+              >
+                {b.viability && (
+                  <span className="text-[9px] font-extrabold uppercase tracking-[0.15em] bg-[#79912a] text-white px-2.5 py-0.5 rounded-full mb-2 shadow-sm">
+                    {b.viability}
+                  </span>
+                )}
+                <h3 className="font-extrabold text-[15px] text-gray-950 text-center leading-snug">{b.name}</h3>
+                <p className="text-[13px] font-bold text-[#79912a] mt-1">Score: {b.score} / 100</p>
+              </div>
+            ))}
+          </div>
+
+          {/* ── SECTION HEADER: Financials ── */}
+          <div
+            className="grid"
+            style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}
+          >
+            <div className="px-5 py-3 bg-[#f0fdf4] border-b border-r border-gray-200 flex items-center">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#79912a] bg-[#dcfce7] border border-[#bbf7d0] px-3 py-1 rounded-md">
+                Financials
+              </span>
+            </div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-3 bg-[#f8fdf9] border-b border-l border-gray-200">
+                <table className="w-full">
+                  <tbody>
+                    <tr>
+                      <td className="text-[13px] text-gray-500 font-semibold pr-3 py-1">Project Cost</td>
+                      <td className="text-[14px] text-gray-900 font-extrabold text-right">{b.financials.projectCost}</td>
+                    </tr>
+                    <tr>
+                      <td className="text-[13px] text-gray-500 font-semibold pr-3 py-1">10% Margin</td>
+                      <td className="text-[14px] text-gray-900 font-extrabold text-right">{b.financials.margin10}</td>
+                    </tr>
+                    <tr>
+                      <td className="text-[13px] text-gray-500 font-semibold pr-3 py-1">90% SCA Loan</td>
+                      <td className="text-[14px] text-gray-900 font-extrabold text-right">{b.financials.sca}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            ))}
+          </div>
+
+          {/* ── ROW: Net Profit Margin ── */}
+          <div className="grid border-b border-gray-200" style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}>
+            <div className="flex items-center px-5 py-5 border-r border-gray-200 bg-white">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.13em] text-gray-800 bg-gray-100 border border-gray-200 px-3 py-1 rounded-md">
+                Net Profit Margin
+              </span>
+            </div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="flex flex-col justify-center px-5 py-5 border-l border-gray-200 bg-white">
+                <p className="text-[20px] font-black text-gray-950 leading-none tracking-tight">{b.netProfitMargin}</p>
+                <p className="text-[13px] text-gray-500 font-semibold mt-1.5">{b.monthlyProfit}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* ── ROW: Time to Break-Even ── */}
+          <div className="grid border-b border-gray-200" style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}>
+            <div className="flex items-center px-5 py-5 border-r border-gray-200" style={{ background: "rgba(241,245,249,0.6)" }}>
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.13em] text-gray-800 bg-gray-100 border border-gray-200 px-3 py-1 rounded-md">
+                Time to Break-Even
+              </span>
+            </div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="flex items-center px-5 py-5 border-l border-gray-200" style={{ background: "rgba(241,245,249,0.6)" }}>
+                <p className="text-[24px] font-black text-gray-950 tracking-tight">{b.breakEven}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* ── ROW: Local Saturation ── */}
+          <div className="grid border-b border-gray-200" style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}>
+            <div className="flex items-center px-5 py-5 border-r border-gray-200 bg-white">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.13em] text-gray-800 bg-gray-100 border border-gray-200 px-3 py-1 rounded-md">
+                Local Saturation
+              </span>
+            </div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="flex items-center px-5 py-5 border-l border-gray-200 bg-white">
+                <p className="text-[15px] font-bold text-gray-900">{b.localSaturation}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* ── ROW: Operational Complexity ── */}
+          <div className="grid border-b border-gray-200" style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}>
+            <div className="flex items-center px-5 py-5 border-r border-gray-200" style={{ background: "rgba(241,245,249,0.6)" }}>
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.13em] text-gray-800 bg-gray-100 border border-gray-200 px-3 py-1 rounded-md">
+                Operational Complexity
+              </span>
+            </div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="flex items-center px-5 py-5 border-l border-gray-200" style={{ background: "rgba(241,245,249,0.6)" }}>
+                <p className="text-[15px] font-bold text-gray-900">{b.operationalComplexity}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* ── ROW: Key Local Risk ── */}
+          <div className="grid" style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}>
+            <div className="flex items-center px-5 py-5 border-r border-gray-200 bg-white">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.13em] text-red-700 bg-red-50 border border-red-200 px-3 py-1 rounded-md">
+                Key Local Risk
+              </span>
+            </div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-5 border-l border-gray-200 bg-white">
+                <div className="bg-red-50 border border-red-100 rounded-xl p-3.5">
+                  <p className="text-[14px] text-red-900 font-semibold leading-snug">{b.keyLocalRisk}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  );
+};
+

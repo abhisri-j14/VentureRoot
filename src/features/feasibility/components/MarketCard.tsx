@@ -1,119 +1,98 @@
 "use client";
 
-import React, { useState } from "react";
-import { BentoCard } from "@/components/layout/BentoCard";
-import { Users, TrendingUp, Target, MapPin, ChevronDown, ChevronUp } from "lucide-react";
+import React from "react";
+import { Users, TrendingUp, Target, MapPin } from "lucide-react";
 import { MarketAnalysis } from "../types";
-import { EvidenceBadge } from "@/components/evidence/EvidenceBadge";
-import { ConfidenceIndicator } from "@/components/evidence/ConfidenceIndicator";
-import { WhyPanel } from "@/components/evidence/WhyPanel";
 import { useTranslation } from "@/features/i18n/hooks/useTranslation";
+import { LocationIntelligenceMap } from "@/features/location/components/LocationIntelligenceMap";
+
 export const MarketCard = ({ data }: { data?: MarketAnalysis }) => {
   const { t } = useTranslation();
-  const [showDetails, setShowDetails] = useState(false);
 
   if (!data) return null;
 
   return (
-    <BentoCard className="col-span-12 md:col-span-8 flex flex-col h-full">
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
-        <div className="flex items-center gap-2">
-          <div className="p-2 bg-vr-teal-light/30 rounded-lg shrink-0">
-            <Users className="w-5 h-5 text-vr-teal" />
+    <>
+      {/* 1. Location Intelligence (Map) - Full Width */}
+      <div className="col-span-1 xl:col-span-2 bg-white rounded-3xl border border-slate-200 shadow-sm p-5 md:p-6 flex flex-col gap-5">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-full bg-vr-teal/10 flex items-center justify-center border border-vr-teal/20">
+            <MapPin className="w-5 h-5 text-vr-teal" />
           </div>
-          <h3 className="text-xl font-heading font-bold text-secondary">
-            {t("dashboard.simple.demand")}
-          </h3>
+          <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-900">
+            Location Intelligence
+          </h2>
         </div>
-        {showDetails && data.confidence && (
-          <div className="w-full sm:w-auto sm:max-w-xs shrink-0">
-            <ConfidenceIndicator 
-              score={data.confidence.score}
-              level={data.confidence.level}
-              reasons={data.confidence.reasons}
-            />
-          </div>
-        )}
+
+        <div className="w-full rounded-2xl overflow-hidden border border-slate-200 relative min-h-[450px] bg-slate-50">
+          <LocationIntelligenceMap />
+        </div>
       </div>
 
-      {showDetails && (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-            <div className="flex flex-col gap-1 p-4 bg-slate-50 rounded-xl border border-slate-100">
-              <span className="text-sm font-medium text-secondary-muted flex items-center gap-1.5">
-                <MapPin className="w-4 h-4" /> {t("feasi.reach5")}
-              </span>
-              <span className="text-2xl font-bold text-secondary">
-                {data.reach.radius5km.toLocaleString("en-IN")}
-              </span>
-            </div>
-            <div className="flex flex-col gap-1 p-4 bg-slate-50 rounded-xl border border-slate-100">
-              <span className="text-sm font-medium text-secondary-muted flex items-center gap-1.5">
-                <MapPin className="w-4 h-4" /> {t("feasi.reach10")}
-              </span>
-              <span className="text-2xl font-bold text-secondary">
-                {data.reach.radius10km.toLocaleString("en-IN")}
-              </span>
-            </div>
+      {/* 2. Market Demand (Stats) - Half Width */}
+      <div className="col-span-1 bg-white rounded-3xl border border-slate-200 shadow-sm p-5 md:p-6 flex flex-col gap-6 h-full">
+
+        {/* Header */}
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">
+            <Users className="w-5 h-5 text-slate-600" />
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 mb-6">
-            <div>
-              <h4 className="font-semibold text-secondary flex items-center gap-2 mb-3">
-                <Target className="w-4 h-4 text-slate-400" /> {t("feasi.custSeg")}
-              </h4>
-              <ul className="flex flex-col gap-2">
-                {data.customerSegments.map((segment, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-sm text-secondary">
-                    <span className="w-1.5 h-1.5 rounded-full bg-vr-teal mt-1.5 shrink-0" />
-                    {segment}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold text-secondary flex items-center gap-2 mb-3">
-                <TrendingUp className="w-4 h-4 text-slate-400" /> {t("feasi.trends")}
-              </h4>
-              <ul className="flex flex-col gap-2">
-                {data.marketTrends.map((trend, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-sm text-secondary">
-                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-1.5 shrink-0" />
-                    {trend}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </>
-      )}
-
-      <button 
-        onClick={() => setShowDetails(!showDetails)}
-        className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-light transition-colors self-start mb-4 mt-6"
-      >
-        {showDetails ? t("evidence.simple.viewDetails") : t("evidence.simple.why")}
-        {showDetails ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-      </button>
-
-      {showDetails && data.why && (
-        <WhyPanel summary={data.why.summary} factors={data.why.factors} />
-      )}
-
-      {showDetails && data.evidence && data.evidence.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap gap-2 items-center">
-          <span className="text-xs font-medium text-secondary-muted uppercase tracking-wider">{t("feasi.evidence")}:</span>
-          {data.evidence.map((ev, idx) => (
-            <EvidenceBadge 
-              key={idx} 
-              type={ev.type} 
-              label={`${ev.label} (${ev.source})`} 
-              confidence={ev.confidenceScore} 
-            />
-          ))}
+          <h3 className="text-2xl font-heading font-bold text-gray-900">
+            Market Demand
+          </h3>
         </div>
-      )}
-    </BentoCard>
+
+        {/* Population Stats */}
+        <div className="flex gap-3">
+          <div className="flex-1 bg-slate-50 p-4 rounded-xl border border-slate-100">
+            <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1">
+              <MapPin className="w-3 h-3" /> 5km Population Reach
+            </div>
+            <div className="text-3xl font-heading font-black text-gray-900">
+              {data.reach.radius5km.toLocaleString("en-IN")}
+            </div>
+          </div>
+          <div className="flex-1 bg-slate-50 p-4 rounded-xl border border-slate-100">
+            <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1">
+              <MapPin className="w-3 h-3" /> 10km Population Reach
+            </div>
+            <div className="text-3xl font-heading font-black text-gray-900">
+              {data.reach.radius10km.toLocaleString("en-IN")}
+            </div>
+          </div>
+        </div>
+
+        {/* Customer Segments */}
+        <div>
+          <div className="text-base font-heading font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <Target className="w-5 h-5 text-vr-teal" /> Customer Segments
+          </div>
+          <ul className="flex flex-col gap-2.5">
+            {(data.customerSegments || []).map((segment, idx) => (
+              <li key={idx} className="flex items-start gap-2.5 text-base text-gray-800 font-medium">
+                <span className="w-2 h-2 rounded-full bg-vr-teal mt-1.5 shrink-0" />
+                {segment}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Market Trends */}
+        <div>
+          <div className="text-base font-heading font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-indigo-500" /> Market Trends
+          </div>
+          <ul className="flex flex-col gap-2.5">
+            {(data.marketTrends || []).map((trend, idx) => (
+              <li key={idx} className="flex items-start gap-2.5 text-base text-gray-800 font-medium">
+                <span className="w-2 h-2 rounded-full bg-indigo-400 mt-1.5 shrink-0" />
+                {trend}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+      </div>
+    </>
   );
 };

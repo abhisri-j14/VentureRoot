@@ -79,12 +79,12 @@ export const ChatWindow = () => {
   };
 
   return (
-    <div className="flex flex-col h-[600px] bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+    <div className="flex flex-col h-[75vh] min-h-[600px] bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
       {/* Header */}
       <div className="flex justify-between items-center p-4 border-b border-slate-200 bg-slate-50">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-vr-violet-light/30 flex items-center justify-center">
-            <Bot className="w-5 h-5 text-vr-violet" />
+          <div className="w-8 h-8 rounded-full bg-[#1E6702]/10 flex items-center justify-center">
+            <Bot className="w-5 h-5 text-[#1E6702]" />
           </div>
           <div>
             <h3 className="font-semibold text-secondary">AI Business Advisor</h3>
@@ -116,7 +116,7 @@ export const ChatWindow = () => {
                   <User className="w-5 h-5 text-secondary-muted" />
                 </div>
               ) : (
-                <div className="w-8 h-8 rounded-full bg-vr-violet text-white flex items-center justify-center shadow-sm">
+                <div className="w-8 h-8 rounded-full bg-[#1E6702] text-white flex items-center justify-center shadow-sm">
                   <Bot className="w-5 h-5" />
                 </div>
               )}
@@ -162,7 +162,7 @@ export const ChatWindow = () => {
         {isStreaming && (
           <div className="flex gap-4 max-w-[85%] self-start">
             <div className="shrink-0 mt-1">
-              <div className="w-8 h-8 rounded-full bg-vr-violet text-white flex items-center justify-center shadow-sm">
+              <div className="w-8 h-8 rounded-full bg-[#1E6702] text-white flex items-center justify-center shadow-sm">
                 <Bot className="w-5 h-5" />
               </div>
             </div>
@@ -215,7 +215,7 @@ export const ChatWindow = () => {
             <button
               type="submit"
               disabled={!input.trim() || isStreaming}
-              className="p-2 bg-primary text-white rounded-lg hover:bg-primary-light disabled:opacity-50 disabled:hover:bg-primary transition-colors flex-shrink-0"
+              className="p-2 bg-[#1E6702] text-white rounded-lg hover:bg-[#155201] disabled:opacity-50 disabled:hover:bg-[#1E6702] transition-colors flex-shrink-0"
             >
               <Send className="w-4 h-4" />
             </button>

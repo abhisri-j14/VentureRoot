@@ -38,7 +38,7 @@ export default function ReportsPage() {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto flex flex-col min-h-[calc(100vh-80px)] py-8 px-4 sm:px-6">
+    <div className="w-full flex flex-col min-h-[calc(100vh-80px)] py-8 px-6 lg:px-10 xl:px-16">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl sm:text-3xl font-heading font-bold text-secondary flex items-center gap-2">

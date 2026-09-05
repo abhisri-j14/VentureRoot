@@ -31,12 +31,22 @@ export const ReportCard = ({ report }: ReportCardProps) => {
     }
   };
 
+  const getStatusBorder = (status: string) => {
+    switch (status) {
+      case "READY": return "border-l-4 border-l-green-600";
+      case "GENERATING": return "border-l-4 border-l-blue-500";
+      case "FAILED": return "border-l-4 border-l-red-500";
+      case "DRAFT": return "border-l-4 border-l-slate-400";
+      default: return "border-l-4 border-l-slate-400";
+    }
+  };
+
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-5 hover:shadow-md transition-shadow flex flex-col h-full relative overflow-hidden group">
+    <div className={`bg-white border border-slate-200 rounded-2xl p-5 hover:shadow-md transition-shadow flex flex-col h-full relative overflow-hidden group ${getStatusBorder(report.status)}`}>
       {/* Top section */}
       <div className="flex items-start justify-between gap-4 mb-4">
         <div className="flex items-center gap-3">
-          <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
+          <div className="p-3 bg-[#1E6702]/10 text-[#1E6702] rounded-xl">
             <FileText className="w-6 h-6" />
           </div>
           <div>
@@ -85,7 +95,7 @@ export const ReportCard = ({ report }: ReportCardProps) => {
         {report.status === "READY" ? (
           <Link
             href={`/reports/${report.id}`}
-            className="px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary/90 transition-colors"
+            className="px-4 py-2 bg-[#1E6702] text-white text-sm font-semibold rounded-lg hover:bg-[#155201] transition-colors"
           >
             {t("reports.view")}
           </Link>

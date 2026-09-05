@@ -2,7 +2,7 @@ import { BusinessDetailsView } from "@/features/business/components/BusinessDeta
 
 export default function BusinessDetailsPage() {
   return (
-    <div className="flex-1 flex flex-col pb-16">
+    <div className="flex-1 flex flex-col pb-0">
       <BusinessDetailsView />
     </div>
   );

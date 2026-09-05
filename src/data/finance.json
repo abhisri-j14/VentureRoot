@@ -1,8 +1,65 @@
 {
   "repaymentSchedule": [
-    { "period": "Q1", "principal": 0, "interest": 15000, "isMoratorium": true },
-    { "period": "Q2", "principal": 0, "interest": 15000, "isMoratorium": true },
+    { "period": "Q1", "principal": 0,     "interest": 15000, "isMoratorium": true  },
+    { "period": "Q2", "principal": 0,     "interest": 15000, "isMoratorium": true  },
     { "period": "Q3", "principal": 25000, "interest": 14000, "isMoratorium": false },
     { "period": "Q4", "principal": 25000, "interest": 13000, "isMoratorium": false }
-  ]
+  ],
+  "summary": {
+    "totalNeeded":      700000,
+    "ownContribution":  200000,
+    "possibleLoan":     500000,
+    "monthlySurplus":   11500
+  },
+  "fundingAllocation": [
+    { "item": "Equipment and machinery",          "amount": 250000 },
+    { "item": "Working capital (first 3 months)", "amount": 150000 },
+    { "item": "Infrastructure and site setup",    "amount": 120000 },
+    { "item": "Permits, registration and legal",  "amount": 30000  },
+    { "item": "Marketing and launch costs",       "amount": 50000  },
+    { "item": "Emergency reserve",                "amount": 100000 }
+  ],
+  "fundingOptions": [
+    {
+      "id": "mudra-kishore",
+      "name": "MUDRA Kishore Loan",
+      "reason": "Suited for micro-enterprises in early growth stage needing working capital or equipment.",
+      "supportType": "Term Loan",
+      "amount": "₹50,000 – ₹5,00,000",
+      "interest": "8.5% – 12% p.a.",
+      "tenure": "3 – 5 years",
+      "moratorium": "Up to 6 months",
+      "status": "Likely relevant"
+    },
+    {
+      "id": "nabard-agri",
+      "name": "NABARD Agriculture Term Loan",
+      "reason": "Supports agri-linked businesses including livestock and dairy operations.",
+      "supportType": "Term Loan",
+      "amount": "₹1,00,000 – ₹10,00,000",
+      "interest": "7% – 9% p.a.",
+      "tenure": "5 – 7 years",
+      "moratorium": "Up to 12 months",
+      "status": "May be relevant"
+    },
+    {
+      "id": "bank-cc",
+      "name": "Commercial Bank Working Capital",
+      "reason": "Standard bank credit for operational expenses and short-term liquidity needs.",
+      "supportType": "Cash Credit / OD",
+      "amount": "Up to ₹5,00,000",
+      "interest": "10% – 14% p.a.",
+      "tenure": "1 – 3 years",
+      "moratorium": "None",
+      "status": "Needs verification"
+    }
+  ],
+  "repaymentPlan": {
+    "frequency":       "Monthly",
+    "period":          "60 months (5 years)",
+    "interestRate":    "9% per annum",
+    "moratorium":      "6 months (interest only)",
+    "regularPayment":  "₹10,381",
+    "totalInterest":   "₹1,22,860"
+  }
 }

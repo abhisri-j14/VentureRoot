@@ -27,8 +27,8 @@ export default function ActionRoadmapPage() {
   const progressPercent = totalActions > 0 ? Math.round((completedActions / totalActions) * 100) : 0;
 
   return (
-    <div className="w-full max-w-5xl mx-auto flex flex-col py-8 px-4 sm:px-6">
-      
+    <div className="w-full min-h-screen bg-[#f4fce8]">
+      <div className="w-full max-w-[1400px] mx-auto flex flex-col py-8 px-6 md:px-10 lg:px-14">
       {/* Navigation Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <Link 
@@ -53,7 +53,7 @@ export default function ActionRoadmapPage() {
         
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 relative z-10">
           <div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-secondary leading-tight mb-3">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-[#79912a] leading-tight mb-3">
               {t("roadmap.title") || "Action Roadmap"}
             </h1>
             <p className="text-secondary-muted text-lg max-w-2xl">
@@ -77,11 +77,11 @@ export default function ActionRoadmapPage() {
               <CheckCircle2 className="w-5 h-5 text-green-500" />
               <span className="font-bold text-secondary">{t("roadmap.progress") || "Overall Progress"}</span>
             </div>
-            <div className="text-3xl font-heading font-bold text-secondary mb-2">
+            <div className="text-3xl font-heading font-black text-primary mb-2">
               {progressPercent}%
             </div>
             <div className="w-full bg-slate-200 rounded-full h-2">
-              <div className="bg-green-500 h-2 rounded-full transition-all" style={{ width: `${progressPercent}%` }}></div>
+              <div className="bg-primary h-2 rounded-full transition-all" style={{ width: `${progressPercent}%` }}></div>
             </div>
             <p className="text-xs text-secondary-muted mt-2">
               {completedActions} / {totalActions} {t("roadmap.tasksCompleted") || "tasks completed"}
@@ -95,6 +95,7 @@ export default function ActionRoadmapPage() {
       
       <div className="flex justify-center mt-6">
         <MockDisclaimer text="Currently showing mock data • Action roadmap API integration pending" />
+      </div>
       </div>
     </div>
   );

@@ -62,7 +62,7 @@ export const ActionCard = ({ action }: ActionCardProps) => {
   const isCompleted = localStatus === "COMPLETED";
 
   return (
-    <div className={`bg-white border rounded-2xl transition-all ${isExpanded ? 'shadow-md border-slate-300' : 'hover:shadow-sm border-slate-200'} ${isCompleted ? 'opacity-75' : ''}`}>
+    <div className={`bg-white border rounded-2xl transition-all ${isExpanded ? 'shadow-soft border-primary' : 'hover:shadow-sm hover:border-primary/50 border-slate-200'} ${isCompleted ? 'opacity-75' : ''}`}>
       {/* Header section (Always visible) */}
       <div 
         className="p-5 flex items-start gap-4 cursor-pointer select-none"
@@ -76,7 +76,7 @@ export const ActionCard = ({ action }: ActionCardProps) => {
 
         <div className="flex-1 min-w-0">
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-1">
-            <h3 className={`font-heading font-bold text-lg leading-tight transition-colors ${isCompleted ? 'text-slate-500 line-through' : 'text-secondary'}`}>
+            <h3 className={`font-heading font-bold text-xl leading-tight transition-colors group-hover:text-primary ${isCompleted ? 'text-slate-500 line-through' : 'text-gray-900'}`}>
               {action.title}
             </h3>
             

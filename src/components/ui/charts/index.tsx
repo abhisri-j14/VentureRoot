@@ -31,7 +31,7 @@ export const FeasibilityRing = ({ value, label }: { value: number; label?: strin
   const strokeDashoffset = circumference - (value / 100) * circumference;
 
   return (
-    <div className="relative flex flex-col items-center justify-center w-32 h-32">
+    <div className="relative flex flex-col items-center justify-center w-full h-full">
       <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
         <circle
           cx="50"
@@ -67,10 +67,10 @@ export const FeasibilityRing = ({ value, label }: { value: number; label?: strin
 /* ═══════════════════════════════════════
    2. EDITORIAL AREA CHART
    ═══════════════════════════════════════ */
-export const EditorialAreaChart = ({ data, xKey, yKey }: { data: any[]; xKey: string; yKey: string }) => {
+export const EditorialAreaChart = ({ data, xKey, yKey, tickFormatter }: { data: any[]; xKey: string; yKey: string; tickFormatter?: (value: any) => string }) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+      <AreaChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
         <defs>
           <linearGradient id="colorY" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#1E6702" stopOpacity={0.3} />
@@ -78,8 +78,8 @@ export const EditorialAreaChart = ({ data, xKey, yKey }: { data: any[]; xKey: st
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#200813" opacity={0.05} />
-        <XAxis dataKey={xKey} axisLine={false} tickLine={false} tick={{ fill: "#200813", opacity: 0.5, fontSize: 12 }} dy={10} />
-        <YAxis axisLine={false} tickLine={false} tick={{ fill: "#200813", opacity: 0.5, fontSize: 12 }} />
+        <XAxis dataKey={xKey} axisLine={false} tickLine={false} tick={{ fill: "#200813", opacity: 0.5, fontSize: 11 }} dy={10} />
+        <YAxis axisLine={false} tickLine={false} tickFormatter={tickFormatter} tick={{ fill: "#200813", opacity: 0.5, fontSize: 11 }} />
         <Tooltip
           contentStyle={{ backgroundColor: "rgba(255, 255, 255, 0.9)", borderRadius: "12px", border: "1px solid rgba(0,0,0,0.05)", boxShadow: "0 10px 40px -10px rgba(32,8,19,0.1)" }}
           itemStyle={{ color: "#1E6702", fontWeight: "bold" }}
