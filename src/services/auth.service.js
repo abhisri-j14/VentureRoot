@@ -36,4 +36,15 @@ export async function getCurrentUser(accessToken) {
   return data.user;
 }
 
+export async function refreshUserSession(refreshToken) {
+  const { data, error } = await supabase.auth.refreshSession({
+    refresh_token: refreshToken,
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
 
