@@ -15,7 +15,17 @@ const locationSchema = z.object({
     .trim()
     .min(1)
     .optional(),
-});
+}).refine(
+    (data) => {
+      return !data.village || data.block;
+    },
+    {
+      message:
+        "Block is required when village is provided",
+
+      path: ["block"],
+    }
+  );
 
 const financialSchema = z.object({
   availableCapital: z
