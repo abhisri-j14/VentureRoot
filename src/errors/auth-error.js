@@ -2,6 +2,7 @@ import {
   BadRequestError,
   UnauthorizedError,
   ConflictError,
+    TooManyRequestsError,
 } from "@/errors/http-error";
 
 export function mapAuthError(error) {
@@ -15,6 +16,10 @@ export function mapAuthError(error) {
       return new UnauthorizedError(
         "Please verify your email before logging in"
       );
+      case "over_email_send_rate_limit":
+  return new TooManyRequestsError(
+    "Too many email requests. Please try again later."
+  );
 
     case "user_already_exists":
       return new ConflictError(
