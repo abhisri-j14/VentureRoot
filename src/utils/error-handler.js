@@ -1,5 +1,6 @@
 import { AppError } from "@/errors/AppError";
 import { errorResponse } from "@/utils/api-error";
+import { ZodError } from "zod";
 
 
 export function handleError(error , requestId = null) {
