@@ -1,5 +1,6 @@
 import { registerUser } from "@/services/auth.service";
 import {loginUser} from "@/services/auth.service";
+import { getCurrentUser } from "@/services/auth.service";
 
 export async function register(data) {
   const result = await registerUser(data);
@@ -15,5 +16,15 @@ export async function login(data) {
   return {
     message: "Login successful",
     data: result,
+  };
+}
+export async function me(accessToken) {
+  const user = await getCurrentUser(accessToken);
+
+  return {
+    message: "Current user fetched successfully",
+    data: {
+      user,
+    },
   };
 }
