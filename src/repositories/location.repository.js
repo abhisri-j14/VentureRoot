@@ -1,6 +1,118 @@
 import { prisma } from "@/lib/prisma";
 
 
+export async function findStates() {
+  return prisma.location.findMany({
+    where: {
+      type: "STATE",
+      parentId: null,
+    },
+
+    orderBy: {
+      name: "asc",
+    },
+  });
+}
+
+
+export async function findDistrictsByStateId(
+  stateId
+) {
+  return prisma.location.findMany({
+    where: {
+      type: "DISTRICT",
+      parentId: stateId,
+    },
+
+    orderBy: {
+      name: "asc",
+    },
+  });
+}
+
+
+export async function findBlocksByDistrictId(
+  districtId
+) {
+  return prisma.location.findMany({
+    where: {
+      type: "BLOCK",
+      parentId: districtId,
+    },
+
+    orderBy: {
+      name: "asc",
+    },
+  });
+}
+
+
+export async function findVillagesByBlockId(
+  blockId
+) {
+  return prisma.location.findMany({
+    where: {
+      type: "VILLAGE",
+      parentId: blockId,
+    },
+
+    orderBy: {
+      name: "asc",
+    },
+  });
+}
+
+
+export async function searchLocations({
+  query,
+  limit,
+}) {
+  return prisma.location.findMany({
+    where: {
+      OR: [
+        {
+          name: {
+            contains: query,
+            mode: "insensitive",
+          },
+        },
+
+        {
+          code: {
+            contains: query,
+            mode: "insensitive",
+          },
+        },
+      ],
+    },
+
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      type: true,
+    },
+
+    orderBy: {
+      name: "asc",
+    },
+
+    take: limit,
+  });
+}
+
+
+export async function findLocationById(
+  locationId
+) {
+  return prisma.location.findUnique({
+    where: {
+      id: locationId,
+    },
+  });
+}
+
+
 export async function findLocationByHierarchy({
   state,
   district,
@@ -35,7 +147,8 @@ export async function findLocationByHierarchy({
   }
 
 
-  let currentLocation = districtRecord;
+  let currentLocation =
+    districtRecord;
 
 
   if (block) {
@@ -52,7 +165,8 @@ export async function findLocationByHierarchy({
       return null;
     }
 
-    currentLocation = blockRecord;
+    currentLocation =
+      blockRecord;
 
 
     if (village) {
@@ -69,7 +183,8 @@ export async function findLocationByHierarchy({
         return null;
       }
 
-      currentLocation = villageRecord;
+      currentLocation =
+        villageRecord;
     }
   }
 
