@@ -1,13 +1,20 @@
 import apiClient from "@/lib/api/client";
 
-// TODO: BACKEND CONFIRMATION REQUIRED
-export type ReportListResponse = unknown;
-export type ReportDetailResponse = unknown;
-export type ReportGenerateResponse = unknown;
+import { ApiResponse, PaginatedData, PaginationParams } from "@/types/api";
+
+export interface ReportListParams extends PaginationParams {
+  status?: "GENERATING" | "READY" | "FAILED";
+  type?: "FEASIBILITY" | "FINANCIAL" | "BUSINESS_PLAN" | "COMPREHENSIVE";
+  businessId?: string;
+}
+
+export type ReportListResponse = ApiResponse<PaginatedData<any>>;
+export type ReportDetailResponse = ApiResponse<any>;
+export type ReportGenerateResponse = ApiResponse<any>;
 
 export const reportApi = {
-  list: async (): Promise<ReportListResponse> => {
-    const response = await apiClient.get("/reports");
+  list: async (params?: ReportListParams): Promise<ReportListResponse> => {
+    const response = await apiClient.get("/reports", { params });
     return response.data;
   },
 
@@ -16,9 +23,8 @@ export const reportApi = {
     return response.data;
   },
 
-  generate: async (businessId: string): Promise<ReportGenerateResponse> => {
-    // TODO: BACKEND CONFIRMATION REQUIRED (Is this streaming, async job polling, etc?)
-    const response = await apiClient.post("/reports/generate", { businessId });
+  generate: async (payload: { businessId: string; type: "FEASIBILITY" | "FINANCIAL" | "BUSINESS_PLAN" | "COMPREHENSIVE" }): Promise<ReportGenerateResponse> => {
+    const response = await apiClient.post("/reports/generate", payload);
     return response.data;
   },
 

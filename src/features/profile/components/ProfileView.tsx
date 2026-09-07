@@ -1,221 +1,225 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { Edit2, Check, ArrowLeft, Camera, User, MapPin, Wallet, Briefcase } from "lucide-react";
+import { Edit2, Check, X, Camera, User, MapPin, Wallet, Briefcase, Leaf, ChevronRight } from "lucide-react";
 import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 import { MockDisclaimer } from "@/components/ui/mock-disclaimer";
-
 import { useProfile } from "@/lib/data/users";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 
-export const ProfileView = () => {
-  const { data: fetchedProfile, isLoading } = useProfile();
-  const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState<any>(fetchedProfile);
-  const { t } = useTranslation();
+// --- Framer Motion Variants matching dashboard style ---
+const EASE_OUT_EXPO = [0.22, 1, 0.36, 1] as const;
 
+const containerVariants: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE_OUT_EXPO } },
+};
+
+// --- Typography classes aligned 1:1 with dashboard/page.tsx ---
+const classes = {
+  pageTitle: "text-[22px] font-heading font-bold text-[#242424] tracking-tight leading-tight",
+  cardHeading: "text-[20px] font-bold text-slate-900 tracking-tight",
+  supportingText: "text-sm text-slate-500 font-medium",
+  smallSupporting: "text-[14px] font-medium text-slate-400",
+  profileLabel: "text-[13px] font-semibold text-slate-500",
+  profileValue: "text-[14px] font-semibold text-slate-900",
+  buttonText: "text-[14px] font-bold",
+};
+
+function CompletionRing({ pct }: { pct: number }) {
+  const r = 36;
+  const circ = 2 * Math.PI * r;
+  const [offset, setOffset] = React.useState(circ);
   React.useEffect(() => {
-    if (fetchedProfile) {
-      setProfile(fetchedProfile);
-    }
-  }, [fetchedProfile]);
+    const t = setTimeout(() => setOffset(circ - (pct / 100) * circ), 400);
+    return () => clearTimeout(t);
+  }, [pct, circ]);
+  return (
+    <div className="relative w-[88px] h-[88px] flex items-center justify-center">
+      <div className="absolute inset-0 rounded-full bg-[#80638a]/10 blur-md" />
+      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 88 88">
+        <circle cx="44" cy="44" r={r} stroke="#80638a" strokeOpacity="0.15" strokeWidth="5" fill="none" />
+        <circle
+          cx="44" cy="44" r={r}
+          stroke="#80638a" strokeWidth="5" fill="none"
+          strokeDasharray={circ}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          style={{ transition: "stroke-dashoffset 1.2s cubic-bezier(0.16,1,0.3,1)" }}
+        />
+      </svg>
+      <div className="absolute flex flex-col items-center justify-center">
+        <span className="text-[20px] font-bold text-slate-900 tracking-tight leading-none">{pct}%</span>
+        <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider mt-0.5">Done</span>
+      </div>
+    </div>
+  );
+}
 
-  if (!profile) return null;
+function Avatar({ name, isEditing }: { name: string; isEditing: boolean }) {
+  const initials = name.split(/\s+/).map((w: string) => w[0]).join("").toUpperCase().slice(0, 2);
+  return (
+    <div className="relative group shrink-0">
+      <div className="w-[80px] h-[80px] rounded-2xl bg-gradient-to-br from-[#80638a] to-[#674b72] flex items-center justify-center shadow-[0_8px_24px_rgba(128,99,138,0.35)] border border-[#80638a]/20">
+        <span className="text-2xl font-bold text-white tracking-tight select-none">{initials}</span>
+      </div>
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
+      {isEditing && (
+        <button className="absolute -bottom-1.5 -right-1.5 w-7 h-7 bg-slate-900 text-white rounded-lg flex items-center justify-center shadow-lg hover:bg-[#80638a] transition-colors border-2 border-white">
+          <Camera className="w-3.5 h-3.5" />
+        </button>
+      )}
+    </div>
+  );
+}
 
-  const handleSave = () => {
-    console.log("Mock profile update:", profile);
-    setIsEditing(false);
-  };
+function SectionHeading({ icon: Icon, label, iconClass }: { icon: any; label: string; iconClass: string }) {
+  return (
+    <div className="flex items-center gap-2.5 mb-4 pb-3 border-b border-gray-900/8">
+      <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${iconClass}`}>
+        <Icon className="w-4 h-4" />
+      </div>
+      <h3 className={classes.cardHeading}>{label}</h3>
+    </div>
+  );
+}
 
-  const getInitials = (name: string) =>
-    name
-      .split(/\s+/)
-      .map((word) => word.slice(0, 1))
-      .join('');
-
-  const InputField = ({ label, value, onChange, type = "text", editable = true, options = null }: any) => (
-    <div className="flex flex-col gap-1.5 w-full">
-      <label className="text-[13px] md:text-[14px] font-black uppercase tracking-widest text-emerald-950 pl-1 drop-shadow-sm">
-        {label}
-      </label>
-
-      {isEditing && editable ? (
+function InputField({ label, value, onChange, type = "text", editable = true, options = null }: any) {
+  return (
+    <div className="flex flex-col gap-1.5 w-full group">
+      <label className={classes.profileLabel}>{label}</label>
+      {editable && onChange ? (
         options ? (
           <select
             value={value}
-            onChange={(e) => onChange(e.target.value)}
-            className="w-full bg-white/40 backdrop-blur-xl border border-white/60 rounded-xl p-3 text-[14px] font-bold text-slate-900 focus:outline-none focus:border-emerald-500/50 focus:bg-white/60 transition-all shadow-[0_4px_16px_0_rgba(31,38,135,0.05)]"
+            onChange={e => onChange(e.target.value)}
+            className={`w-full bg-white border border-gray-900/10 rounded-xl px-3 py-2.5 ${classes.profileValue} focus:outline-none focus:border-[#80638a]/60 focus:ring-2 focus:ring-[#80638a]/10 transition-all shadow-sm`}
           >
-            {options.map((opt: string) => (
-              <option key={opt} value={opt}>{opt}</option>
-            ))}
+            {options.map((opt: string) => <option key={opt} value={opt}>{opt}</option>)}
           </select>
         ) : (
           <input
             type={type}
             value={value}
-            onChange={(e) => onChange(e.target.value)}
-            className="w-full bg-white/40 backdrop-blur-xl border border-white/60 rounded-xl p-3 text-[14px] font-bold text-slate-900 focus:outline-none focus:border-emerald-500/50 focus:bg-white/60 transition-all shadow-[0_4px_16px_0_rgba(31,38,135,0.05)]"
+            onChange={e => onChange(e.target.value)}
+            className={`w-full bg-white border border-gray-900/10 rounded-xl px-3 py-2.5 ${classes.profileValue} focus:outline-none focus:border-[#80638a]/60 focus:ring-2 focus:ring-[#80638a]/10 transition-all shadow-sm`}
           />
         )
       ) : (
-        <div className="w-full bg-white/40 backdrop-blur-xl border border-white/60 rounded-xl p-3 text-[14px] font-bold text-slate-900 flex items-center min-h-[48px] shadow-[0_4px_16px_0_rgba(31,38,135,0.05)]">
-          {value || <span className="text-slate-500/70 italic font-medium">Not provided</span>}
+        <div className={`w-full bg-white/70 border border-gray-900/8 rounded-xl px-3 py-2.5 ${classes.profileValue} min-h-[42px] flex items-center shadow-sm group-hover:border-[#80638a]/30 transition-colors`}>
+          {value || <span className={`${classes.smallSupporting} italic font-normal`}>Not provided</span>}
         </div>
       )}
     </div>
   );
+}
+
+export const ProfileView = () => {
+  const { data: fetchedProfile } = useProfile();
+  const [isEditing, setIsEditing] = useState(false);
+  const [profile, setProfile] = useState<any>(fetchedProfile);
+  const { t } = useTranslation();
+
+  React.useEffect(() => { if (fetchedProfile) setProfile(fetchedProfile); }, [fetchedProfile]);
+
+  if (!profile) return null;
+
+  const handleSave = () => { console.log("Mock profile update:", profile); setIsEditing(false); };
 
   return (
-    <div className="flex flex-col w-full min-h-screen px-6 md:px-12 lg:px-20 pb-24 relative">
+    <motion.div variants={containerVariants} initial="hidden" animate="visible"
+      className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-6">
 
-      {/* Top Banner Image Area */}
-      <div className="w-full h-[180px] md:h-[240px] bg-[url('/images/profile-banner-highres.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl relative mt-4 shadow-lg border border-white/40 mb-4">
+      {/* Header Card */}
+      <motion.div variants={itemVariants}
+        className="relative w-full bg-[#fffff5] rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] overflow-hidden mb-6">
+        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#80638a] via-[#a387ad] to-[#c7b0d0]" />
+        <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-[#80638a]/8 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-[#80638a]/6 blur-2xl pointer-events-none" />
 
-        {/* Elegant floating Back button */}
-        <div className="absolute top-4 left-4 z-10 bg-white/40 backdrop-blur-xl border border-white/60 p-1.5 pr-4 rounded-full inline-flex shadow-[0_4px_16px_0_rgba(31,38,135,0.05)]">
-          <Link href="/dashboard" className="inline-flex items-center gap-2 text-[12px] font-extrabold tracking-wide text-emerald-950 hover:text-emerald-700 transition-colors">
-            <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
-              <ArrowLeft className="w-4 h-4" />
+        <div className="relative px-6 md:px-8 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          <div className="flex items-center gap-5">
+            <Avatar name={profile.fullName} isEditing={isEditing} />
+            <div>
+              <h1 className={classes.pageTitle}>{profile.fullName}</h1>
+              <p className={`${classes.supportingText} mt-1 flex items-center gap-1.5`}>
+                <Leaf className="w-3.5 h-3.5 text-[#80638a]" />
+                <span>{profile.location.state} Entrepreneur</span>
+              </p>
             </div>
-            BACK TO DASHBOARD
-          </Link>
+          </div>
+
+          <div className="flex items-center gap-5">
+            <CompletionRing pct={75} />
+            <AnimatePresence mode="wait">
+              {isEditing ? (
+                <motion.div key="editing" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="flex gap-2.5">
+                  <button onClick={() => setIsEditing(false)} className={`px-4 py-2.5 bg-white border border-gray-900/10 text-slate-700 ${classes.buttonText} rounded-xl hover:bg-slate-50 transition-all flex items-center gap-1.5 shadow-sm`}>
+                    <X className="w-4 h-4" /> Cancel
+                  </button>
+                  <button onClick={handleSave} className={`px-4 py-2.5 bg-[#80638a] text-white ${classes.buttonText} rounded-xl hover:bg-[#6c4f75] shadow-md shadow-[#80638a]/20 hover:-translate-y-0.5 transition-all flex items-center gap-1.5`}>
+                    <Check className="w-4 h-4" /> Save Changes
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.button key="view" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
+                  onClick={() => setIsEditing(true)}
+                  className={`px-4 py-2.5 bg-white border border-gray-900/10 text-slate-900 ${classes.buttonText} rounded-xl hover:border-[#80638a]/40 hover:bg-[#80638a]/5 shadow-sm transition-all flex items-center gap-1.5 group`}>
+                  <Edit2 className="w-4 h-4" />
+                  Edit Profile
+                  <ChevronRight className="w-3.5 h-3.5 opacity-40 -ml-0.5 group-hover:translate-x-0.5 transition-transform" />
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Avatar & Title (BELOW the banner, no overlap) */}
-      <div className="flex flex-col md:flex-row items-center md:items-end justify-between w-full mb-16 gap-6 px-2">
-        <div className="flex flex-col md:flex-row items-center md:items-end gap-5 text-center md:text-left">
-          <div className="relative group">
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white/40 backdrop-blur-xl p-1.5 shadow-[0_8px_32px_0_rgba(31,38,135,0.05)] border border-white/60">
-              <div className="w-full h-full rounded-full bg-emerald-100 flex items-center justify-center text-emerald-800 text-4xl md:text-5xl font-heading font-black border border-emerald-200/50 overflow-hidden">
-                {getInitials(profile.fullName)}
-              </div>
-            </div>
-            {isEditing && (
-              <button className="absolute bottom-1 right-1 p-2.5 bg-slate-900 text-white rounded-full hover:bg-slate-800 transition-colors shadow-lg border-[3px] border-emerald-50">
-                <Camera className="w-4 h-4" />
-              </button>
-            )}
-          </div>
+      {/* Info Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <motion.div variants={itemVariants} whileHover={{ y: -2, boxShadow: "0 8px 28px rgba(128,99,138,0.14)" }}
+          className="bg-[#fffff5] rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] p-6 flex flex-col gap-4 transition-shadow">
+          <SectionHeading icon={User} label="Personal" iconClass="bg-[#80638a]/10 text-[#80638a]" />
+          <InputField label="Full Name" value={profile.fullName} onChange={isEditing ? (v: any) => setProfile({ ...profile, fullName: v }) : null} editable={isEditing} />
+          <InputField label="Email Address" type="email" value={profile.email} onChange={isEditing ? (v: any) => setProfile({ ...profile, email: v }) : null} editable={isEditing} />
+          <InputField label="Phone Number" type="tel" value={profile.phone} onChange={isEditing ? (v: any) => setProfile({ ...profile, phone: v }) : null} editable={isEditing} />
+        </motion.div>
 
-          <div className="pb-2">
-            <h1 className="text-3xl md:text-4xl font-heading font-black text-emerald-950 tracking-tight drop-shadow-sm">{profile.fullName}</h1>
-            <p className="text-sm md:text-base font-bold text-emerald-800/80 mt-1 uppercase tracking-widest">{profile.location.state} Entrepreneur</p>
-          </div>
-        </div>
-
-        {/* Right Side Actions & Ring */}
-        <div className="flex flex-col md:flex-row items-center gap-6">
-
-          {/* Actions */}
-          <div className="order-2 md:order-1">
-            {isEditing ? (
-              <div className="flex gap-3">
-                <button onClick={() => setIsEditing(false)} className="px-5 py-3 bg-white/40 backdrop-blur-xl border border-white/60 font-bold text-slate-800 rounded-xl hover:bg-white/60 shadow-[0_4px_16px_0_rgba(31,38,135,0.05)] transition-all">Cancel</button>
-                <button onClick={handleSave} className="px-5 py-3 bg-[#1E6702] hover:bg-[#2b8a03] text-white font-bold rounded-xl shadow-md transition-all flex items-center gap-2">
-                  <Check className="w-4 h-4" /> Save
-                </button>
-              </div>
-            ) : (
-              <button onClick={() => setIsEditing(true)} className="px-5 py-3 bg-white/40 backdrop-blur-xl border border-white/60 font-bold text-emerald-950 rounded-xl hover:bg-white/60 shadow-[0_4px_16px_0_rgba(31,38,135,0.05)] flex items-center gap-2 transition-all">
-                <Edit2 className="w-4 h-4" /> Edit Profile
-              </button>
-            )}
-          </div>
-
-          {/* 75% Completion Ring */}
-          <div className="relative w-16 h-16 md:w-20 md:h-20 flex items-center justify-center bg-white/40 backdrop-blur-xl rounded-full shadow-[0_4px_16px_0_rgba(31,38,135,0.05)] border border-white/60 order-1 md:order-2">
-            <svg className="w-full h-full transform -rotate-90">
-              <circle cx="50%" cy="50%" r="38%" stroke="rgba(255,255,255,0.5)" strokeWidth="4" fill="none" />
-              <circle
-                cx="50%" cy="50%" r="38%"
-                stroke="#1E6702" strokeWidth="4" fill="none"
-                strokeDasharray="240"
-                strokeDashoffset={240 - (0.75 * 240)}
-                strokeLinecap="round"
-                className="transition-all duration-1000 ease-out"
-              />
-            </svg>
-            <div className="absolute flex flex-col items-center mt-0.5">
-              <span className="text-[13px] md:text-[14px] font-black text-[#1E6702] leading-none">75%</span>
-              <span className="text-[6px] font-bold uppercase tracking-[0.2em] text-[#1E6702]/60 mt-0.5">Done</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      {/* Main Grid Layout - DIRECTLY ON CANVAS utilizing entire screen width */}
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 lg:gap-x-12 xl:gap-x-16 gap-y-12">
-
-        {/* Personal Details Column */}
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center gap-3 mb-1 border-b border-[#1E6702]/10 pb-3">
-            <div className="w-9 h-9 rounded-full bg-emerald-100/80 backdrop-blur-sm flex items-center justify-center text-emerald-800 shadow-sm border border-emerald-200/50">
-              <User className="w-4 h-4" />
-            </div>
-            <h3 className="text-xl md:text-2xl font-black text-emerald-950 tracking-tight">Personal</h3>
-          </div>
-
-          <InputField label="Full Name" value={profile.fullName} onChange={(v: any) => setProfile({ ...profile, fullName: v })} />
-          <InputField label="Email Address" type="email" value={profile.email} onChange={(v: any) => setProfile({ ...profile, email: v })} />
-          <InputField label="Phone Number" type="tel" value={profile.phone} onChange={(v: any) => setProfile({ ...profile, phone: v })} />
-        </div>
-
-        {/* Location Column */}
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center gap-3 mb-1 border-b border-[#1E6702]/10 pb-3">
-            <div className="w-9 h-9 rounded-full bg-orange-100/80 backdrop-blur-sm flex items-center justify-center text-orange-700 shadow-sm border border-orange-200/50">
-              <MapPin className="w-4 h-4" />
-            </div>
-            <h3 className="text-xl md:text-2xl font-black text-emerald-950 tracking-tight">Location</h3>
-          </div>
-
-          {isEditing && (
-            <p className="text-[12px] font-bold text-orange-900 bg-orange-100/80 backdrop-blur-sm p-3 rounded-xl border border-orange-200/60 shadow-sm">
-              {t("profile.locEditWarn")}
-            </p>
-          )}
+        <motion.div variants={itemVariants} whileHover={{ y: -2, boxShadow: "0 8px 28px rgba(128,99,138,0.14)" }}
+          className="bg-[#fffff5] rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] p-6 flex flex-col gap-4 transition-shadow">
+          <SectionHeading icon={MapPin} label="Location" iconClass="bg-orange-50 text-orange-600" />
+          {isEditing && <p className="text-[12px] font-medium text-orange-700 bg-orange-50 border border-orange-200/60 rounded-xl px-3 py-2">{t("profile.locEditWarn")}</p>}
           <InputField label="State" value={profile.location.state} editable={false} />
           <InputField label="District" value={profile.location.district} editable={false} />
           <InputField label="Block / Taluka" value={profile.location.block} editable={false} />
           <InputField label="Village" value={profile.location.village} editable={false} />
-        </div>
+        </motion.div>
 
-        {/* Financial Column */}
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center gap-3 mb-1 border-b border-[#1E6702]/10 pb-3">
-            <div className="w-9 h-9 rounded-full bg-blue-100/80 backdrop-blur-sm flex items-center justify-center text-blue-700 shadow-sm border border-blue-200/50">
-              <Wallet className="w-4 h-4" />
-            </div>
-            <h3 className="text-xl md:text-2xl font-black text-emerald-950 tracking-tight">Financials</h3>
-          </div>
+        <motion.div variants={itemVariants} whileHover={{ y: -2, boxShadow: "0 8px 28px rgba(128,99,138,0.14)" }}
+          className="bg-[#fffff5] rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] p-6 flex flex-col gap-4 transition-shadow">
+          <SectionHeading icon={Wallet} label="Financial" iconClass="bg-blue-50 text-blue-600" />
+          <InputField label="Available Capital (Rs)" type="number" value={profile.financial.availableCapital} onChange={isEditing ? (v: any) => setProfile({ ...profile, financial: { ...profile.financial, availableCapital: Number(v) } }) : null} editable={isEditing} />
+          <InputField label="Monthly Income (Rs)" type="number" value={profile.financial.income} onChange={isEditing ? (v: any) => setProfile({ ...profile, financial: { ...profile.financial, income: Number(v) } }) : null} editable={isEditing} />
+        </motion.div>
 
-          <InputField label="Available Capital (₹)" type="number" value={profile.financial.availableCapital} onChange={(v: any) => setProfile({ ...profile, financial: { ...profile.financial, availableCapital: Number(v) } })} />
-          <InputField label="Monthly Income (₹)" type="number" value={profile.financial.income} onChange={(v: any) => setProfile({ ...profile, financial: { ...profile.financial, income: Number(v) } })} />
-        </div>
-
-        {/* Experience Column */}
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center gap-3 mb-1 border-b border-[#1E6702]/10 pb-3">
-            <div className="w-9 h-9 rounded-full bg-purple-100/80 backdrop-blur-sm flex items-center justify-center text-purple-700 shadow-sm border border-purple-200/50">
-              <Briefcase className="w-4 h-4" />
-            </div>
-            <h3 className="text-xl md:text-2xl font-black text-emerald-950 tracking-tight">Experience</h3>
-          </div>
-
-          <InputField label="Business Experience" options={["None", "0-2 years", "3-5 years", "5+ years"]} value={profile.experience.businessExperience} onChange={(v: any) => setProfile({ ...profile, experience: { ...profile.experience, businessExperience: v } })} />
-          <InputField label="Key Skills" value={profile.experience.skills} onChange={(v: any) => setProfile({ ...profile, experience: { ...profile.experience, skills: v } })} />
-          <InputField label="Education" value={profile.experience.education} onChange={(v: any) => setProfile({ ...profile, experience: { ...profile.experience, education: v } })} />
-        </div>
-
+        <motion.div variants={itemVariants} whileHover={{ y: -2, boxShadow: "0 8px 28px rgba(128,99,138,0.14)" }}
+          className="bg-[#fffff5] rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] p-6 flex flex-col gap-4 transition-shadow">
+          <SectionHeading icon={Briefcase} label="Experience" iconClass="bg-purple-50 text-purple-600" />
+          <InputField label="Business Experience" options={isEditing ? ["None", "0-2 years", "3-5 years", "5+ years"] : null} value={profile.experience.businessExperience} onChange={isEditing ? (v: any) => setProfile({ ...profile, experience: { ...profile.experience, businessExperience: v } }) : null} editable={isEditing} />
+          <InputField label="Key Skills" value={profile.experience.skills} onChange={isEditing ? (v: any) => setProfile({ ...profile, experience: { ...profile.experience, skills: v } }) : null} editable={isEditing} />
+          <InputField label="Education" value={profile.experience.education} onChange={isEditing ? (v: any) => setProfile({ ...profile, experience: { ...profile.experience, education: v } }) : null} editable={isEditing} />
+        </motion.div>
       </div>
 
-      <div className="mt-16 flex justify-center">
-        <MockDisclaimer text="Currently showing mock data • User profile integration pending" />
-      </div>
+      <motion.div variants={itemVariants} className="mt-10 flex justify-center">
+        <MockDisclaimer text="Currently showing mock data - User profile integration pending" />
+      </motion.div>
 
-    </div>
+    </motion.div>
   );
 };

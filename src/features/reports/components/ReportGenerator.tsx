@@ -14,7 +14,6 @@ interface ReportGeneratorProps {
 export const ReportGenerator = ({ onCancel, onComplete }: ReportGeneratorProps) => {
   const { t } = useTranslation();
   const [stages, setStages] = useState(MOCK_GENERATION_STAGES);
-  const [isFailed, setIsFailed] = useState(false);
   
   useEffect(() => {
     let currentStage = 0;

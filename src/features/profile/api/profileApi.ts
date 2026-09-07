@@ -1,10 +1,9 @@
 import apiClient from "@/lib/api/client";
 import { ProfileData } from "../schemas/profileSchema";
+import { ApiResponse } from "@/types/api";
 
-// TODO: BACKEND CONFIRMATION REQUIRED
-// Replace `unknown` with the exact backend schema once confirmed
-export type GetProfileResponse = unknown;
-export type UpdateProfileResponse = unknown;
+export type GetProfileResponse = ApiResponse<{ profile: ProfileData | null; onboardingCompleted: boolean }>;
+export type UpdateProfileResponse = ApiResponse<{ profile: ProfileData; onboardingCompleted: boolean }>;
 
 export const profileApi = {
   getProfile: async (): Promise<GetProfileResponse> => {

@@ -11,7 +11,7 @@ const ALL_BUSINESSES = [
     name: "Dairy Farming & Milk Chilling",
     score: 82,
     viability: "HIGHEST VIABILITY",
-    color: "#79912a",
+    color: "#402a03",
     dot: "#22c55e",
     financials: { projectCost: "₹10,00,000", margin10: "₹1,00,000", sca: "₹9,00,000" },
     netProfitMargin: "18% – 24%",
@@ -115,7 +115,7 @@ const BusinessSelector = ({
       {selected.map((b) => (
         <div key={b.id} className="relative">
           <div
-            className="flex items-center gap-2 bg-[#79912a] text-white rounded-lg px-3.5 py-2 text-[13px] font-semibold shadow-sm cursor-pointer select-none"
+            className="flex items-center gap-2 bg-[#402a03] text-[#fffbe6] rounded-lg px-3.5 py-2 text-[13px] font-semibold shadow-sm cursor-pointer select-none"
             onClick={() => setOpenDropdown(openDropdown === b.id ? null : b.id)}
           >
             <span className="max-w-[160px] truncate">{b.name}</span>
@@ -142,7 +142,7 @@ const BusinessSelector = ({
                       <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: ab.dot }} />
                       {ab.name}
                     </span>
-                    {isSelected && <Check className="w-4 h-4 text-[#79912a] shrink-0" />}
+                    {isSelected && <Check className="w-4 h-4 text-[#402a03] shrink-0" />}
                   </button>
                 );
               })}
@@ -153,7 +153,7 @@ const BusinessSelector = ({
 
       {selected.length < ALL_BUSINESSES.length && (
         <button
-          className="flex items-center gap-2 border-2 border-dashed border-gray-300 rounded-lg px-3.5 py-2 text-[13px] font-semibold text-gray-500 hover:border-[#79912a] hover:text-[#79912a] transition-colors"
+          className="flex items-center gap-2 border-2 border-dashed border-gray-300 rounded-lg px-3.5 py-2 text-[13px] font-semibold text-gray-500 hover:border-[#402a03] hover:text-[#402a03] transition-colors"
           onClick={onAdd}
         >
           <Plus className="w-4 h-4" /> Add Business
@@ -197,16 +197,16 @@ export const BusinessComparison = () => {
   const cols = activeBiz.length;
 
   return (
-    <div className="w-full flex flex-col gap-5" onClick={() => setDropdownOpen(false)}>
+    <div className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-6" onClick={() => setDropdownOpen(false)}>
 
       {/* ── PAGE HEADER ─────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-serif font-bold text-[#1a1a1a] leading-tight mb-1">Compare Business Ideas</h1>
-          <p className="text-[15px] text-gray-500 font-medium">Compare potential enterprises side by side before making a decision.</p>
+          <h1 className="text-[22px] font-heading font-bold text-[#242424] tracking-tight leading-tight">Compare Business Ideas</h1>
+          <p className="text-sm text-slate-500 font-medium mt-0.5">Compare potential enterprises side by side before making a decision.</p>
         </div>
         <div className="flex items-center gap-2 opacity-75 shrink-0">
-          <Leaf className="w-6 h-6 text-[#79912a]" />
+          <Leaf className="w-6 h-6 text-[#402a03]" />
           <span className="font-serif italic text-[15px] text-gray-500 text-right leading-snug">
             "Better Decisions<br />Stronger Tomorrows"
           </span>
@@ -225,9 +225,9 @@ export const BusinessComparison = () => {
       </div>
 
       {/* ── RADAR CHART ──────────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] p-6">
+      <div className="bg-[#fffff5] rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] p-6 transition-all duration-300">
         <div className="flex items-center gap-2 mb-4">
-          <BarChart2 className="w-5 h-5 text-[#79912a]" />
+          <BarChart2 className="w-5 h-5 text-[#402a03]" />
           <span className="text-[15px] font-bold text-gray-900">Visual Comparison</span>
           <span className="text-[13px] text-gray-400 font-medium ml-1 hidden md:block">Compare key parameters across all selected business ideas.</span>
         </div>
@@ -256,9 +256,9 @@ export const BusinessComparison = () => {
                 </div>
               ))}
             </div>
-            <div className="mt-2 bg-[#f4fce8] rounded-xl p-4 border border-[#e6f0d1] flex items-center gap-3">
-              <Leaf className="w-4 h-4 text-[#79912a] shrink-0" />
-              <p className="font-serif italic text-[14px] text-[#79912a]">"Compare today, build a brighter tomorrow."</p>
+            <div className="mt-2 bg-[#fffbe6] rounded-xl p-4 border border-[#402a03]/10 flex items-center gap-3">
+              <Leaf className="w-4 h-4 text-[#402a03] shrink-0" />
+              <p className="font-serif italic text-[14px] text-[#402a03]">"Compare today, build a brighter tomorrow."</p>
             </div>
           </div>
         </div>
@@ -267,32 +267,32 @@ export const BusinessComparison = () => {
       {/* ── FULL-WIDTH COMPARISON TABLE ───────────────────────────── */}
       <div className="w-full overflow-x-auto">
         <div
-          className="min-w-[600px] w-full rounded-2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.07)] border border-white/80"
+          className="min-w-[600px] w-full rounded-xl overflow-hidden shadow-[0_4px_24px_rgb(0,0,0,0.05)] border border-gray-900/8"
           style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px)" }}
         >
 
           {/* ── HEADER ROW: business names ── */}
           <div
-            className="grid border-b-[3px] border-[#79912a]"
+            className="grid border-b-[3px] border-[#402a03]"
             style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}
           >
             {/* Label column header */}
-            <div className="px-5 py-5 bg-[#79912a]">
-              <span className="text-[11px] font-extrabold uppercase tracking-[0.15em] text-white/60">Metric</span>
+            <div className="px-5 py-5 bg-[#402a03]">
+              <span className="text-[11px] font-extrabold uppercase tracking-[0.15em] text-[#fffbe6]/70">Metric</span>
             </div>
             {activeBiz.map((b) => (
               <div
                 key={b.id}
-                className="flex flex-col items-center justify-center px-4 py-5 border-l border-[#79912a]/20"
-                style={{ background: "rgba(27,78,51,0.06)" }}
+                className="flex flex-col items-center justify-center px-4 py-5 border-l border-[#402a03]/20"
+                style={{ background: "rgba(64,42,3,0.04)" }}
               >
                 {b.viability && (
-                  <span className="text-[9px] font-extrabold uppercase tracking-[0.15em] bg-[#79912a] text-white px-2.5 py-0.5 rounded-full mb-2 shadow-sm">
+                  <span className="text-[9px] font-extrabold uppercase tracking-[0.15em] bg-[#402a03] text-[#fffbe6] px-2.5 py-0.5 rounded-full mb-2 shadow-sm">
                     {b.viability}
                   </span>
                 )}
                 <h3 className="font-extrabold text-[15px] text-gray-950 text-center leading-snug">{b.name}</h3>
-                <p className="text-[13px] font-bold text-[#79912a] mt-1">Score: {b.score} / 100</p>
+                <p className="text-[13px] font-bold text-[#402a03] mt-1">Score: {b.score} / 100</p>
               </div>
             ))}
           </div>
@@ -302,8 +302,8 @@ export const BusinessComparison = () => {
             className="grid"
             style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}
           >
-            <div className="px-5 py-3 bg-[#f0fdf4] border-b border-r border-gray-200 flex items-center">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#79912a] bg-[#dcfce7] border border-[#bbf7d0] px-3 py-1 rounded-md">
+            <div className="px-5 py-3 bg-[#fffbe6]/50 border-b border-r border-gray-200 flex items-center">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#402a03] bg-[#fffbe6] border border-[#402a03]/10 px-3 py-1 rounded-md">
                 Financials
               </span>
             </div>

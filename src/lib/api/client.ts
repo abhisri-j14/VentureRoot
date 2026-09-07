@@ -55,7 +55,7 @@ apiClient.interceptors.response.use(
     // Normalize Error
     // TODO: BACKEND CONFIRMATION REQUIRED (Exact error response schema)
     const normalizedError: ApiError = {
-      message: error.response?.data?.detail || error.message || "An unexpected error occurred",
+      message: error.response?.data?.message || error.message || "An unexpected error occurred",
       code: error.response?.data?.error_code || "UNKNOWN",
       details: error.response?.data?.errors,
     };

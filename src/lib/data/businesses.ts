@@ -16,7 +16,7 @@ export const useBusinessesComparison = () => {
     if (DATA_SOURCE === "database") {
       businessApi.list()
         .then((res) => {
-          setData(res as any[]);
+          setData(((res.data as any).businesses || (res.data as any).items || []) as any[]);
           setIsLoading(false);
         })
         .catch((err) => {
@@ -40,7 +40,7 @@ export const useBusinessDetails = (id: string) => {
     if (DATA_SOURCE === "database") {
       businessApi.get(id)
         .then((res) => {
-          setData(res as BusinessDetails);
+          setData(res.data as BusinessDetails);
           setIsLoading(false);
         })
         .catch((err) => {

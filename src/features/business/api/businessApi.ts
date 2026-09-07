@@ -1,15 +1,20 @@
 import apiClient from "@/lib/api/client";
 import { BusinessFormValues } from "../schemas/businessSchema";
+import { ApiResponse, PaginatedData, PaginationParams } from "@/types/api";
 
-// TODO: BACKEND CONFIRMATION REQUIRED
-// Replace `unknown` with exact backend schemas for business resources
-export type BusinessListResponse = unknown;
-export type BusinessDetailResponse = unknown;
-export type CreateBusinessResponse = unknown;
+export interface BusinessListParams extends PaginationParams {
+  status?: "DRAFT" | "ANALYZING" | "READY";
+  categoryId?: string;
+  search?: string;
+}
+
+export type BusinessListResponse = ApiResponse<PaginatedData<any>>; // Replace any with Business type if available
+export type BusinessDetailResponse = ApiResponse<any>;
+export type CreateBusinessResponse = ApiResponse<any>;
 
 export const businessApi = {
-  list: async (): Promise<BusinessListResponse> => {
-    const response = await apiClient.get("/businesses");
+  list: async (params?: BusinessListParams): Promise<BusinessListResponse> => {
+    const response = await apiClient.get("/businesses", { params });
     return response.data;
   },
 

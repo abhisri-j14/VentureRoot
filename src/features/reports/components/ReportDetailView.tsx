@@ -5,12 +5,11 @@ import Link from "next/link";
 import { Report } from "../types";
 import { 
   ArrowLeft, Download, Printer, Loader2, AlertTriangle, 
-  CheckCircle, Info, FileText, Target, MapPin, Users,
-  Shield, Landmark, TrendingUp, HandCoins, ListChecks, 
-  Briefcase, Database, Lightbulb, AlertOctagon, XCircle,
-  Check
+  CheckCircle, Info, FileText, Target, MapPin,
+  Shield, Landmark, TrendingUp, HandCoins,
+  Briefcase, AlertOctagon, XCircle
 } from "lucide-react";
-import { useTranslation } from "@/features/i18n/hooks/useTranslation";
+
 import { reportApi } from "../api/reportApi";
 import businessesData from "@/data/businesses.json";
 
@@ -60,7 +59,6 @@ const SectionHeading = ({ number, title, icon: Icon }: { number: number; title: 
 );
 
 export const ReportDetailView = ({ report }: ReportDetailViewProps) => {
-  const { t } = useTranslation();
   const [isDownloading, setIsDownloading] = useState(false);
   const [activeSection, setActiveSection] = useState(1);
 
@@ -109,7 +107,7 @@ export const ReportDetailView = ({ report }: ReportDetailViewProps) => {
       a.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.warn("Backend request failed or offline. Cannot download report.");
+      console.warn("Backend request failed or offline. Cannot download report.", error);
       alert("Report download is currently unavailable (Backend offline).");
     } finally {
       setIsDownloading(false);

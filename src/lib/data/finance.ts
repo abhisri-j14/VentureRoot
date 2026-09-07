@@ -13,13 +13,12 @@ export const useRepaymentSchedule = (businessId: string) => {
 
   useEffect(() => {
     if (DATA_SOURCE === "database") {
-      financeApi.getRepaymentSchedule(businessId)
-        .then((res) => {
-          // Assuming backend returns an array mapped to RepaymentResponse
-          setData(res as any);
+      financeApi.getRepayment({ businessId } as any)
+        .then((res: any) => {
+          setData(res.data as any);
           setIsLoading(false);
         })
-        .catch((err) => {
+        .catch((err: any) => {
           setError(err);
           setIsLoading(false);
         });

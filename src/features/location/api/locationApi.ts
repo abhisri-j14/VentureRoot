@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "@/lib/api/client";
 
-// TODO: BACKEND CONFIRMATION REQUIRED
-export type LocationHierarchyResponse = unknown;
-export type LocationSearchResponse = unknown;
+import { ApiResponse } from "@/types/api";
+
+export type LocationHierarchyResponse = ApiResponse<any>;
+export type LocationSearchResponse = ApiResponse<any>;
 
 export const locationApi = {
   getStates: async (): Promise<LocationHierarchyResponse> => {
@@ -36,6 +37,8 @@ export const locationApi = {
     return response.data;
   },
 
+  // ── DEFERRED ENDPOINTS ──
+  // The following endpoints are currently deferred in the Phase 17 backend contract.
   getStatistics: async (locationId: string) => {
     const response = await apiClient.get(`/locations/${locationId}/statistics`);
     return response.data;

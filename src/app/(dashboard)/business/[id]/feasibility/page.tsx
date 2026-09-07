@@ -53,8 +53,8 @@ export default function FeasibilityPage() {
   const compositeConfidence = feasibilityData.opportunity?.confidence?.score || 84;
 
   return (
-    <div className="flex w-full min-h-screen bg-background font-sans">
-      <main className="flex-1 px-4 md:px-8 lg:px-12 py-8 w-full max-w-full">
+    <div className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-6 bg-background font-sans">
+      <main className="flex-1 w-full max-w-full flex flex-col gap-6">
         
         {/* Header Section */}
         <div className="mb-6">
@@ -63,10 +63,10 @@ export default function FeasibilityPage() {
           </Link>
           <div className="flex justify-between items-end">
             <div>
-              <h1 className="text-3xl md:text-4xl font-heading font-bold text-secondary tracking-tight">
+              <h1 className="text-[22px] font-heading font-bold text-[#242424] tracking-tight leading-tight">
                 Business Intelligence
               </h1>
-              <p className="text-secondary-muted mt-1 text-sm md:text-base">
+              <p className="text-sm text-slate-500 font-medium mt-0.5">
                 Hyper-local market demand, competitor positioning, and feasibility intelligence.
               </p>
             </div>

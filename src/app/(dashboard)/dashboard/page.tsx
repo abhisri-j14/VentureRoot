@@ -4,8 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import Link from "next/link";
-import { ArrowRight, PieChart } from "lucide-react";
+import { ArrowRight, PieChart, TrendingUp, Sparkles } from "lucide-react";
 import { CountUp } from "@/components/ui/CountUp";
+import { motion } from "framer-motion";
 import businessesData from "@/data/businesses.json";
 
 // --- Frontend-safe structured placeholders for ML/backend data ---
@@ -24,349 +25,468 @@ const ML_PLACEHOLDERS = {
   }
 };
 
+// --- Framer Motion Variants ---
+const EASE_OUT_EXPO = [0.22, 1, 0.36, 1] as [number, number, number, number];
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20, scale: 0.98 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.5,
+      ease: EASE_OUT_EXPO,
+    },
+  },
+};
+
+const headerVariants = {
+  hidden: { opacity: 0, x: -12 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.6, ease: EASE_OUT_EXPO },
+  },
+};
+
 export default function DashboardPage() {
   const { t } = useTranslation();
   const { user, fetchUser } = useAuthStore();
   const [mounted, setMounted] = useState(false);
-  
+
   useEffect(() => {
     fetchUser();
-    // Trigger animations after a tiny delay for visual effect
     const timer = setTimeout(() => setMounted(true), 100);
     return () => clearTimeout(timer);
   }, [fetchUser]);
 
   const { dashboard, details } = businessesData;
   const capexBreakdown = dashboard.capexBreakdown || [];
-  
+
   // Financial metrics
-  const totalCapex = details.capital.expectedInvestment / 100000; // in Lakhs
-  const loanAmount = 7.65; // Example loan calculation
+  const totalCapex = details.capital.expectedInvestment / 100000;
+  const loanAmount = 7.65;
   const ltvPercentage = (loanAmount / totalCapex) * 100;
   const businessScore = 78;
 
   const firstName = user?.name?.split(" ")[0] || "Entrepreneur";
   const locationStr = details.location ? `${details.location.district}, ${details.location.state}` : "Local Area";
 
-  // Breakdown colors - professional SaaS palette
-  const breakdownColors = ["bg-[#3B82F6]", "bg-[#10B981]", "bg-[#F59E0B]", "bg-[#6366F1]"];
+  const breakdownColors = ["bg-[#5c331c]", "bg-[#f4ebd9]", "bg-[#c66f43]", "bg-[#e8d47b]"];
   const totalBreakdown = capexBreakdown.reduce((sum, item) => sum + item.value, 0);
 
   // SVG Circumference constants
-  const CIRCLE_RADIUS = 54;
-  const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * CIRCLE_RADIUS; // ~339.29
-  
-  const DONUT_RADIUS = 35;
-  const DONUT_CIRCUMFERENCE = 2 * Math.PI * DONUT_RADIUS; // ~219.91
+  const CIRCLE_RADIUS = 50;
+  const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * CIRCLE_RADIUS;
 
-  // Shared Typography Classes based on the new hierarchical system
+  const DONUT_RADIUS = 35;
+  const DONUT_CIRCUMFERENCE = 2 * Math.PI * DONUT_RADIUS;
+
   const classes = {
-    cardHeading: "text-[16px] font-bold text-slate-900 tracking-tight", // Clean, prominent, modern SaaS heading
-    mainValue: "font-bold text-slate-900 tracking-tight", // Crisp dark values
-    supportingText: "text-sm text-slate-500 font-medium", // Clean slate supporting text
-    smallSupporting: "text-[12px] font-medium text-slate-400", 
-    profileLabel: "text-[13px] font-semibold text-slate-500", // Soft but legible labels
-    profileValue: "text-[15px] font-bold text-slate-900" // Strong data points
+    cardHeading: "text-[20px] font-bold text-slate-900 tracking-tight",
+    mainValue: "font-bold text-slate-900 tracking-tight",
+    supportingText: "text-sm text-slate-500 font-medium",
+    smallSupporting: "text-[14px] font-medium text-slate-400",
+    profileLabel: "text-[13px] font-semibold text-slate-500",
+    profileValue: "text-[13px] font-bold text-slate-900"
   };
+
+  // Card base classes
+  const cardBase = "bg-[#fffff5] rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] transition-all duration-300 card-hover-lift";
 
   return (
     <div className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-6">
-      
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+
+      {/* ═══ HEADER with staggered entrance ═══ */}
+      <motion.div
+        variants={headerVariants}
+        initial="hidden"
+        animate="visible"
+        className="flex flex-col md:flex-row md:items-center justify-between gap-2"
+      >
         <div>
-          <h1 className="text-2xl font-heading font-bold text-[#242424] tracking-tight">
+          <h1 className="text-[22px] font-heading font-bold text-[#242424] tracking-tight leading-tight">
             Welcome back, {firstName}
           </h1>
-          <p className={classes.supportingText + " mt-1"}>
+          <p className={classes.supportingText + " mt-0.5"}>
             {details.category} • {locationStr}
           </p>
         </div>
-      </div>
+        {/* Live status indicator */}
+        <div className="flex items-center gap-2 text-[12px] font-semibold text-slate-400">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          Dashboard live
+        </div>
+      </motion.div>
 
-      {/* Main Grid Canvas */}
-      <div className="flex flex-col gap-6">
-        
-        {/* TOP ROW: KPI CARDS WITH GRAPHS */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
-          {/* KPI 1: Viability */}
-          <div className="bg-white rounded-xl border border-gray-900/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-gray-900/20 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 p-6 lg:p-8 flex flex-col relative overflow-hidden">
-            <h3 className={`${classes.cardHeading} mb-6 text-center`}>
+      {/* ═══ MAIN GRID CANVAS ═══ */}
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="flex flex-col gap-6"
+      >
+
+        {/* ─── TOP ROW: KPI CARDS ─── */}
+        <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          {/* KPI 1: Business Viability */}
+          <motion.div variants={cardVariants} className={`${cardBase} p-6 lg:p-7 flex flex-col relative overflow-hidden group`}>
+            {/* Subtle corner glow */}
+            <div className="absolute -top-6 -right-6 w-24 h-24 bg-[#1E6702]/5 rounded-full blur-2xl pointer-events-none group-hover:bg-[#1E6702]/10 transition-colors duration-700" />
+
+            <h3 className={`${classes.cardHeading} mb-5 text-left relative z-10`}>
               Business Viability
             </h3>
-            
-            <div className="flex-1 flex flex-col items-center justify-center">
-              <div className="relative w-32 h-32 flex items-center justify-center mb-6">
+
+            <div className="flex-1 flex flex-col items-center justify-center relative z-10">
+              {/* SVG Ring with animated glow */}
+              <div className={`relative w-28 h-28 flex items-center justify-center mb-4 ${mounted ? 'animate-pulse-glow' : ''}`}>
                 <svg className="w-full h-full transform -rotate-90 absolute inset-0">
-                  <circle cx="64" cy="64" r={CIRCLE_RADIUS} stroke="#F3F4F6" strokeWidth="12" fill="none" />
-                  <circle 
-                    cx="64" cy="64" r={CIRCLE_RADIUS} 
-                    stroke="#1E6702" strokeWidth="12" fill="none" 
-                    strokeDasharray={CIRCLE_CIRCUMFERENCE} 
+                  <circle cx="56" cy="56" r={CIRCLE_RADIUS} stroke="#F3F4F6" strokeWidth="11" fill="none" />
+                  <circle
+                    cx="56" cy="56" r={CIRCLE_RADIUS}
+                    stroke="url(#viabilityGradient)" strokeWidth="11" fill="none"
+                    strokeDasharray={CIRCLE_CIRCUMFERENCE}
                     strokeDashoffset={mounted ? CIRCLE_CIRCUMFERENCE - (businessScore / 100) * CIRCLE_CIRCUMFERENCE : CIRCLE_CIRCUMFERENCE}
                     strokeLinecap="round"
-                    className="transition-all duration-1000 ease-out"
+                    className="transition-all duration-[1.5s] ease-out"
                   />
+                  <defs>
+                    <linearGradient id="viabilityGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#1E6702" />
+                      <stop offset="100%" stopColor="#4bc71a" />
+                    </linearGradient>
+                  </defs>
                 </svg>
                 <div className="absolute flex flex-col items-center justify-center">
-                  <span className={`text-4xl ${classes.mainValue} leading-none`}>
+                  <span className={`text-[34px] leading-none ${classes.mainValue}`}>
                     {mounted ? <CountUp to={businessScore} duration={1} /> : "0"}
                   </span>
-                  <span className={`${classes.smallSupporting} uppercase tracking-widest mt-1`}>Score</span>
+                  <span className={`${classes.smallSupporting} uppercase tracking-widest mt-0.5`}>Score</span>
                 </div>
               </div>
               <div className="text-center w-full">
-                <span className={`${classes.supportingText} font-bold block mb-1 text-[#242424]`}>Good viability</span>
-                <span className={classes.smallSupporting}>Currently showing mock data • ML integration pending</span>
+                <span className={`${classes.supportingText} font-bold block mb-0.5 text-[#242424]`}>Good viability</span>
+                <span className={classes.smallSupporting}>Mock data · ML integration pending</span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* KPI 2: CAPEX */}
-          <div className="bg-white rounded-xl border border-gray-900/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-gray-900/20 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 p-6 lg:p-8 flex flex-col relative overflow-hidden">
-            <h3 className={`${classes.cardHeading} mb-8 text-left`}>
+          {/* KPI 2: Estimated Capex */}
+          <motion.div variants={cardVariants} className={`${cardBase} p-6 lg:p-7 flex flex-col relative overflow-hidden group`}>
+            <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-[#1E6702]/5 rounded-full blur-2xl pointer-events-none group-hover:bg-[#1E6702]/10 transition-colors duration-700" />
+
+            <h3 className={`${classes.cardHeading} mb-5 text-left relative z-10`}>
               Estimated Capex
             </h3>
-            
-            <div className="flex-1 flex flex-col justify-between">
-              <div className="flex items-center justify-between mb-8">
-                <span className={`text-5xl ${classes.mainValue} truncate mr-2`}>
+
+            <div className="flex-1 flex flex-col justify-between relative z-10">
+              <div className="flex items-center justify-between mb-5">
+                <span className={`text-[42px] leading-none ${classes.mainValue} truncate mr-2`}>
                   <CountUp to={totalCapex} prefix="₹" suffix="L" decimals={1} duration={2} />
                 </span>
-                
-                {/* Donut Chart Visual (Stacked perfectly to avoid gaps) */}
-                <div className="w-16 h-16 lg:w-20 lg:h-20 relative shrink-0">
+
+                <div className="w-14 h-14 lg:w-16 lg:h-16 relative shrink-0">
                   <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
                     <circle cx="50" cy="50" r={DONUT_RADIUS} fill="none" stroke="#F3F4F6" strokeWidth="20" />
-                    <circle 
-                      cx="50" cy="50" r={DONUT_RADIUS} fill="none" stroke="#1E6702" strokeWidth="20" 
-                      strokeDasharray={DONUT_CIRCUMFERENCE} 
-                      strokeDashoffset={mounted ? 0 : DONUT_CIRCUMFERENCE} 
-                      className="transition-all duration-1000 ease-out delay-100"
+                    <circle
+                      cx="50" cy="50" r={DONUT_RADIUS} fill="none" stroke="#1E6702" strokeWidth="20"
+                      strokeDasharray={DONUT_CIRCUMFERENCE}
+                      strokeDashoffset={mounted ? 0 : DONUT_CIRCUMFERENCE}
+                      className="transition-all duration-[1.2s] ease-out delay-100"
                     />
-                    <circle 
-                      cx="50" cy="50" r={DONUT_RADIUS} fill="none" stroke="#2b8a03" strokeWidth="20" 
-                      strokeDasharray={DONUT_CIRCUMFERENCE} 
-                      strokeDashoffset={mounted ? DONUT_CIRCUMFERENCE * 0.45 : DONUT_CIRCUMFERENCE} 
-                      className="transition-all duration-1000 ease-out delay-200"
+                    <circle
+                      cx="50" cy="50" r={DONUT_RADIUS} fill="none" stroke="#2b8a03" strokeWidth="20"
+                      strokeDasharray={DONUT_CIRCUMFERENCE}
+                      strokeDashoffset={mounted ? DONUT_CIRCUMFERENCE * 0.45 : DONUT_CIRCUMFERENCE}
+                      className="transition-all duration-[1.2s] ease-out delay-200"
                     />
-                    <circle 
-                      cx="50" cy="50" r={DONUT_RADIUS} fill="none" stroke="#4bc71a" strokeWidth="20" 
-                      strokeDasharray={DONUT_CIRCUMFERENCE} 
-                      strokeDashoffset={mounted ? DONUT_CIRCUMFERENCE * 0.75 : DONUT_CIRCUMFERENCE} 
-                      className="transition-all duration-1000 ease-out delay-300"
+                    <circle
+                      cx="50" cy="50" r={DONUT_RADIUS} fill="none" stroke="#4bc71a" strokeWidth="20"
+                      strokeDasharray={DONUT_CIRCUMFERENCE}
+                      strokeDashoffset={mounted ? DONUT_CIRCUMFERENCE * 0.75 : DONUT_CIRCUMFERENCE}
+                      className="transition-all duration-[1.2s] ease-out delay-300"
                     />
                   </svg>
                 </div>
               </div>
-              
-              <div className="mt-auto border-t border-slate-100 pt-6">
-                <span className={`${classes.supportingText} font-bold block mb-1 text-[#242424]`}>Based on market averages</span>
-                <span className={classes.smallSupporting}>Backend integration pending • Currently showing mock data</span>
+
+              <div className="border-t border-slate-100 pt-4">
+                <span className={`${classes.supportingText} font-bold block mb-0.5 text-[#242424]`}>Based on market averages</span>
+                <span className={classes.smallSupporting}>Backend integration pending · Mock data</span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* KPI 3: Loan */}
-          <div className="bg-white rounded-xl border border-gray-900/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-gray-900/20 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 p-6 lg:p-8 flex flex-col relative overflow-hidden">
-            <h3 className={`${classes.cardHeading} mb-8 text-left`}>
+          {/* KPI 3: Possible Loan */}
+          <motion.div variants={cardVariants} className={`${cardBase} p-6 lg:p-7 flex flex-col relative overflow-hidden group`}>
+            <div className="absolute -top-4 -left-4 w-16 h-16 bg-[#1E6702]/5 rounded-full blur-xl pointer-events-none group-hover:bg-[#1E6702]/10 transition-colors duration-700" />
+
+            <h3 className={`${classes.cardHeading} mb-5 text-left relative z-10`}>
               Possible Loan
             </h3>
-            
-            <div className="flex-1 flex flex-col justify-between">
-              <div className="flex flex-col gap-6 mb-8">
-                <span className={`text-5xl ${classes.mainValue}`}>
+
+            <div className="flex-1 flex flex-col justify-between relative z-10">
+              <div className="flex flex-col gap-4 mb-5">
+                <span className={`text-[42px] leading-none ${classes.mainValue}`}>
                   <CountUp to={loanAmount} prefix="₹" suffix="L" decimals={2} duration={2} />
                 </span>
-                
-                <div className="flex flex-col gap-2 w-full mt-2">
+
+                <div className="flex flex-col gap-1.5 w-full">
                   <div className="flex justify-between items-center text-[11px] font-bold text-[#5B514A] uppercase tracking-[0.04em]">
                     <span>LTV</span>
                     <span className="text-[#1E6702]">{Math.round(ltvPercentage)}%</span>
                   </div>
-                  <div className="h-2.5 w-full bg-[#1E6702]/10 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-[#1E6702] rounded-full transition-all duration-1000 ease-out" 
-                      style={{ width: mounted ? `${ltvPercentage}%` : "0%" }} 
+                  <div className="h-2 w-full bg-[#1E6702]/10 rounded-full overflow-hidden relative">
+                    <div
+                      className="h-full bg-gradient-to-r from-[#1E6702] to-[#4bc71a] rounded-full transition-all duration-[1.5s] ease-out relative progress-shine"
+                      style={{ width: mounted ? `${ltvPercentage}%` : "0%" }}
                     />
                   </div>
                 </div>
               </div>
-              
-              <div className="mt-auto border-t border-slate-100 pt-6">
-                <span className={`${classes.supportingText} font-bold block mb-1 text-[#242424]`}>{Math.round(ltvPercentage)}% LTV</span>
-                <span className={classes.smallSupporting}>Backend integration pending • Currently showing mock data</span>
+
+              <div className="border-t border-slate-100 pt-4">
+                <span className={`${classes.supportingText} font-bold block mb-0.5 text-[#242424]`}>{Math.round(ltvPercentage)}% LTV</span>
+                <span className={classes.smallSupporting}>Backend integration pending · Mock data</span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-        </div>
+        </motion.div>
 
-        {/* MIDDLE AND BOTTOM ROWS: Grid split */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-          
-          {/* LEFT COLUMN (2fr span) */}
+        {/* ─── LOWER GRID: 2/3 left + 1/3 right ─── */}
+        <motion.div variants={containerVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+
+          {/* LEFT COLUMN */}
           <div className="lg:col-span-2 flex flex-col gap-6">
-            
-            {/* Business Dossier */}
-            <div className="bg-[#cde06e] text-gray-900 rounded-xl border border-gray-900/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-gray-900/20 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 p-6 lg:p-8 flex flex-col h-full">
-              <div className="flex items-center justify-between mb-8">
+
+            {/* Business Overview — Premium warm card */}
+            <motion.div variants={cardVariants} className="bg-[#f2f1b6] text-gray-900 rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] p-6 lg:p-7 flex flex-col flex-1 card-hover-lift relative overflow-hidden group">
+              {/* Decorative floating orb */}
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#1c4270]/5 rounded-full blur-3xl pointer-events-none animate-float" />
+              <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-white/30 rounded-full blur-2xl pointer-events-none animate-float" style={{ animationDelay: '3s' }} />
+
+              {/* Header */}
+              <div className="flex items-center justify-between mb-5 relative z-10">
                 <div>
-                  <span className={`text-gray-700 text-[11px] uppercase tracking-wider font-bold block mb-2`}>Business Overview</span>
-                  <h2 className={`text-xl font-bold text-gray-900`}>{details.category}</h2>
+                  <span className="text-[#1c4270] text-[14px] uppercase tracking-wider font-bold block mb-1">Business Overview</span>
+                  <h2 className="text-[32px] font-bold text-[#1c4270]">{details.category}</h2>
                 </div>
-                <span className="bg-white/40 text-gray-900 px-3 py-1 rounded-md text-xs font-semibold shadow-sm">Active</span>
+                <span className="bg-white/50 backdrop-blur-sm text-[#1c4270] px-3 py-1.5 rounded-lg text-[11px] font-semibold shadow-sm border border-white/60">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Active
+                  </span>
+                </span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                <div className="flex flex-col gap-2">
-                  <span className="text-gray-700 text-xs font-semibold uppercase tracking-wider">Business focus</span>
-                  <p className="text-sm font-semibold text-gray-900">{ML_PLACEHOLDERS.business.focus}</p>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <span className="text-gray-700 text-xs font-semibold uppercase tracking-wider">Primary market</span>
-                  <p className="text-sm font-semibold text-gray-900">{ML_PLACEHOLDERS.business.primaryMarket}</p>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <span className="text-gray-700 text-xs font-semibold uppercase tracking-wider">Positioning</span>
-                  <p className="text-sm font-semibold text-gray-900">{ML_PLACEHOLDERS.business.positioning}</p>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <span className="text-gray-700 text-xs font-semibold uppercase tracking-wider">Business model</span>
-                  <p className="text-sm font-semibold text-gray-900">{ML_PLACEHOLDERS.business.businessModel}</p>
-                </div>
+              {/* Data grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5 mb-5 relative z-10">
+                {[
+                  { label: "Business focus", value: ML_PLACEHOLDERS.business.focus },
+                  { label: "Primary market", value: ML_PLACEHOLDERS.business.primaryMarket },
+                  { label: "Positioning", value: ML_PLACEHOLDERS.business.positioning },
+                  { label: "Business model", value: ML_PLACEHOLDERS.business.businessModel },
+                ].map((item, i) => (
+                  <motion.div
+                    key={item.label}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 + i * 0.08, duration: 0.4, ease: EASE_OUT_EXPO }}
+                    className="flex flex-col gap-1"
+                  >
+                    <span className="text-[#1c4270] text-[15px] font-semibold uppercase tracking-wider">{item.label}</span>
+                    <p className="text-[14px] font-semibold text-gray-900">{item.value}</p>
+                  </motion.div>
+                ))}
               </div>
 
-              <div className="p-4 bg-white/30 rounded-lg border border-white/50 mt-auto shadow-sm">
-                <span className={`text-gray-700 text-xs font-semibold uppercase tracking-wider block mb-2`}>Key opportunity</span>
-                <p className={`text-sm font-bold text-gray-900`}>
+              {/* Key Opportunity — glassmorphism */}
+              <div className="p-4 bg-white/35 backdrop-blur-sm rounded-lg border border-white/60 mt-auto shadow-sm relative z-10 group/opp hover:bg-white/50 transition-colors duration-300">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <Sparkles className="w-3 h-3 text-[#1c4270]/60" />
+                  <span className="text-[#1c4270] text-[12px] font-semibold uppercase tracking-wider">Key opportunity</span>
+                </div>
+                <p className="text-[13px] font-bold text-gray-900">
                   {ML_PLACEHOLDERS.business.keyOpportunity}
                 </p>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Capital Breakdown */}
+            {/* Capital Breakdown — Earthy olive card */}
             {capexBreakdown.length > 0 && (
-              <div className="bg-[#fcfce8] rounded-xl border border-gray-900/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-gray-900/20 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 p-6 lg:p-8">
-                <div className="flex items-center justify-between mb-8">
-                  <h3 className={classes.cardHeading}>Capital Breakdown</h3>
-                  <button className="text-xs font-semibold text-blue-600 hover:text-blue-700">View details</button>
+              <motion.div variants={cardVariants} className={`${cardBase} p-6 lg:p-7 relative overflow-hidden group`} style={{ backgroundColor: '#a7bf63' }}>
+                {/* Decorative orb */}
+                <div className="absolute -bottom-8 -right-8 w-28 h-28 bg-[#5c331c]/8 rounded-full blur-2xl pointer-events-none animate-float" style={{ animationDelay: '2s' }} />
+
+                <div className="flex items-center justify-between mb-5 relative z-10">
+                  <h3 className={classes.cardHeading} style={{ fontSize: '29px', color: '#5c331c' }}>Capital Breakdown</h3>
                 </div>
 
-                <div className="flex flex-col gap-8">
-                  {/* Progress Bar */}
-                  <div className="flex h-4 rounded-full overflow-hidden w-full gap-[1px]">
+                <div className="flex flex-col gap-5 relative z-10">
+                  {/* Animated progress bars with rounded segments */}
+                  <div className="flex h-3.5 rounded-full overflow-hidden w-full gap-[2px] shadow-inner">
                     {capexBreakdown.map((item, i) => (
-                      <div 
+                      <motion.div
                         key={item.name}
-                        className={`${breakdownColors[i % breakdownColors.length]} transition-all duration-1000 ease-out`}
-                        style={{ width: mounted ? `${(item.value / totalBreakdown) * 100}%` : "0%" }}
+                        className={`${breakdownColors[i % breakdownColors.length]} rounded-sm`}
+                        initial={{ width: "0%" }}
+                        animate={{ width: mounted ? `${(item.value / totalBreakdown) * 100}%` : "0%" }}
+                        transition={{ duration: 1.2, delay: 0.3 + i * 0.15, ease: EASE_OUT_EXPO }}
                       />
                     ))}
                   </div>
 
-                  {/* Metrics Row */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {capexBreakdown.map((item, i) => (
-                      <div key={item.name} className="flex flex-col gap-1.5">
-                        <div className="flex items-center gap-2">
-                          <div className={`w-2.5 h-2.5 rounded-sm ${breakdownColors[i % breakdownColors.length]}`} />
-                          <span className={`${classes.profileLabel} truncate`}>{item.name}</span>
+                      <motion.div
+                        key={item.name}
+                        className="flex flex-col gap-1"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 + i * 0.1, duration: 0.4, ease: EASE_OUT_EXPO }}
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <div className={`w-2.5 h-2.5 rounded-sm ${breakdownColors[i % breakdownColors.length]} shadow-sm`} />
+                          <span className="text-[13px] font-semibold text-[#5c331c]/90 truncate">{item.name}</span>
                         </div>
-                        <span className={`text-lg ${classes.mainValue}`}>
+                        <span className="text-[17px] font-bold text-[#5c331c] tracking-tight">
                           ₹{(item.value / 100000).toFixed(1)}L
                         </span>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             )}
           </div>
 
-          {/* RIGHT COLUMN (1fr span) */}
-          <div className="flex flex-col gap-6 h-full">
-            
-            {/* FINANCIAL OUTLOOK */}
-            <div className="bg-[#bd9702] rounded-xl shadow-lg shadow-[#bd9702]/20 p-6 lg:p-8 flex flex-col flex-1 relative overflow-hidden group">
-              {/* Subtle light bloom in the top left to add depth without being rainbow */}
-              <div className="absolute top-0 left-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -ml-10 -mt-10 pointer-events-none" />
-              
+          {/* RIGHT COLUMN */}
+          <div className="flex flex-col gap-6">
+
+            {/* Financial Outlook — Premium purple accent */}
+            <motion.div variants={cardVariants} className="bg-[#9b79a8] rounded-xl shadow-[0_8px_32px_rgba(155,121,168,0.25)] p-6 lg:p-7 flex flex-col flex-1 relative overflow-hidden group">
+              {/* Floating decorative orbs */}
+              <div className="absolute top-0 left-0 w-36 h-36 bg-white/8 rounded-full blur-3xl -ml-8 -mt-8 pointer-events-none animate-float" />
+              <div className="absolute bottom-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-2xl -mr-6 -mb-6 pointer-events-none animate-float" style={{ animationDelay: '4s' }} />
+
+              {/* Shimmer overlay */}
+              <div className="absolute inset-0 animate-shimmer pointer-events-none rounded-xl" />
+
               <div className="relative z-10 flex flex-col h-full">
-                <span className="text-[12px] font-bold uppercase tracking-[0.04em] text-[#fcf8e6]/80 mb-2 block">
+                <span className="text-[14px] font-bold uppercase tracking-[0.06em] text-[#faf9d7]/80 mb-1.5 block">
                   Financial Outlook
                 </span>
-                
-                <h3 className="text-xl font-heading font-semibold text-[#fcf8e6] mb-8 tracking-tight">
-                  Your business, in numbers
+
+                <h3 className="text-[25px] font-heading font-semibold text-[#fffede] mb-5 tracking-tight leading-snug">
+                  Your business in numbers
                 </h3>
-                
-                <div className="flex items-center justify-between gap-4 w-full mb-8">
-                  <div className="flex flex-col gap-1 w-1/2">
-                    <span className="text-2xl lg:text-3xl font-heading font-bold text-[#fcf8e6] tracking-tight">
+
+                {/* Revenue + profit side-by-side */}
+                <div className="flex items-stretch justify-between gap-3 w-full mb-5">
+                  <motion.div
+                    className="flex flex-col gap-0.5 flex-1"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.5, duration: 0.5, ease: EASE_OUT_EXPO }}
+                  >
+                    <span className="text-[30px] lg:text-[30px] font-heading font-semibold text-[#fffede] tracking-tight leading-none">
                       {ML_PLACEHOLDERS.finance.monthlyRevenue}
                     </span>
-                    <span className="text-[13px] font-medium text-[#fcf8e6]/80">Monthly revenue</span>
-                  </div>
-                  
-                  <div className="w-px h-10 bg-[#fcf8e6]/20"></div>
+                    <span className="text-[14px] font-medium text-[#fffede]/75 mt-1 flex items-center gap-1">
+                      <TrendingUp className="w-3 h-3" />
+                      Monthly revenue
+                    </span>
+                  </motion.div>
 
-                  <div className="flex flex-col gap-1 w-1/2">
-                    <span className="text-2xl lg:text-3xl font-heading font-bold text-[#fcf8e6] tracking-tight">
+                  <div className="w-px bg-[#fffede]/20 self-stretch" />
+
+                  <motion.div
+                    className="flex flex-col gap-0.5 flex-1"
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.6, duration: 0.5, ease: EASE_OUT_EXPO }}
+                  >
+                    <span className="text-[30px] lg:text-[30px] font-heading font-semibold text-[#fffede] tracking-tight leading-none">
                       {ML_PLACEHOLDERS.finance.monthlyNetProfit}
                     </span>
-                    <span className="text-[13px] font-medium text-[#fcf8e6]/80">Monthly net profit</span>
-                  </div>
+                    <span className="text-[14px] font-medium text-[#fffede]/75 mt-1 flex items-center gap-1">
+                      <TrendingUp className="w-3 h-3" />
+                      Net profit / mo
+                    </span>
+                  </motion.div>
                 </div>
-                
-                <div className="w-full border-t border-[#fcf8e6]/20 pt-6 mb-8">
-                  <span className="text-[13px] font-medium text-[#fcf8e6]/80 block mb-1">Estimated break-even</span>
-                  <div className="flex items-center gap-2 text-lg font-heading font-semibold text-[#fcf8e6]">
-                    <PieChart className="w-4 h-4 text-[#fcf8e6]" />
+
+                {/* Break-even */}
+                <div className="w-full border-t border-[#fffede]/20 pt-4 mb-5">
+                  <span className="text-[14px] font-medium text-[#fffede]/75 block mb-0.5">Estimated break-even</span>
+                  <div className="flex items-center gap-1.5 text-[25px] font-heading font-semibold text-[#fffede]">
+                    <PieChart className="w-3.5 h-3.5 text-[#fffede]" />
                     Month {ML_PLACEHOLDERS.finance.breakEvenMonth}
                   </div>
                 </div>
-                
-                <Link 
+
+                <Link
                   href={`/business/${details.id}/finance`}
-                  className="mt-auto flex items-center justify-center gap-2 w-full bg-[#fcf8e6] hover:bg-white text-[#bd9702] px-4 py-3 rounded-lg text-sm font-bold transition-colors"
+                  className="group/btn mt-auto flex items-center justify-center gap-2 w-full bg-[#faf9d7] hover:bg-white text-[#9b79a8] px-4 py-2.5 rounded-lg text-[14px] font-bold transition-all duration-300 hover:shadow-[0_4px_16px_rgba(250,249,215,0.4)]"
                 >
                   <span>View financial analysis</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover/btn:translate-x-1" />
                 </Link>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Next Action -> My Business */}
-            <div className="bg-[#943212] rounded-xl shadow-lg shadow-[#943212]/20 p-6 lg:p-8 flex flex-col shrink-0 relative overflow-hidden text-white">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
-              
-              <span className="text-[12px] font-bold uppercase tracking-[0.04em] text-[#ffeee8]/70 mb-4">
+            {/* Recommended Action — Deep terracotta accent */}
+            <motion.div variants={cardVariants} className="bg-[#943212] rounded-xl shadow-[0_8px_32px_rgba(148,50,18,0.25)] p-6 lg:p-7 flex flex-col relative overflow-hidden text-white group">
+              {/* Floating orbs */}
+              <div className="absolute top-0 right-0 w-28 h-28 bg-white/8 rounded-full blur-2xl -mr-8 -mt-8 pointer-events-none animate-float" />
+              <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full blur-xl -ml-6 -mb-6 pointer-events-none animate-float" style={{ animationDelay: '5s' }} />
+
+              {/* Shimmer overlay */}
+              <div className="absolute inset-0 animate-shimmer pointer-events-none rounded-xl" />
+
+              <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-[#ffeee8]/70 mb-3 relative z-10 flex items-center gap-1.5">
+                <Sparkles className="w-3 h-3" />
                 Recommended Action
               </span>
-              
-              <h3 className="text-xl font-heading font-semibold mb-6 tracking-tight leading-snug text-[#ffeee8]">
+
+              <h3 className="text-[25px] font-heading font-semibold mb-3 tracking-tight leading-snug text-[#ffeee8] relative z-10">
                 Explore your business overview
               </h3>
-              
-              <p className="text-[15px] text-[#ffeee8]/90 mb-8 font-medium">
-                Get a detailed and comprehensive overview of your entire business operations.
+
+              <p className="text-[13px] text-[#ffeee8]/85 mb-5 font-medium relative z-10">
+                Get a detailed overview of your entire business operations and financials.
               </p>
-              
-              <Link 
+
+              <Link
                 href={`/business/${details.id}`}
-                className="mt-auto flex items-center justify-center gap-2 w-full bg-[#ffeee8] hover:bg-white text-[#943212] px-4 py-3 rounded-lg text-sm font-bold transition-colors"
+                className="group/btn mt-auto flex items-center justify-center gap-2 w-full bg-[#ffeee8] hover:bg-white text-[#943212] px-4 py-2.5 rounded-lg text-[14px] font-bold transition-all duration-300 relative z-10 hover:shadow-[0_4px_16px_rgba(255,238,232,0.4)]"
               >
                 <span>My Business</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover/btn:translate-x-1" />
               </Link>
-            </div>
+            </motion.div>
 
           </div>
-        </div>
+        </motion.div>
 
-      </div>
+      </motion.div>
     </div>
   );
 }

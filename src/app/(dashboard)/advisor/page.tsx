@@ -2,17 +2,17 @@ import { ChatWindow } from "@/features/advisor/components/ChatWindow";
 
 export default function AdvisorPage() {
   return (
-    <div className="w-full max-w-[1800px] mx-auto px-4 lg:px-6 h-full flex flex-col pb-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-heading font-bold text-secondary">
+    <div className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-6 pb-8">
+      <div>
+        <h1 className="text-[22px] font-heading font-bold text-[#242424] tracking-tight leading-tight">
           VentureRoot AI Advisor
         </h1>
-        <p className="text-secondary-muted mt-1">
+        <p className="text-sm text-slate-500 font-medium mt-0.5">
           Ask about your business, market, financing, or next steps.
         </p>
       </div>
 
-      <div className="mb-6 hidden md:flex gap-3 overflow-x-auto pb-2">
+      <div className="hidden md:flex gap-3 overflow-x-auto pb-2">
         <button className="whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white text-sm font-medium text-secondary-muted hover:border-[#1E6702] hover:text-[#1E6702] hover:bg-[#1E6702]/10 transition-colors">
           Should I start this business here?
         </button>

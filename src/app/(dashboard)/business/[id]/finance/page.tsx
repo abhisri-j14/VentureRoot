@@ -31,7 +31,7 @@ const scheduleRows = financeData.repaymentSchedule.map(r => {
 // ── Shared Card wrapper ───────────────────────────────────────────────────────
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`bg-white rounded-2xl border border-slate-200 shadow-sm ${className}`}>
+    <div className={`bg-[#fffff5] rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] transition-all duration-300 ${className}`}>
       {children}
     </div>
   );
@@ -42,7 +42,7 @@ function CardHeader({
 }: { title: string; subtitle?: string; accent?: boolean }) {
   return (
     <div className={`px-6 py-5 border-b border-slate-100 ${accent ? "bg-[#96b827]" : ""}`}>
-      <h2 className={`text-base font-bold ${accent ? "text-white" : "text-gray-900"}`}>{title}</h2>
+      <h2 className={`text-[20px] tracking-tight font-bold ${accent ? "text-white" : "text-slate-900"}`}>{title}</h2>
       {subtitle && <p className={`text-xs mt-0.5 ${accent ? "text-white/70" : "text-gray-500"}`}>{subtitle}</p>}
     </div>
   );
@@ -55,8 +55,7 @@ export default function FinancePage() {
   const { summary, fundingAllocation, fundingOptions, repaymentPlan } = financeData;
 
   return (
-    <div className="w-full min-h-screen bg-[#f4fce8]">
-      <div className="w-full px-6 md:px-10 lg:px-14 py-8 max-w-[1400px] mx-auto">
+    <div className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-6 bg-[#f4fce8]">
 
         {/* ── 1. Header ─────────────────────────────────────────────────── */}
         <div className="mb-8">
@@ -69,10 +68,10 @@ export default function FinancePage() {
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
-              <h1 className="text-3xl md:text-4xl font-heading font-bold text-gray-900 tracking-tight">
+              <h1 className="text-[22px] font-heading font-bold text-[#242424] tracking-tight leading-tight">
                 Financial Planning
               </h1>
-              <p className="text-gray-500 mt-1.5 text-sm md:text-base">
+              <p className="text-sm text-slate-500 font-medium mt-0.5">
                 Understand the money needed, possible funding, and repayment burden.
               </p>
               <span className="inline-block mt-2 text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full">
@@ -338,8 +337,6 @@ export default function FinancePage() {
             before making any financial commitment.
           </p>
         </div>
-
-      </div>
     </div>
   );
 }

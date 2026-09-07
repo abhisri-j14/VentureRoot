@@ -15,7 +15,7 @@ export const useReports = () => {
     if (DATA_SOURCE === "database") {
       reportApi.list()
         .then((res) => {
-          setData(res as any[]);
+          setData(((res.data as any).reports || (res.data as any).items || []) as any[]);
           setIsLoading(false);
         })
         .catch((err) => {
@@ -39,7 +39,7 @@ export const useReportDetails = (id: string) => {
     if (DATA_SOURCE === "database") {
       reportApi.get(id)
         .then((res) => {
-          setData(res);
+          setData(res.data);
           setIsLoading(false);
         })
         .catch((err) => {
@@ -56,7 +56,7 @@ export const getReportDetails = async (id: string): Promise<any | null> => {
   if (DATA_SOURCE === "database") {
     try {
       const res = await reportApi.get(id);
-      return res;
+      return res.data;
     } catch (e) {
       console.error(e);
       return null;

@@ -55,12 +55,12 @@ export const TopNav = () => {
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="px-4 md:px-6 pt-4 w-full z-50 relative"
+      className="sticky top-0 w-full z-50"
     >
-      <nav className="w-full bg-[#1E6702] rounded-2xl md:rounded-[20px] py-2 px-3 md:px-5 flex items-center justify-between shadow-[inset_0px_1px_0px_rgba(255,255,255,0.15),0px_10px_30px_-5px_rgba(0,0,0,0.15),0px_4px_10px_-4px_rgba(0,0,0,0.1)] border-b border-[#144a01]/60 relative z-50">
+      <nav className="w-full bg-[#1E6702] rounded-none py-3 px-6 md:px-10 flex items-center justify-between shadow-md border-b border-[#144a01]/60 relative z-50">
         
         {/* Ambient Hover Light (Soft Localized Highlight) */}
-        <div className="absolute inset-0 overflow-hidden rounded-2xl md:rounded-[20px] pointer-events-none">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-0 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50" />
         </div>
 

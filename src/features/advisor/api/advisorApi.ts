@@ -11,10 +11,11 @@ export interface ChatMessage {
   };
 }
 
-// TODO: BACKEND CONFIRMATION REQUIRED
-export type ChatResponse = unknown;
-export type BusinessAnalysisResponse = unknown;
-export type RecommendationsResponse = unknown;
+import { ApiResponse } from "@/types/api";
+
+export type ChatResponse = ApiResponse<any>;
+export type BusinessAnalysisResponse = ApiResponse<any>;
+export type RecommendationsResponse = ApiResponse<any>;
 
 export const advisorApi = {
   chat: async (payload: { message: string; businessId?: string; context?: any }): Promise<ChatResponse> => {

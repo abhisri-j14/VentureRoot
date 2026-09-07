@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 
 export default function BusinessCreatePage() {
   return (
-    <div className="w-full px-6 lg:px-16 xl:px-24 py-8 max-w-[1800px] mx-auto">
+    <div className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-6">
       <div className="mb-6 flex justify-start">
         <Link 
           href="/dashboard"

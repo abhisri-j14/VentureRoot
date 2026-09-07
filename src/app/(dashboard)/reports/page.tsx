@@ -38,14 +38,14 @@ export default function ReportsPage() {
   };
 
   return (
-    <div className="w-full flex flex-col min-h-[calc(100vh-80px)] py-8 px-6 lg:px-10 xl:px-16">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+    <div className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-heading font-bold text-secondary flex items-center gap-2">
-            <FileText className="w-6 h-6 text-primary" />
+          <h1 className="text-[22px] font-heading font-bold text-[#242424] tracking-tight leading-tight flex items-center gap-2">
+            <FileText className="w-6 h-6 text-[#242424]" />
             {t("reports.title") || "Business Reports"}
           </h1>
-          <p className="text-secondary-muted mt-1">
+          <p className="text-sm text-slate-500 font-medium mt-0.5">
             {t("reports.subtitle") || "Access and generate comprehensive business intelligence reports."}
           </p>
         </div>

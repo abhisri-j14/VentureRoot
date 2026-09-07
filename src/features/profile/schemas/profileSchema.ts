@@ -23,7 +23,7 @@ export const profileSchema = z.object({
   // Experience
   experience: z.object({
     businessExperience: z.enum(["None", "0-2 years", "3-5 years", "5+ years"]),
-    skills: z.string().optional(),
+    skills: z.array(z.string()).optional(),
     education: z.string().optional(),
   }),
 });
