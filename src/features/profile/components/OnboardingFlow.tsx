@@ -72,8 +72,36 @@ export const OnboardingFlow = () => {
   const onSubmit = async (data: ProfileData) => {
     setIsSubmitting(true);
     try {
-      await profileApi.updateProfile(data);
-      // Response is unknown, but we don't need it.
+      const formattedSkills = typeof data.experience?.skills === "string"
+        ? (data.experience.skills as string)
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : Array.isArray(data.experience?.skills)
+        ? data.experience.skills
+        : [];
+
+      const payload: any = {
+        fullName: data.fullName,
+        phone: data.phone?.trim() ? data.phone.trim() : undefined,
+        location: {
+          state: data.location.state,
+          district: data.location.district,
+          block: data.location.block?.trim() ? data.location.block.trim() : undefined,
+          village: data.location.village?.trim() ? data.location.village.trim() : undefined,
+        },
+        financial: {
+          availableCapital: Number(data.financial.availableCapital) || 0,
+          income: Number(data.financial.income) || 0,
+        },
+        experience: {
+          businessExperience: data.experience.businessExperience,
+          skills: formattedSkills,
+          education: data.experience.education?.trim() ? data.experience.education.trim() : undefined,
+        },
+      };
+
+      await profileApi.updateProfile(payload);
       setIsSubmitting(false);
       router.push("/dashboard");
     } catch (error: any) {
@@ -326,6 +354,9 @@ export const OnboardingFlow = () => {
                 className="w-full rounded-xl bg-gray-50/50 border border-black/5 p-3.5 font-sans text-[14px] transition-all outline-none focus:ring-4 focus:ring-[#1E6702]/10 focus:border-[#1E6702] focus:bg-white text-[#200813] font-medium shadow-sm"
                 placeholder="e.g. Agriculture, Carpentry, Sales"
               />
+              {errors.experience?.skills && (
+                <p className="text-red-500 font-sans text-[12px] mt-1.5 font-medium">{errors.experience.skills.message}</p>
+              )}
             </div>
 
             <div>
@@ -336,6 +367,9 @@ export const OnboardingFlow = () => {
                 className="w-full rounded-xl bg-gray-50/50 border border-black/5 p-3.5 font-sans text-[14px] transition-all outline-none focus:ring-4 focus:ring-[#1E6702]/10 focus:border-[#1E6702] focus:bg-white text-[#200813] font-medium shadow-sm"
                 placeholder="e.g. 10th Pass, BA, Diploma"
               />
+              {errors.experience?.education && (
+                <p className="text-red-500 font-sans text-[12px] mt-1.5 font-medium">{errors.experience.education.message}</p>
+              )}
             </div>
           </div>
         )}

@@ -55,13 +55,20 @@ function LoginPageContent() {
     setGlobalError(null);
     setIsSubmitting(true);
     try {
-      await authApi.login(data);
+      const res: any = await authApi.login(data);
       
-      // TODO: BACKEND CONFIRMATION REQUIRED
-      // LoginResponse is unknown, so we cannot safely extract access_token or user.
-      // Retaining temporary mock state mutation (mock token) to keep UI routing functional.
-      // MUST remove this once backend response schema is confirmed.
-      loginAction("mock-token-xyz-123", mockUser!);
+      const session = res?.data?.session || res?.data?.data?.session || res?.session;
+      const backendUser = res?.data?.user || res?.data?.data?.user || res?.user;
+      const token = session?.access_token || "mock-token-xyz-123";
+      
+      const authUser = backendUser ? {
+        id: backendUser.id,
+        name: backendUser.user_metadata?.full_name || backendUser.email?.split('@')[0] || "User",
+        email: backendUser.email || data.email,
+        roleLabel: backendUser.user_metadata?.role || "Business Owner",
+      } : mockUser!;
+
+      loginAction(token, authUser);
       setIsSubmitting(false);
       
       if (redirectUrl) {
