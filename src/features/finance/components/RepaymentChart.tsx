@@ -58,7 +58,7 @@ export const RepaymentChart = ({ businessId }: { businessId: string }) => {
           </Bar>
         </BarChart>
       </ResponsiveContainer>
-      <p className="text-xs text-center text-gray-400 mt-2">
+      <p className="font-sans text-[12px] text-center text-gray-400 mt-2">
         Grey bars indicate moratorium quarters (interest only). Illustrative data.
       </p>
     </div>

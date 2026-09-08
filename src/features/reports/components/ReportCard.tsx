@@ -50,21 +50,21 @@ export const ReportCard = ({ report }: ReportCardProps) => {
             <FileText className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="font-heading font-bold text-secondary text-lg leading-tight group-hover:text-primary transition-colors line-clamp-2">
+            <h3 className="font-heading text-[18px] font-bold text-secondary leading-tight group-hover:text-primary transition-colors line-clamp-2">
               {report.title}
             </h3>
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <span className="font-sans text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
               {report.type}
             </span>
           </div>
         </div>
-        <span className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full border whitespace-nowrap shrink-0 ${getStatusColor(report.status)}`}>
+        <span className={`px-2.5 py-1 font-sans text-[11px] font-bold uppercase tracking-wider rounded-full border whitespace-nowrap shrink-0 ${getStatusColor(report.status)}`}>
           {t(getStatusKey(report.status) as any) || report.status}
         </span>
       </div>
 
       {/* Middle info */}
-      <div className="flex flex-col gap-2 text-sm text-secondary-muted flex-1 mb-6">
+      <div className="flex flex-col gap-2 font-sans text-[14px] text-secondary-muted flex-1 mb-6">
         <div className="flex items-center gap-2">
           <Building className="w-4 h-4 shrink-0 text-slate-400" />
           <span className="truncate">{report.businessName}</span>
@@ -84,7 +84,7 @@ export const ReportCard = ({ report }: ReportCardProps) => {
       {/* Action bottom */}
       <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
         {report.status === "FAILED" ? (
-          <div className="flex items-center gap-2 text-xs text-red-600 font-medium">
+          <div className="flex items-center gap-2 font-sans text-[12px] text-red-600 font-medium">
             <AlertCircle className="w-4 h-4" />
             {t("reports.failed.desc")}
           </div>
@@ -95,14 +95,14 @@ export const ReportCard = ({ report }: ReportCardProps) => {
         {report.status === "READY" ? (
           <Link
             href={`/reports/${report.id}`}
-            className="px-4 py-2 bg-[#1E6702] text-white text-sm font-semibold rounded-lg hover:bg-[#155201] transition-colors"
+            className="px-4 py-2 bg-[#1E6702] text-white font-sans text-[14px] font-semibold rounded-lg hover:bg-[#155201] transition-colors"
           >
             {t("reports.view")}
           </Link>
         ) : (
           <button 
             disabled 
-            className="px-4 py-2 bg-slate-100 text-slate-400 text-sm font-semibold rounded-lg cursor-not-allowed"
+            className="px-4 py-2 bg-slate-100 text-slate-400 font-sans text-[14px] font-semibold rounded-lg cursor-not-allowed"
           >
             {t("reports.view")}
           </button>

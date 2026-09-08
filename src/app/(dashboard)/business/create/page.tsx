@@ -8,7 +8,7 @@ export default function BusinessCreatePage() {
       <div className="mb-6 flex justify-start">
         <Link 
           href="/dashboard"
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1E6702] hover:text-[#155201] transition-colors"
+          className="inline-flex items-center gap-1.5 font-sans text-[14px] font-semibold text-[#1E6702] hover:text-[#155201] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Dashboard
         </Link>

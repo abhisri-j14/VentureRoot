@@ -95,7 +95,7 @@ export default function RegisterPage() {
 
           <div className="mt-12 pointer-events-none z-10">
             <div className="max-w-[380px] p-1">
-              <h2 className="text-[25px] font-sans font-medium italic text-[#FFFBE7] leading-[1.15] [text-shadow:_0_4px_24px_rgba(0,0,0,0.6)]">
+              <h2 className="font-heading text-[28px] font-medium italic text-[#FFFBE7] leading-[1.15] [text-shadow:_0_4px_24px_rgba(0,0,0,0.6)]">
                 <TextEffect per='char' preset='fade'>
                   Your idea deserves a clear path.
                 </TextEffect>
@@ -127,10 +127,10 @@ export default function RegisterPage() {
               transition={{ duration: 0.6, ease: "easeOut" }}
               className="text-center mb-8 md:text-left"
             >
-              <h1 className="text-3xl font-sans font-medium text-[#200813]">
+              <h1 className="font-heading text-[32px] font-medium text-[#200813]">
                 Create your account
               </h1>
-              <p className="text-[#200813]/60 mt-2 text-sm font-normal">
+              <p className="font-sans text-[14px] text-[#200813]/60 mt-2 font-normal">
                 Start planning your local business today.
               </p>
             </motion.div>
@@ -150,7 +150,7 @@ export default function RegisterPage() {
               className="flex flex-col gap-5"
             >
               <motion.div variants={itemVariants}>
-                <label className="block text-sm font-medium text-[#200813] mb-1.5" htmlFor="fullName">
+                <label className="block font-sans text-[14px] font-medium text-[#200813] mb-1.5" htmlFor="fullName">
                   Full Name
                 </label>
                 <input
@@ -159,15 +159,15 @@ export default function RegisterPage() {
                   {...register("fullName")}
                   placeholder="Ravi Kumar"
                   className={`w-full rounded-xl bg-white border ${errors.fullName ? "border-red-300 focus:ring-red-200" : "border-[#200813]/10 focus:ring-[#1E6702]/20 focus:border-[#1E6702]"
-                    } p-3.5 text-sm transition-all outline-none focus:ring-4 text-[#200813] font-normal shadow-sm`}
+                    } p-3.5 font-sans text-[14px] transition-all outline-none focus:ring-4 text-[#200813] font-normal shadow-sm`}
                 />
                 {errors.fullName && (
-                  <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.fullName.message}</p>
+                  <p className="text-red-500 font-sans text-[12px] mt-1.5 font-medium">{errors.fullName.message}</p>
                 )}
               </motion.div>
 
               <motion.div variants={itemVariants}>
-                <label className="block text-sm font-medium text-[#200813] mb-1.5" htmlFor="email">
+                <label className="block font-sans text-[14px] font-medium text-[#200813] mb-1.5" htmlFor="email">
                   Email Address
                 </label>
                 <input
@@ -176,16 +176,16 @@ export default function RegisterPage() {
                   {...register("email")}
                   placeholder="you@example.com"
                   className={`w-full rounded-xl bg-white border ${errors.email ? "border-red-300 focus:ring-red-200" : "border-[#200813]/10 focus:ring-[#1E6702]/20 focus:border-[#1E6702]"
-                    } p-3.5 text-sm transition-all outline-none focus:ring-4 text-[#200813] font-normal shadow-sm`}
+                    } p-3.5 font-sans text-[14px] transition-all outline-none focus:ring-4 text-[#200813] font-normal shadow-sm`}
                 />
                 {errors.email && (
-                  <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.email.message}</p>
+                  <p className="text-red-500 font-sans text-[12px] mt-1.5 font-medium">{errors.email.message}</p>
                 )}
               </motion.div>
 
               <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-[#200813] mb-1.5" htmlFor="password">
+                  <label className="block font-sans text-[14px] font-medium text-[#200813] mb-1.5" htmlFor="password">
                     Password
                   </label>
                   <div className="relative">
@@ -195,7 +195,7 @@ export default function RegisterPage() {
                       {...register("password")}
                       placeholder="••••••••"
                       className={`w-full rounded-xl bg-white border ${errors.password ? "border-red-300 focus:ring-red-200" : "border-[#200813]/10 focus:ring-[#1E6702]/20 focus:border-[#1E6702]"
-                        } p-3.5 pr-12 text-sm transition-all outline-none focus:ring-4 text-[#200813] font-normal shadow-sm`}
+                        } p-3.5 pr-12 font-sans text-[14px] transition-all outline-none focus:ring-4 text-[#200813] font-normal shadow-sm`}
                     />
                     <button
                       type="button"
@@ -207,12 +207,12 @@ export default function RegisterPage() {
                     </button>
                   </div>
                   {errors.password && (
-                    <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.password.message}</p>
+                    <p className="text-red-500 font-sans text-[12px] mt-1.5 font-medium">{errors.password.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#200813] mb-1.5" htmlFor="confirmPassword">
+                  <label className="block font-sans text-[14px] font-medium text-[#200813] mb-1.5" htmlFor="confirmPassword">
                     Confirm Password
                   </label>
                   <div className="relative">
@@ -222,7 +222,7 @@ export default function RegisterPage() {
                       {...register("confirmPassword")}
                       placeholder="••••••••"
                       className={`w-full rounded-xl bg-white border ${errors.confirmPassword ? "border-red-300 focus:ring-red-200" : "border-[#200813]/10 focus:ring-[#1E6702]/20 focus:border-[#1E6702]"
-                        } p-3.5 pr-12 text-sm transition-all outline-none focus:ring-4 text-[#200813] font-normal shadow-sm`}
+                        } p-3.5 pr-12 font-sans text-[14px] transition-all outline-none focus:ring-4 text-[#200813] font-normal shadow-sm`}
                     />
                     <button
                       type="button"
@@ -234,7 +234,7 @@ export default function RegisterPage() {
                     </button>
                   </div>
                   {errors.confirmPassword && (
-                    <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.confirmPassword.message}</p>
+                    <p className="text-red-500 font-sans text-[12px] mt-1.5 font-medium">{errors.confirmPassword.message}</p>
                   )}
                 </div>
               </motion.div>
@@ -245,7 +245,7 @@ export default function RegisterPage() {
                   {...register("termsAccepted" as const)}
                   className="mt-0.5 w-4 h-4 rounded border-[#200813]/20 text-[#1E6702] focus:ring-[#1E6702] bg-white transition-colors cursor-pointer shrink-0"
                 />
-                <span className="text-xs font-normal text-[#200813]/70 transition-colors leading-relaxed">
+                <span className="font-sans text-[12px] font-normal text-[#200813]/70 transition-colors leading-relaxed">
                   I agree to the <Link href="/terms" className="text-[#1E6702] font-medium hover:underline">Terms of Service</Link> & <Link href="/privacy" className="text-[#1E6702] font-medium hover:underline">Privacy Policy</Link>.
                 </span>
               </motion.div>
@@ -256,7 +256,7 @@ export default function RegisterPage() {
                 whileTap={{ scale: 0.99 }}
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 mt-2 rounded-xl bg-[#1E6702] text-white font-medium hover:bg-[#154a01] transition-all shadow-[0_4px_14px_rgba(30,103,2,0.25)] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
+                className="w-full py-3.5 mt-2 rounded-xl bg-[#1E6702] text-white font-sans text-[14px] font-medium hover:bg-[#154a01] transition-all shadow-[0_4px_14px_rgba(30,103,2,0.25)] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 {isSubmitting ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -267,14 +267,14 @@ export default function RegisterPage() {
               
               <motion.div variants={itemVariants} className="mt-4 flex items-center justify-between w-full">
                 <span className="w-[28%] border-b border-[#200813]/10"></span>
-                <span className="text-[11px] text-[#200813]/40 font-bold uppercase tracking-wider">or continue with</span>
+                <span className="font-sans text-[11px] text-[#200813]/40 font-bold uppercase tracking-wider">or continue with</span>
                 <span className="w-[28%] border-b border-[#200813]/10"></span>
               </motion.div>
 
               <motion.div variants={itemVariants} className="mt-2 grid grid-cols-2 gap-4">
                 <button
                   type="button"
-                  className="flex items-center justify-center gap-2.5 py-3 rounded-xl bg-white border border-[#200813]/10 hover:bg-[#f9f9f9] transition-colors text-sm font-medium text-[#200813] shadow-sm hover:shadow-md hover:-translate-y-0.5 duration-300"
+                  className="flex items-center justify-center gap-2.5 py-3 rounded-xl bg-white border border-[#200813]/10 hover:bg-[#f9f9f9] transition-colors font-sans text-[14px] font-medium text-[#200813] shadow-sm hover:shadow-md hover:-translate-y-0.5 duration-300"
                 >
                   <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -286,7 +286,7 @@ export default function RegisterPage() {
                 </button>
                 <button
                   type="button"
-                  className="flex items-center justify-center gap-2.5 py-3 rounded-xl bg-white border border-[#200813]/10 hover:bg-[#f9f9f9] transition-colors text-sm font-medium text-[#200813] shadow-sm hover:shadow-md hover:-translate-y-0.5 duration-300"
+                  className="flex items-center justify-center gap-2.5 py-3 rounded-xl bg-white border border-[#200813]/10 hover:bg-[#f9f9f9] transition-colors font-sans text-[14px] font-medium text-[#200813] shadow-sm hover:shadow-md hover:-translate-y-0.5 duration-300"
                 >
                   <svg className="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.19 2.31-.88 3.5-.8 1.48.06 2.65.65 3.45 1.77-2.98 1.68-2.4 5.92.51 7.08-.66 1.7-1.64 3.28-2.54 4.12zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
@@ -300,7 +300,7 @@ export default function RegisterPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.5 }}
-              className="text-center md:text-left text-sm text-[#200813]/60 mt-8 font-normal"
+              className="text-center md:text-left font-sans text-[14px] text-[#200813]/60 mt-8 font-normal"
             >
               Already have an account? <Link href="/login" className="font-medium text-[#1E6702] hover:text-[#154a01] transition-colors ml-1">
                 Sign in

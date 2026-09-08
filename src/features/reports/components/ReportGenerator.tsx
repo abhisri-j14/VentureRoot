@@ -43,7 +43,7 @@ export const ReportGenerator = ({ onCancel, onComplete }: ReportGeneratorProps) 
   return (
     <div className="w-full max-w-xl mx-auto bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-heading font-bold text-secondary mb-2">
+        <h2 className="font-heading text-[24px] font-bold text-secondary mb-2">
           {t("reports.generating.title") || "Generating Report"}
         </h2>
         <div className="flex justify-center w-full">
@@ -74,7 +74,7 @@ export const ReportGenerator = ({ onCancel, onComplete }: ReportGeneratorProps) 
                 {isPending && <Circle className="w-6 h-6 text-slate-300" />}
                 {isError && <AlertCircle className="w-6 h-6 text-red-600" />}
               </div>
-              <span className={`font-medium ${
+              <span className={`font-sans text-[14px] font-medium ${
                 isCompleted ? "text-green-800" :
                 isInProgress ? "text-blue-800" :
                 isError ? "text-red-800" :
@@ -90,7 +90,7 @@ export const ReportGenerator = ({ onCancel, onComplete }: ReportGeneratorProps) 
       <div className="flex justify-center">
         <button
           onClick={onCancel}
-          className="px-6 py-2 text-secondary-muted hover:text-secondary font-medium transition-colors"
+          className="px-6 py-2 font-sans text-[14px] text-secondary-muted hover:text-secondary font-medium transition-colors"
         >
           {t("common.cancel") || "Cancel"}
         </button>

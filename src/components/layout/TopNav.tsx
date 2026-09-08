@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { User, ChevronDown, LogOut, Settings, Globe, Menu, X, Home, Briefcase, PlusCircle, BarChart2, FileText, MessageSquare } from "lucide-react";
+import { User, ChevronDown, LogOut, Settings, Globe, Menu, X, Home, Briefcase, PlusCircle, BarChart2, FileText, MessageSquare, TrendingUp, ShieldAlert } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 import { LanguageSwitcher } from "@/features/i18n/components/LanguageSwitcher";
@@ -40,11 +40,10 @@ export const TopNav = () => {
 
   const NAV_ITEMS = [
     { href: "/dashboard", tKey: "nav.dashboard", icon: Home },
-    { href: "/profile", tKey: "nav.profile", icon: User },
     { href: "/business/123", tKey: "nav.myBusiness", icon: Briefcase },
+    { href: "/business/123/finance", tKey: "nav.finance", icon: TrendingUp },
+    { href: "/business/123/feasibility", tKey: "nav.feasibility", icon: ShieldAlert },
     { href: "/business/create", tKey: "nav.newBusiness", icon: PlusCircle },
-    { href: "/business/compare", tKey: "nav.compare", icon: BarChart2 },
-    { href: "/reports", tKey: "nav.reports", icon: FileText },
     { href: "/advisor", tKey: "nav.advisor", icon: MessageSquare },
   ];
 

@@ -81,28 +81,28 @@ export const BusinessWizard = () => {
   return (
     <div className="w-full flex flex-col items-center">
       
-      <div className="w-full bg-[#fffff5] rounded-xl shadow-[0_4px_24px_rgb(0,0,0,0.05)] border border-gray-900/8 overflow-hidden flex flex-col mb-20 transition-all duration-300">
+      <div className="w-full bg-[#FEFEF4] rounded-xl shadow-[0_4px_24px_rgb(0,0,0,0.05)] border border-gray-900/8 overflow-hidden flex flex-col mb-20 transition-all duration-300">
         
         {/* Dark Header */}
-        <div className="w-full bg-[#402a03] px-10 py-12 relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center text-[#fffbe6]">
+        <div className="w-full bg-[#81cc87] px-10 py-12 relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center text-[#f9faeb]">
           <div className="z-10 mb-6 md:mb-0">
-            <h1 className="text-[22px] font-heading font-bold text-[#fffbe6] tracking-tight leading-tight">Start a New Enterprise</h1>
-            <p className="text-sm text-[#fffbe6]/70 font-medium mt-0.5">Complete the 6 steps to get started</p>
+            <h1 className="font-heading text-[32px] font-bold text-[#f9faeb] tracking-tight leading-tight">Start a New Enterprise</h1>
+            <p className="font-sans text-[14px] text-[#f9faeb]/70 font-medium mt-0.5">Complete the 6 steps to get started</p>
           </div>
           
-          <div className="z-10 flex flex-col md:items-end opacity-90 border-l-2 border-[#fffbe6]/10 pl-6">
+          <div className="z-10 flex flex-col md:items-end opacity-90 border-l-2 border-[#f9faeb]/10 pl-6">
             <div className="flex items-center gap-3 mb-2">
-              <Leaf className="w-7 h-7 text-[#fffbe6]" />
-              <span className="font-serif italic text-2xl text-[#fffbe6]">Ideas grow brighter here</span>
+              <Leaf className="w-7 h-7 text-[#f9faeb]" />
+              <span className="font-heading italic text-[25px] text-[#f9faeb]">Ideas grow brighter here</span>
             </div>
-            <p className="text-[10px] tracking-[0.2em] text-[#fffbe6]/50 uppercase font-bold">Poal: Rural Ideas. Real Opportunities.</p>
+            <p className="font-sans text-[11px] tracking-wider text-[#f9faeb]/50 uppercase font-bold">Poal: Rural Ideas. Real Opportunities.</p>
           </div>
         </div>
 
         {globalError && (
           <div className="mx-10 mt-8 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-            <p className="text-sm text-red-700">{globalError}</p>
+            <p className="font-sans text-[14px] font-medium text-red-700">{globalError}</p>
           </div>
         )}
 
@@ -123,21 +123,21 @@ export const BusinessWizard = () => {
                   return (
                     <div key={step.id} className="flex items-start gap-5 relative z-10">
                       <div className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center border-2 transition-all duration-300
-                        ${isActive ? 'bg-[#402a03] border-[#402a03] text-[#fffbe6] shadow-md' : 
-                          isCompleted ? 'bg-white border-[#402a03] text-[#402a03]' : 
+                        ${isActive ? 'bg-[#81cc87] border-[#81cc87] text-[#f9faeb] shadow-md' : 
+                          isCompleted ? 'bg-white border-[#81cc87] text-[#81cc87]' : 
                           'bg-white border-gray-300 text-gray-400'}
                       `}>
-                        <span className="font-bold text-sm">
+                        <span className="font-sans text-[14px] font-bold">
                           {isCompleted ? <Check className="w-5 h-5" /> : step.id}
                         </span>
                       </div>
                       <div className="flex flex-col pt-1">
-                        <span className={`font-bold text-[15px] transition-colors duration-300
+                        <span className={`font-sans text-[14px] font-bold transition-colors duration-300
                           ${isActive ? 'text-gray-900' : 'text-gray-500'}
                         `}>
                           {step.label}
                         </span>
-                        <span className={`text-[13px] font-medium transition-colors duration-300
+                        <span className={`font-sans text-[12px] font-medium transition-colors duration-300
                           ${isActive ? 'text-gray-600' : 'text-gray-400'}
                         `}>
                           {step.subtitle}
@@ -150,12 +150,12 @@ export const BusinessWizard = () => {
 
               {/* Bottom Footer Banner */}
               <div className="mt-auto pt-12">
-                <div className="bg-[#fffbe6] p-4 rounded-2xl flex items-start gap-3 border border-[#402a03]/10">
-                  <Leaf className="w-5 h-5 text-[#402a03] shrink-0 mt-0.5" />
+                <div className="bg-[#f9faeb] p-4 rounded-2xl flex items-start gap-3 border border-[#81cc87]/10">
+                  <Leaf className="w-5 h-5 text-[#81cc87] shrink-0 mt-0.5" />
                   <div className="flex flex-col">
-                    <span className="text-sm font-bold text-[#402a03]">Building stronger</span>
-                    <span className="text-sm font-bold text-[#402a03] mb-1">rural businesses</span>
-                    <span className="text-xs text-[#402a03]/70 font-medium">One idea at a time.</span>
+                    <span className="font-sans text-[14px] font-bold text-[#81cc87]">Building stronger</span>
+                    <span className="font-sans text-[14px] font-bold text-[#81cc87] mb-1">rural businesses</span>
+                    <span className="font-sans text-[12px] text-[#81cc87]/70 font-medium">One idea at a time.</span>
                   </div>
                 </div>
               </div>
@@ -168,22 +168,22 @@ export const BusinessWizard = () => {
             
             {/* Progress Bar */}
             <div className="w-full mb-10">
-               <div className="flex justify-between text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">
+               <div className="flex justify-between font-sans text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">
                  <span>Progress</span>
                  <span>{progressPercentage}%</span>
                </div>
                <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
                  <div 
-                   className="h-full bg-[#402a03] transition-all duration-500 ease-out rounded-full"
+                   className="h-full bg-[#81cc87] transition-all duration-500 ease-out rounded-full"
                    style={{ width: `${progressPercentage}%` }}
                  ></div>
                </div>
             </div>
 
-            <h2 className="text-3xl font-serif font-bold text-[#1a202c] mb-2">
+            <h2 className="font-heading text-[25px] font-bold text-[#1a202c] mb-2">
               {WIZARD_STEPS[currentStep - 1].label}
             </h2>
-            <p className="text-gray-500 font-medium mb-8">
+            <p className="font-sans text-[14px] text-gray-500 font-medium mb-8">
               {WIZARD_STEPS[currentStep - 1].subtitle}.
             </p>
 
@@ -194,22 +194,22 @@ export const BusinessWizard = () => {
                 {currentStep === 1 && (
                   <div className="flex flex-col gap-6 animate-in fade-in duration-300">
                     <div>
-                      <label className="block text-sm font-bold text-gray-800 mb-2">{t("business.wizard.cat")}</label>
+                      <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">{t("business.wizard.cat")}</label>
                       <select
                         {...register("categoryId")}
-                        className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#402a03] focus:ring-1 focus:ring-[#402a03] transition-all outline-none font-medium"
+                        className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium"
                       >
                         <option value="">{t("business.wizard.selectCat")}</option>
                         <option value="dairy">Dairy</option>
                         <option value="retail">Retail</option>
                         <option value="tailoring">Tailoring</option>
                       </select>
-                      {errors.categoryId && <p className="text-red-500 text-sm mt-2 font-medium">{errors.categoryId.message}</p>}
+                      {errors.categoryId && <p className="text-red-500 font-sans text-[12px] mt-2 font-medium">{errors.categoryId.message}</p>}
                     </div>
 
-                    <div className="bg-[#fffbe6] rounded-xl p-4 flex gap-3 items-start border border-[#402a03]/10">
-                      <Info className="w-5 h-5 text-[#402a03] shrink-0 mt-0.5" />
-                      <p className="text-sm text-[#402a03] font-medium leading-relaxed">
+                    <div className="bg-[#f9faeb] rounded-xl p-4 flex gap-3 items-start border border-[#81cc87]/10">
+                      <Info className="w-5 h-5 text-[#81cc87] shrink-0 mt-0.5" />
+                      <p className="font-sans text-[14px] text-[#81cc87] font-medium leading-relaxed">
                         Choose the category that matches your primary business activity.<br/>
                         This helps us provide more accurate scheme recommendations and market insights.
                       </p>
@@ -222,50 +222,50 @@ export const BusinessWizard = () => {
                   <div className="flex flex-col gap-6 animate-in fade-in duration-300">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-bold text-gray-800 mb-2">{t("business.wizard.state")}</label>
+                        <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">{t("business.wizard.state")}</label>
                         <input
                           {...register("state")}
                           type="text"
                           placeholder="e.g. Maharashtra"
-                          className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#402a03] focus:ring-1 focus:ring-[#402a03] transition-all outline-none font-medium"
+                          className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium"
                         />
-                        {errors.state && <p className="text-red-500 text-sm mt-2 font-medium">{errors.state.message}</p>}
+                        {errors.state && <p className="text-red-500 font-sans text-[12px] mt-2 font-medium">{errors.state.message}</p>}
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-gray-800 mb-2">{t("business.wizard.district")}</label>
+                        <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">{t("business.wizard.district")}</label>
                         <input
                           {...register("district")}
                           type="text"
                           placeholder="e.g. Pune"
-                          className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#402a03] focus:ring-1 focus:ring-[#402a03] transition-all outline-none font-medium"
+                          className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium"
                         />
-                        {errors.district && <p className="text-red-500 text-sm mt-2 font-medium">{errors.district.message}</p>}
+                        {errors.district && <p className="text-red-500 font-sans text-[12px] mt-2 font-medium">{errors.district.message}</p>}
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-gray-800 mb-2">{t("business.wizard.block")}</label>
+                        <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">{t("business.wizard.block")}</label>
                         <input
                           {...register("block")}
                           type="text"
                           placeholder="e.g. Haveli"
-                          className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#402a03] focus:ring-1 focus:ring-[#402a03] transition-all outline-none font-medium"
+                          className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium"
                         />
-                        {errors.block && <p className="text-red-500 text-sm mt-2 font-medium">{errors.block.message}</p>}
+                        {errors.block && <p className="text-red-500 font-sans text-[12px] mt-2 font-medium">{errors.block.message}</p>}
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-gray-800 mb-2">{t("business.wizard.village")}</label>
+                        <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">{t("business.wizard.village")}</label>
                         <input
                           {...register("village")}
                           type="text"
                           placeholder="e.g. Wagholi"
-                          className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#402a03] focus:ring-1 focus:ring-[#402a03] transition-all outline-none font-medium"
+                          className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium"
                         />
-                        {errors.village && <p className="text-red-500 text-sm mt-2 font-medium">{errors.village.message}</p>}
+                        {errors.village && <p className="text-red-500 font-sans text-[12px] mt-2 font-medium">{errors.village.message}</p>}
                       </div>
                     </div>
                     
-                    <div className="bg-[#fffbe6] rounded-xl p-4 flex gap-3 items-start border border-[#402a03]/10">
-                      <Info className="w-5 h-5 text-[#402a03] shrink-0 mt-0.5" />
-                      <p className="text-sm text-[#402a03] font-medium leading-relaxed">
+                    <div className="bg-[#f9faeb] rounded-xl p-4 flex gap-3 items-start border border-[#81cc87]/10">
+                      <Info className="w-5 h-5 text-[#81cc87] shrink-0 mt-0.5" />
+                      <p className="font-sans text-[14px] text-[#81cc87] font-medium leading-relaxed">
                         Location data is critical to discovering local grants, finding localized competitors, and understanding the surrounding demographic market.
                       </p>
                     </div>
@@ -276,22 +276,22 @@ export const BusinessWizard = () => {
                 {currentStep === 3 && (
                   <div className="flex flex-col gap-6 animate-in fade-in duration-300">
                     <div>
-                      <label className="block text-sm font-bold text-gray-800 mb-2">{t("business.wizard.availMargin")}</label>
+                      <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">{t("business.wizard.availMargin")}</label>
                       <div className="relative">
                         <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-gray-400">₹</span>
                         <input
                           {...register("availableMargin", { valueAsNumber: true })}
                           type="number"
                           min="0"
-                          className="w-full rounded-xl border border-gray-200 p-4 pl-8 bg-white focus:bg-white focus:border-[#402a03] focus:ring-1 focus:ring-[#402a03] transition-all outline-none font-medium"
+                          className="w-full rounded-xl border border-gray-200 p-4 pl-8 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium"
                         />
                       </div>
-                      {errors.availableMargin && <p className="text-red-500 text-sm mt-2 font-medium">{errors.availableMargin.message}</p>}
+                      {errors.availableMargin && <p className="text-red-500 font-sans text-[12px] mt-2 font-medium">{errors.availableMargin.message}</p>}
                     </div>
 
-                    <div className="bg-[#fffbe6] rounded-xl p-4 flex gap-3 items-start border border-[#402a03]/10">
-                      <Info className="w-5 h-5 text-[#402a03] shrink-0 mt-0.5" />
-                      <p className="text-sm text-[#402a03] font-medium leading-relaxed">
+                    <div className="bg-[#f9faeb] rounded-xl p-4 flex gap-3 items-start border border-[#81cc87]/10">
+                      <Info className="w-5 h-5 text-[#81cc87] shrink-0 mt-0.5" />
+                      <p className="font-sans text-[14px] text-[#81cc87] font-medium leading-relaxed">
                         State exactly how much capital you currently have on hand. We will use this to calculate loan requirements and match you with subsidies.
                       </p>
                     </div>
@@ -302,19 +302,19 @@ export const BusinessWizard = () => {
                 {currentStep === 4 && (
                   <div className="flex flex-col gap-6 animate-in fade-in duration-300">
                     <div>
-                      <label className="block text-sm font-bold text-gray-800 mb-2">{t("business.wizard.resources")}</label>
+                      <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">{t("business.wizard.resources")}</label>
                       <textarea
                         {...register("existingResources")}
                         rows={4}
                         placeholder="e.g., Owned land, basic shed, water connection..."
-                        className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#402a03] focus:ring-1 focus:ring-[#402a03] transition-all outline-none font-medium resize-none"
+                        className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium resize-none"
                       ></textarea>
-                      {errors.existingResources && <p className="text-red-500 text-sm mt-2 font-medium">{errors.existingResources.message}</p>}
+                      {errors.existingResources && <p className="text-red-500 font-sans text-[12px] mt-2 font-medium">{errors.existingResources.message}</p>}
                     </div>
 
-                    <div className="bg-[#fffbe6] rounded-xl p-4 flex gap-3 items-start border border-[#402a03]/10">
-                      <Info className="w-5 h-5 text-[#402a03] shrink-0 mt-0.5" />
-                      <p className="text-sm text-[#402a03] font-medium leading-relaxed">
+                    <div className="bg-[#f9faeb] rounded-xl p-4 flex gap-3 items-start border border-[#81cc87]/10">
+                      <Info className="w-5 h-5 text-[#81cc87] shrink-0 mt-0.5" />
+                      <p className="font-sans text-[14px] text-[#81cc87] font-medium leading-relaxed">
                         List all physical assets you currently own. This drastically changes the feasibility analysis for new businesses.
                       </p>
                     </div>
@@ -325,22 +325,22 @@ export const BusinessWizard = () => {
                 {currentStep === 5 && (
                   <div className="flex flex-col gap-6 animate-in fade-in duration-300">
                     <div>
-                      <label className="block text-sm font-bold text-gray-800 mb-2">{t("business.wizard.revenue")}</label>
+                      <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">{t("business.wizard.revenue")}</label>
                       <div className="relative">
                         <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-gray-400">₹</span>
                         <input
                           {...register("expectedRevenue", { valueAsNumber: true })}
                           type="number"
                           min="0"
-                          className="w-full rounded-xl border border-gray-200 p-4 pl-8 bg-white focus:bg-white focus:border-[#402a03] focus:ring-1 focus:ring-[#402a03] transition-all outline-none font-medium"
+                          className="w-full rounded-xl border border-gray-200 p-4 pl-8 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium"
                         />
                       </div>
-                      {errors.expectedRevenue && <p className="text-red-500 text-sm mt-2 font-medium">{errors.expectedRevenue.message}</p>}
+                      {errors.expectedRevenue && <p className="text-red-500 font-sans text-[12px] mt-2 font-medium">{errors.expectedRevenue.message}</p>}
                     </div>
                     
-                    <div className="bg-[#fffbe6] rounded-xl p-4 flex gap-3 items-start border border-[#402a03]/10">
-                      <Info className="w-5 h-5 text-[#402a03] shrink-0 mt-0.5" />
-                      <p className="text-sm text-[#402a03] font-medium leading-relaxed">
+                    <div className="bg-[#f9faeb] rounded-xl p-4 flex gap-3 items-start border border-[#81cc87]/10">
+                      <Info className="w-5 h-5 text-[#81cc87] shrink-0 mt-0.5" />
+                      <p className="font-sans text-[14px] text-[#81cc87] font-medium leading-relaxed">
                         Provide a realistic estimate of monthly revenue based on your planned production capacity.
                       </p>
                     </div>
@@ -353,26 +353,26 @@ export const BusinessWizard = () => {
                     <div className="bg-gray-50 p-6 rounded-2xl border border-gray-200">
                       <dl className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4">
                         <div>
-                          <dt className="text-[13px] text-gray-500 font-medium mb-1">{t("business.wizard.cat")}</dt>
-                          <dd className="font-bold text-gray-900 text-lg capitalize">{formValues.categoryId || "-"}</dd>
+                          <dt className="font-sans text-[12px] text-gray-500 font-medium mb-1">{t("business.wizard.cat")}</dt>
+                          <dd className="font-sans text-[18px] font-bold text-gray-900 capitalize">{formValues.categoryId || "-"}</dd>
                         </div>
                         <div>
-                          <dt className="text-[13px] text-gray-500 font-medium mb-1">Location</dt>
-                          <dd className="font-bold text-gray-900 text-lg capitalize">
+                          <dt className="font-sans text-[12px] text-gray-500 font-medium mb-1">Location</dt>
+                          <dd className="font-sans text-[18px] font-bold text-gray-900 capitalize">
                             {[formValues.village, formValues.block, formValues.district, formValues.state].filter(Boolean).join(", ") || "-"}
                           </dd>
                         </div>
                         <div>
-                          <dt className="text-[13px] text-gray-500 font-medium mb-1">{t("business.wizard.availMargin")}</dt>
-                          <dd className="font-bold text-[#402a03] text-xl">₹{new Intl.NumberFormat('en-IN').format(formValues.availableMargin || 0)}</dd>
+                          <dt className="font-sans text-[12px] text-gray-500 font-medium mb-1">{t("business.wizard.availMargin")}</dt>
+                          <dd className="font-sans text-[20px] font-bold text-[#81cc87]">₹{new Intl.NumberFormat('en-IN').format(formValues.availableMargin || 0)}</dd>
                         </div>
                         <div>
-                          <dt className="text-[13px] text-gray-500 font-medium mb-1">{t("business.wizard.revenue")}</dt>
-                          <dd className="font-bold text-[#402a03] text-xl">₹{new Intl.NumberFormat('en-IN').format(formValues.expectedRevenue || 0)} <span className="text-sm text-gray-500">/mo</span></dd>
+                          <dt className="font-sans text-[12px] text-gray-500 font-medium mb-1">{t("business.wizard.revenue")}</dt>
+                          <dd className="font-sans text-[20px] font-bold text-[#81cc87]">₹{new Intl.NumberFormat('en-IN').format(formValues.expectedRevenue || 0)} <span className="font-sans text-[14px] text-gray-500 font-medium">/mo</span></dd>
                         </div>
                         <div className="md:col-span-2 pt-4 border-t border-gray-200">
-                          <dt className="text-[13px] text-gray-500 font-medium mb-2">{t("business.wizard.resources")}</dt>
-                          <dd className="font-semibold text-gray-800 bg-white p-3 rounded-lg border border-gray-200">{formValues.existingResources || t("business.wizard.none")}</dd>
+                          <dt className="font-sans text-[12px] text-gray-500 font-medium mb-2">{t("business.wizard.resources")}</dt>
+                          <dd className="font-sans text-[14px] font-semibold text-gray-800 bg-white p-3 rounded-lg border border-gray-200">{formValues.existingResources || t("business.wizard.none")}</dd>
                         </div>
                       </dl>
                     </div>
@@ -385,7 +385,7 @@ export const BusinessWizard = () => {
                 
                 <button
                   type="button"
-                  className="w-full md:w-auto px-6 py-3.5 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors font-semibold flex items-center justify-center gap-2"
+                  className="w-full md:w-auto px-6 py-3.5 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors font-sans text-[14px] font-semibold flex items-center justify-center gap-2"
                 >
                   <Bookmark className="w-4 h-4" /> Save & Continue Later
                 </button>
@@ -394,7 +394,7 @@ export const BusinessWizard = () => {
                   <button
                     type="button"
                     onClick={handleNext}
-                    className="w-full md:w-auto px-8 py-3.5 rounded-xl bg-[#402a03] text-[#fffbe6] hover:bg-[#402a03]/90 shadow-lg shadow-[#402a03]/20 transition-all font-semibold flex items-center justify-center gap-2"
+                    className="w-full md:w-auto px-8 py-3.5 rounded-xl bg-[#81cc87] text-[#f9faeb] hover:bg-[#81cc87]/90 shadow-lg shadow-[#81cc87]/20 transition-all font-sans text-[14px] font-semibold flex items-center justify-center gap-2"
                   >
                     Next Step <ArrowRight className="w-4 h-4" />
                   </button>
@@ -402,10 +402,10 @@ export const BusinessWizard = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full md:w-auto px-8 py-3.5 rounded-xl bg-[#402a03] text-[#fffbe6] hover:bg-[#402a03]/90 shadow-lg shadow-[#402a03]/20 transition-all font-semibold flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none min-w-[200px]"
+                    className="w-full md:w-auto px-8 py-3.5 rounded-xl bg-[#81cc87] text-[#f9faeb] hover:bg-[#81cc87]/90 shadow-lg shadow-[#81cc87]/20 transition-all font-sans text-[14px] font-semibold flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none min-w-[200px]"
                   >
                     {isSubmitting ? (
-                      <div className="w-5 h-5 border-2 border-[#fffbe6]/30 border-t-[#fffbe6] rounded-full animate-spin" />
+                      <div className="w-5 h-5 border-2 border-[#f9faeb]/30 border-t-[#f9faeb] rounded-full animate-spin" />
                     ) : (
                       <>Analyze & Submit <ArrowRight className="w-4 h-4" /></>
                     )}

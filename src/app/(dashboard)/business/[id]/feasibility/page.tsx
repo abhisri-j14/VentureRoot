@@ -58,24 +58,24 @@ export default function FeasibilityPage() {
         
         {/* Header Section */}
         <div className="mb-6">
-          <Link href={`/business/${id}`} className="inline-flex items-center gap-1.5 text-xs font-semibold text-secondary-muted hover:text-primary transition-colors mb-3">
+          <Link href={`/business/${id}`} className="inline-flex items-center gap-1.5 font-sans text-[14px] font-semibold text-secondary-muted hover:text-primary transition-colors mb-3">
             <ArrowLeft className="w-3.5 h-3.5" /> Back to business details
           </Link>
           <div className="flex justify-between items-end">
             <div>
-              <h1 className="text-[22px] font-heading font-bold text-[#242424] tracking-tight leading-tight">
+              <h1 className="font-heading text-[32px] font-bold text-[#242424] tracking-tight leading-tight">
                 Business Intelligence
               </h1>
-              <p className="text-sm text-slate-500 font-medium mt-0.5">
+              <p className="font-sans text-[14px] text-slate-500 font-medium mt-0.5">
                 Hyper-local market demand, competitor positioning, and feasibility intelligence.
               </p>
             </div>
             
             <div className="hidden md:flex gap-3">
-              <Link href={`/business/${id}/finance`} className="px-4 py-2 bg-surface text-primary border border-slate-200 font-semibold text-sm rounded-full shadow-sm hover:bg-slate-50 transition-colors">
+              <Link href={`/business/${id}/finance`} className="px-4 py-2 bg-surface text-primary border border-slate-200 font-sans text-[14px] font-semibold rounded-full shadow-sm hover:bg-slate-50 transition-colors">
                 ₹ Finance
               </Link>
-              <Link href={`/business/${id}/roadmap`} className="px-4 py-2 bg-surface text-vr-red border border-slate-200 font-semibold text-sm rounded-full shadow-sm hover:bg-slate-50 transition-colors">
+              <Link href={`/business/${id}/roadmap`} className="px-4 py-2 bg-surface text-vr-red border border-slate-200 font-sans text-[14px] font-semibold rounded-full shadow-sm hover:bg-slate-50 transition-colors">
                 ⊕ Roadmap
               </Link>
             </div>
@@ -84,47 +84,47 @@ export default function FeasibilityPage() {
 
         <FeasibilityStateBoundary status={feasibilityData.status}>
           {/* Stats Banner */}
-          <div className="bg-[#d2e866] rounded-2xl p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4 mb-6 shadow-sm border border-[#c4da5a]">
+          <div className="bg-[#81cc87] rounded-2xl p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4 mb-6 shadow-sm">
             
             <div className="flex-1 flex flex-col gap-1 w-full text-center md:text-left">
-              <span className="text-xs font-bold text-secondary/60 uppercase tracking-widest">5KM Population</span>
-              <div className="text-2xl md:text-3xl font-bold font-heading text-secondary">{feasibilityData.market?.reach?.radius5km.toLocaleString()}</div>
+              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider">5KM Population</span>
+              <div className="font-sans text-[28px] font-bold text-[#f9faeb]">{feasibilityData.market?.reach?.radius5km.toLocaleString()}</div>
             </div>
             
-            <div className="hidden md:block w-px h-10 bg-secondary/10"></div>
+            <div className="hidden md:block w-px h-10 bg-[#f9faeb]/20"></div>
 
             <div className="flex-1 flex flex-col gap-1 w-full text-center md:text-left">
-              <span className="text-xs font-bold text-secondary/60 uppercase tracking-widest">10KM Population</span>
-              <div className="text-2xl md:text-3xl font-bold font-heading text-secondary">{feasibilityData.market?.reach?.radius10km.toLocaleString()}</div>
+              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider">10KM Population</span>
+              <div className="font-sans text-[28px] font-bold text-[#f9faeb]">{feasibilityData.market?.reach?.radius10km.toLocaleString()}</div>
             </div>
 
-            <div className="hidden md:block w-px h-10 bg-secondary/10"></div>
+            <div className="hidden md:block w-px h-10 bg-[#f9faeb]/20"></div>
 
             <div className="flex-1 flex flex-col gap-1 w-full text-center md:text-left">
-              <span className="text-xs font-bold text-secondary/60 uppercase tracking-widest">Observed Price</span>
-              <div className="text-2xl md:text-3xl font-bold font-heading flex justify-center md:justify-start items-baseline gap-1 text-secondary">
-                ₹{feasibilityData.pricing?.observedMarketPrice} <span className="text-xs text-secondary/60 font-sans font-medium">/liter</span>
+              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider">Observed Price</span>
+              <div className="font-sans text-[28px] font-bold flex justify-center md:justify-start items-baseline gap-1 text-[#f9faeb]">
+                ₹{feasibilityData.pricing?.observedMarketPrice} <span className="font-sans text-[14px] text-[#f9faeb]/80 font-medium">/liter</span>
               </div>
             </div>
 
-            <div className="hidden md:block w-px h-10 bg-secondary/10"></div>
+            <div className="hidden md:block w-px h-10 bg-[#f9faeb]/20"></div>
 
             <div className="flex-1 flex flex-col gap-1 w-full text-center md:text-left">
-              <span className="text-xs font-bold text-secondary/60 uppercase tracking-widest">Expected Price</span>
-              <div className="text-2xl md:text-3xl font-bold font-heading flex justify-center md:justify-start items-center gap-2 text-secondary">
+              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider">Expected Price</span>
+              <div className="font-sans text-[28px] font-bold flex justify-center md:justify-start items-center gap-2 text-[#f9faeb]">
                 ₹{feasibilityData.pricing?.expectedLocalPrice} 
-                <span className="text-[9px] px-1.5 py-0.5 bg-white text-secondary font-sans rounded-full uppercase tracking-wider font-bold shadow-sm">
+                <span className="font-sans text-[11px] font-bold uppercase tracking-wider bg-white text-[#81cc87] rounded-full px-2 py-0.5 shadow-sm">
                   ▲ premium
                 </span>
               </div>
             </div>
 
-            <div className="hidden md:block w-px h-10 bg-secondary/10"></div>
+            <div className="hidden md:block w-px h-10 bg-[#f9faeb]/20"></div>
 
             <div className="flex-1 flex flex-col gap-1 w-full text-center md:text-left">
-              <span className="text-xs font-bold text-secondary/60 uppercase tracking-widest">Confidence</span>
-              <div className="text-2xl md:text-3xl font-bold font-heading flex justify-center md:justify-start items-baseline gap-1 text-secondary">
-                {compositeConfidence} <span className="text-xs text-secondary/60 font-sans font-medium">/100</span>
+              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider">Confidence</span>
+              <div className="font-sans text-[28px] font-bold flex justify-center md:justify-start items-baseline gap-1 text-[#f9faeb]">
+                {compositeConfidence} <span className="font-sans text-[14px] text-[#f9faeb]/80 font-medium">/100</span>
               </div>
             </div>
           </div>
@@ -158,7 +158,7 @@ export default function FeasibilityPage() {
         </FeasibilityStateBoundary>
         
         <div className="flex justify-center w-full mt-4 pb-6 border-t border-slate-200 pt-6">
-          <p className="text-xs text-secondary-muted">
+          <p className="font-sans text-[12px] text-secondary-muted font-medium">
             Generated by VentureRoot • Location and market data shown are illustrative - Not a legal or financial guarantee
           </p>
         </div>

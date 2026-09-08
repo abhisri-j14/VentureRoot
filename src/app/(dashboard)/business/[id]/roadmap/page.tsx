@@ -33,7 +33,7 @@ export default function ActionRoadmapPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <Link 
           href={`/business/${businessId}`}
-          className="inline-flex items-center gap-2 text-sm font-medium text-secondary-muted hover:text-secondary transition-colors"
+          className="inline-flex items-center gap-2 font-sans text-[14px] font-medium text-secondary-muted hover:text-secondary transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           {t("finance.backToBusiness") || "Back to Business Details"}
@@ -41,7 +41,7 @@ export default function ActionRoadmapPage() {
         
         <Link
           href={`/reports/rep-101`} // Using mock report ID for demo
-          className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-secondary font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-sm text-sm"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-secondary font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-sm font-sans text-[14px]"
         >
           <FileText className="w-4 h-4 text-slate-500" />
           {t("roadmap.viewReport") || "View Full Report"}
@@ -53,14 +53,14 @@ export default function ActionRoadmapPage() {
         
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 relative z-10">
           <div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-[#79912a] leading-tight mb-3">
+            <h1 className="font-heading text-[28px] sm:text-[32px] md:text-[36px] font-bold text-[#301608] leading-tight mb-3">
               {t("roadmap.title") || "Action Roadmap"}
             </h1>
-            <p className="text-secondary-muted text-lg max-w-2xl">
+            <p className="font-sans text-[16px] text-secondary-muted max-w-2xl">
               {t("roadmap.subtitle") || "Your recommended next steps for starting and growing this business, broken down into clear, actionable phases."}
             </p>
             
-            <div className="flex flex-wrap items-center gap-4 mt-6 text-sm font-medium text-secondary">
+            <div className="flex flex-wrap items-center gap-4 mt-6 font-sans text-[14px] font-medium text-secondary">
               <div className="flex items-center gap-1.5">
                 <Briefcase className="w-4 h-4 text-slate-400" />
                 {roadmap.businessName || t("common.unknown")}
@@ -75,15 +75,15 @@ export default function ActionRoadmapPage() {
           <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100 min-w-[200px] shrink-0">
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle2 className="w-5 h-5 text-green-500" />
-              <span className="font-bold text-secondary">{t("roadmap.progress") || "Overall Progress"}</span>
+              <span className="font-sans text-[14px] font-bold text-secondary">{t("roadmap.progress") || "Overall Progress"}</span>
             </div>
-            <div className="text-3xl font-heading font-black text-primary mb-2">
+            <div className="font-sans text-[28px] font-bold text-primary mb-2">
               {progressPercent}%
             </div>
             <div className="w-full bg-slate-200 rounded-full h-2">
               <div className="bg-primary h-2 rounded-full transition-all" style={{ width: `${progressPercent}%` }}></div>
             </div>
-            <p className="text-xs text-secondary-muted mt-2">
+            <p className="font-sans text-[12px] text-secondary-muted mt-2">
               {completedActions} / {totalActions} {t("roadmap.tasksCompleted") || "tasks completed"}
             </p>
           </div>

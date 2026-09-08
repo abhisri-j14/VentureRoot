@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import { Manrope, Playfair_Display } from "next/font/google";
+import { Poppins, Lora } from "next/font/google";
 import { cookies } from "next/headers";
 import { GoogleTranslateProvider } from "@/features/i18n/components/GoogleTranslateProvider";
 import "./globals.css";
 
-const manrope = Manrope({
+const poppins = Poppins({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
 });
 
-const playfair = Playfair_Display({
+const lora = Lora({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-heading",
 });
 
@@ -28,7 +30,7 @@ export default async function RootLayout({
   const locale = cookieStore.get("ventureroot_locale")?.value || "en";
 
   return (
-    <html lang={locale} className={`${manrope.variable} ${playfair.variable} font-sans`}>
+    <html lang={locale} className={`${poppins.variable} ${lora.variable} font-sans`}>
       <body className="antialiased text-[#200813] bg-[#f4fce8]">
         <GoogleTranslateProvider />
         {children}

@@ -18,15 +18,15 @@ export const ReportList = ({ reports, onGenerateNew }: ReportListProps) => {
         <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4">
           <FileSearch className="w-8 h-8" />
         </div>
-        <h3 className="text-xl font-heading font-bold text-secondary mb-2">
+        <h3 className="font-heading text-[20px] font-bold text-secondary mb-2">
           {t("reports.empty.title") || "No reports yet"}
         </h3>
-        <p className="text-secondary-muted max-w-sm mb-6">
+        <p className="font-sans text-[16px] text-secondary-muted max-w-sm mb-6">
           {t("reports.empty.desc") || "Generate a business advisory report to see your consolidated analysis here."}
         </p>
         <button
           onClick={onGenerateNew}
-          className="px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-colors shadow-sm"
+          className="px-6 py-3 bg-primary text-white font-sans text-[14px] font-semibold rounded-xl hover:bg-primary/90 transition-colors shadow-sm"
         >
           {t("reports.generate") || "Generate Report"}
         </button>

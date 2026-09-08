@@ -83,7 +83,7 @@ export default function DashboardPage() {
   const firstName = user?.name?.split(" ")[0] || "Entrepreneur";
   const locationStr = details.location ? `${details.location.district}, ${details.location.state}` : "Local Area";
 
-  const breakdownColors = ["bg-[#5c331c]", "bg-[#f4ebd9]", "bg-[#c66f43]", "bg-[#e8d47b]"];
+  const breakdownColors = ["bg-[#60a5fa]", "bg-[#93c5fd]", "bg-[#38bdf8]", "bg-[#dbeafe]"];
   const totalBreakdown = capexBreakdown.reduce((sum, item) => sum + item.value, 0);
 
   // SVG Circumference constants
@@ -94,12 +94,12 @@ export default function DashboardPage() {
   const DONUT_CIRCUMFERENCE = 2 * Math.PI * DONUT_RADIUS;
 
   const classes = {
-    cardHeading: "text-[20px] font-bold text-slate-900 tracking-tight",
-    mainValue: "font-bold text-slate-900 tracking-tight",
-    supportingText: "text-sm text-slate-500 font-medium",
-    smallSupporting: "text-[14px] font-medium text-slate-400",
-    profileLabel: "text-[13px] font-semibold text-slate-500",
-    profileValue: "text-[13px] font-bold text-slate-900"
+    cardHeading: "font-sans text-[18px] lg:text-[20px] font-semibold text-slate-900 tracking-tight",
+    mainValue: "font-sans font-bold text-slate-900 tracking-tight",
+    supportingText: "font-sans text-[14px] font-medium text-slate-500",
+    smallSupporting: "font-sans text-[12px] font-medium text-slate-400",
+    profileLabel: "font-sans text-[11px] uppercase tracking-wider font-bold text-slate-500",
+    profileValue: "font-sans text-[14px] font-semibold text-slate-900"
   };
 
   // Card base classes
@@ -116,7 +116,7 @@ export default function DashboardPage() {
         className="flex flex-col md:flex-row md:items-center justify-between gap-2"
       >
         <div>
-          <h1 className="text-[22px] font-heading font-bold text-[#242424] tracking-tight leading-tight">
+          <h1 className="font-heading text-[32px] font-bold text-[#242424] tracking-tight leading-tight">
             Welcome back, {firstName}
           </h1>
           <p className={classes.supportingText + " mt-0.5"}>
@@ -277,18 +277,18 @@ export default function DashboardPage() {
           <div className="lg:col-span-2 flex flex-col gap-6">
 
             {/* Business Overview — Premium warm card */}
-            <motion.div variants={cardVariants} className="bg-[#f2f1b6] text-gray-900 rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] p-6 lg:p-7 flex flex-col flex-1 card-hover-lift relative overflow-hidden group">
+            <motion.div variants={cardVariants} className="bg-[#fbfce6] text-[#2b542f] rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] p-6 lg:p-7 flex flex-col flex-1 card-hover-lift relative overflow-hidden group">
               {/* Decorative floating orb */}
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#1c4270]/5 rounded-full blur-3xl pointer-events-none animate-float" />
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#2b542f]/5 rounded-full blur-3xl pointer-events-none animate-float" />
               <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-white/30 rounded-full blur-2xl pointer-events-none animate-float" style={{ animationDelay: '3s' }} />
 
               {/* Header */}
               <div className="flex items-center justify-between mb-5 relative z-10">
                 <div>
-                  <span className="text-[#1c4270] text-[14px] uppercase tracking-wider font-bold block mb-1">Business Overview</span>
-                  <h2 className="text-[32px] font-bold text-[#1c4270]">{details.category}</h2>
+                  <span className="font-sans text-[11px] uppercase tracking-wider font-bold block mb-1 text-[#2b542f]">Business Overview</span>
+                  <h2 className="font-heading text-[25px] font-bold text-[#2b542f]">{details.category}</h2>
                 </div>
-                <span className="bg-white/50 backdrop-blur-sm text-[#1c4270] px-3 py-1.5 rounded-lg text-[11px] font-semibold shadow-sm border border-white/60">
+                <span className="bg-white/50 backdrop-blur-sm text-[#2b542f] px-3 py-1.5 rounded-lg font-sans text-[11px] uppercase tracking-wider font-bold shadow-sm border border-white/60">
                   <span className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     Active
@@ -311,8 +311,8 @@ export default function DashboardPage() {
                     transition={{ delay: 0.4 + i * 0.08, duration: 0.4, ease: EASE_OUT_EXPO }}
                     className="flex flex-col gap-1"
                   >
-                    <span className="text-[#1c4270] text-[15px] font-semibold uppercase tracking-wider">{item.label}</span>
-                    <p className="text-[14px] font-semibold text-gray-900">{item.value}</p>
+                    <span className="font-sans text-[11px] uppercase tracking-wider font-bold text-[#2b542f]">{item.label}</span>
+                    <p className="font-sans text-[14px] font-medium text-[#2b542f]">{item.value}</p>
                   </motion.div>
                 ))}
               </div>
@@ -320,10 +320,10 @@ export default function DashboardPage() {
               {/* Key Opportunity — glassmorphism */}
               <div className="p-4 bg-white/35 backdrop-blur-sm rounded-lg border border-white/60 mt-auto shadow-sm relative z-10 group/opp hover:bg-white/50 transition-colors duration-300">
                 <div className="flex items-center gap-1.5 mb-1">
-                  <Sparkles className="w-3 h-3 text-[#1c4270]/60" />
-                  <span className="text-[#1c4270] text-[12px] font-semibold uppercase tracking-wider">Key opportunity</span>
+                  <Sparkles className="w-3 h-3 text-[#2b542f]/60" />
+                  <span className="font-sans text-[11px] uppercase tracking-wider font-bold text-[#2b542f]">Key opportunity</span>
                 </div>
-                <p className="text-[13px] font-bold text-gray-900">
+                <p className="font-sans text-[14px] font-medium text-[#2b542f]">
                   {ML_PLACEHOLDERS.business.keyOpportunity}
                 </p>
               </div>
@@ -331,12 +331,12 @@ export default function DashboardPage() {
 
             {/* Capital Breakdown — Earthy olive card */}
             {capexBreakdown.length > 0 && (
-              <motion.div variants={cardVariants} className={`${cardBase} p-6 lg:p-7 relative overflow-hidden group`} style={{ backgroundColor: '#a7bf63' }}>
+              <motion.div variants={cardVariants} className={`${cardBase} p-6 lg:p-7 relative overflow-hidden group`} style={{ backgroundColor: '#234670' }}>
                 {/* Decorative orb */}
-                <div className="absolute -bottom-8 -right-8 w-28 h-28 bg-[#5c331c]/8 rounded-full blur-2xl pointer-events-none animate-float" style={{ animationDelay: '2s' }} />
+                <div className="absolute -bottom-8 -right-8 w-28 h-28 bg-[#f2f5d0]/10 rounded-full blur-2xl pointer-events-none animate-float" style={{ animationDelay: '2s' }} />
 
                 <div className="flex items-center justify-between mb-5 relative z-10">
-                  <h3 className={classes.cardHeading} style={{ fontSize: '29px', color: '#5c331c' }}>Capital Breakdown</h3>
+                  <h3 className={classes.cardHeading} style={{ fontSize: '29px', color: '#f2f5d0' }}>Capital Breakdown</h3>
                 </div>
 
                 <div className="flex flex-col gap-5 relative z-10">
@@ -364,9 +364,9 @@ export default function DashboardPage() {
                       >
                         <div className="flex items-center gap-1.5">
                           <div className={`w-2.5 h-2.5 rounded-sm ${breakdownColors[i % breakdownColors.length]} shadow-sm`} />
-                          <span className="text-[13px] font-semibold text-[#5c331c]/90 truncate">{item.name}</span>
+                          <span className="font-sans text-[12px] font-medium text-[#f2f5d0]/90 truncate">{item.name}</span>
                         </div>
-                        <span className="text-[17px] font-bold text-[#5c331c] tracking-tight">
+                        <span className="font-sans text-[20px] font-bold text-[#f2f5d0] tracking-tight">
                           ₹{(item.value / 100000).toFixed(1)}L
                         </span>
                       </motion.div>
@@ -381,20 +381,20 @@ export default function DashboardPage() {
           <div className="flex flex-col gap-6">
 
             {/* Financial Outlook — Premium purple accent */}
-            <motion.div variants={cardVariants} className="bg-[#9b79a8] rounded-xl shadow-[0_8px_32px_rgba(155,121,168,0.25)] p-6 lg:p-7 flex flex-col flex-1 relative overflow-hidden group">
+            <motion.div variants={cardVariants} className="bg-[#567a59] rounded-xl shadow-[0_8px_32px_rgba(86,122,89,0.25)] p-6 lg:p-7 flex flex-col flex-1 relative overflow-hidden group">
               {/* Floating decorative orbs */}
-              <div className="absolute top-0 left-0 w-36 h-36 bg-white/8 rounded-full blur-3xl -ml-8 -mt-8 pointer-events-none animate-float" />
+              <div className="absolute top-0 left-0 w-36 h-36 bg-white/10 rounded-full blur-3xl -ml-8 -mt-8 pointer-events-none animate-float" />
               <div className="absolute bottom-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-2xl -mr-6 -mb-6 pointer-events-none animate-float" style={{ animationDelay: '4s' }} />
 
               {/* Shimmer overlay */}
               <div className="absolute inset-0 animate-shimmer pointer-events-none rounded-xl" />
 
               <div className="relative z-10 flex flex-col h-full">
-                <span className="text-[14px] font-bold uppercase tracking-[0.06em] text-[#faf9d7]/80 mb-1.5 block">
+                <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-[#fbfce6]/80 mb-1.5 block">
                   Financial Outlook
                 </span>
 
-                <h3 className="text-[25px] font-heading font-semibold text-[#fffede] mb-5 tracking-tight leading-snug">
+                <h3 className="font-heading text-[25px] font-bold text-[#fbfce6] mb-5 tracking-tight leading-snug">
                   Your business in numbers
                 </h3>
 
@@ -406,16 +406,16 @@ export default function DashboardPage() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5, duration: 0.5, ease: EASE_OUT_EXPO }}
                   >
-                    <span className="text-[30px] lg:text-[30px] font-heading font-semibold text-[#fffede] tracking-tight leading-none">
+                    <span className="font-sans text-[28px] font-bold text-[#fbfce6] tracking-tight leading-none">
                       {ML_PLACEHOLDERS.finance.monthlyRevenue}
                     </span>
-                    <span className="text-[14px] font-medium text-[#fffede]/75 mt-1 flex items-center gap-1">
+                    <span className="font-sans text-[12px] font-medium text-[#fbfce6]/75 mt-1 flex items-center gap-1">
                       <TrendingUp className="w-3 h-3" />
                       Monthly revenue
                     </span>
                   </motion.div>
 
-                  <div className="w-px bg-[#fffede]/20 self-stretch" />
+                  <div className="w-px bg-[#fbfce6]/20 self-stretch" />
 
                   <motion.div
                     className="flex flex-col gap-0.5 flex-1"
@@ -423,10 +423,10 @@ export default function DashboardPage() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.6, duration: 0.5, ease: EASE_OUT_EXPO }}
                   >
-                    <span className="text-[30px] lg:text-[30px] font-heading font-semibold text-[#fffede] tracking-tight leading-none">
+                    <span className="font-sans text-[28px] font-bold text-[#fbfce6] tracking-tight leading-none">
                       {ML_PLACEHOLDERS.finance.monthlyNetProfit}
                     </span>
-                    <span className="text-[14px] font-medium text-[#fffede]/75 mt-1 flex items-center gap-1">
+                    <span className="font-sans text-[12px] font-medium text-[#fbfce6]/75 mt-1 flex items-center gap-1">
                       <TrendingUp className="w-3 h-3" />
                       Net profit / mo
                     </span>
@@ -434,17 +434,17 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Break-even */}
-                <div className="w-full border-t border-[#fffede]/20 pt-4 mb-5">
-                  <span className="text-[14px] font-medium text-[#fffede]/75 block mb-0.5">Estimated break-even</span>
-                  <div className="flex items-center gap-1.5 text-[25px] font-heading font-semibold text-[#fffede]">
-                    <PieChart className="w-3.5 h-3.5 text-[#fffede]" />
+                <div className="w-full border-t border-[#fbfce6]/20 pt-4 mb-5">
+                  <span className="font-sans text-[12px] font-medium text-[#fbfce6]/75 block mb-0.5">Estimated break-even</span>
+                  <div className="flex items-center gap-1.5 font-sans text-[28px] font-bold text-[#fbfce6]">
+                    <PieChart className="w-3.5 h-3.5 text-[#fbfce6]" />
                     Month {ML_PLACEHOLDERS.finance.breakEvenMonth}
                   </div>
                 </div>
 
                 <Link
                   href={`/business/${details.id}/finance`}
-                  className="group/btn mt-auto flex items-center justify-center gap-2 w-full bg-[#faf9d7] hover:bg-white text-[#9b79a8] px-4 py-2.5 rounded-lg text-[14px] font-bold transition-all duration-300 hover:shadow-[0_4px_16px_rgba(250,249,215,0.4)]"
+                  className="group/btn mt-auto flex items-center justify-center gap-2 w-full bg-[#fbfce6] hover:bg-white text-[#567a59] px-4 py-2.5 rounded-lg font-sans text-[14px] font-semibold transition-all duration-300 hover:shadow-[0_4px_16px_rgba(235,237,209,0.4)]"
                 >
                   <span>View financial analysis</span>
                   <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover/btn:translate-x-1" />
@@ -453,30 +453,30 @@ export default function DashboardPage() {
             </motion.div>
 
             {/* Recommended Action — Deep terracotta accent */}
-            <motion.div variants={cardVariants} className="bg-[#943212] rounded-xl shadow-[0_8px_32px_rgba(148,50,18,0.25)] p-6 lg:p-7 flex flex-col relative overflow-hidden text-white group">
+            <motion.div variants={cardVariants} className="bg-[#fbfce6] rounded-xl shadow-[0_8px_32px_rgba(251,252,230,0.25)] p-6 lg:p-7 flex flex-col relative overflow-hidden text-[#234670] group">
               {/* Floating orbs */}
-              <div className="absolute top-0 right-0 w-28 h-28 bg-white/8 rounded-full blur-2xl -mr-8 -mt-8 pointer-events-none animate-float" />
-              <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full blur-xl -ml-6 -mb-6 pointer-events-none animate-float" style={{ animationDelay: '5s' }} />
+              <div className="absolute top-0 right-0 w-28 h-28 bg-[#234670]/5 rounded-full blur-2xl -mr-8 -mt-8 pointer-events-none animate-float" />
+              <div className="absolute bottom-0 left-0 w-20 h-20 bg-[#234670]/5 rounded-full blur-xl -ml-6 -mb-6 pointer-events-none animate-float" style={{ animationDelay: '5s' }} />
 
               {/* Shimmer overlay */}
               <div className="absolute inset-0 animate-shimmer pointer-events-none rounded-xl" />
 
-              <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-[#ffeee8]/70 mb-3 relative z-10 flex items-center gap-1.5">
+              <span className="font-sans text-[11px] uppercase tracking-wider font-bold text-[#234670]/70 mb-3 relative z-10 flex items-center gap-1.5">
                 <Sparkles className="w-3 h-3" />
                 Recommended Action
               </span>
 
-              <h3 className="text-[25px] font-heading font-semibold mb-3 tracking-tight leading-snug text-[#ffeee8] relative z-10">
+              <h3 className="font-heading text-[25px] font-bold mb-3 tracking-tight leading-snug text-[#234670] relative z-10">
                 Explore your business overview
               </h3>
 
-              <p className="text-[13px] text-[#ffeee8]/85 mb-5 font-medium relative z-10">
+              <p className="font-sans text-[14px] font-medium text-[#234670]/85 mb-5 relative z-10">
                 Get a detailed overview of your entire business operations and financials.
               </p>
 
               <Link
                 href={`/business/${details.id}`}
-                className="group/btn mt-auto flex items-center justify-center gap-2 w-full bg-[#ffeee8] hover:bg-white text-[#943212] px-4 py-2.5 rounded-lg text-[14px] font-bold transition-all duration-300 relative z-10 hover:shadow-[0_4px_16px_rgba(255,238,232,0.4)]"
+                className="group/btn mt-auto flex items-center justify-center gap-2 w-full bg-[#234670] hover:bg-[#1c3a5e] text-[#fbfce6] px-4 py-2.5 rounded-lg font-sans text-[14px] font-semibold transition-all duration-300 relative z-10 hover:shadow-[0_4px_16px_rgba(35,70,112,0.4)]"
               >
                 <span>My Business</span>
                 <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover/btn:translate-x-1" />
