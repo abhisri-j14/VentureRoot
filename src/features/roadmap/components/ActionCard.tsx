@@ -69,29 +69,29 @@ export const ActionCard = ({ action }: ActionCardProps) => {
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="shrink-0 flex flex-col items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 text-sm">
+          <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-sans text-[14px] font-bold text-slate-500">
             {action.order}
           </div>
         </div>
 
         <div className="flex-1 min-w-0">
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-1">
-            <h3 className={`font-heading font-bold text-xl leading-tight transition-colors group-hover:text-primary ${isCompleted ? 'text-slate-500 line-through' : 'text-gray-900'}`}>
+            <h3 className={`font-sans text-[16px] md:text-[18px] font-bold leading-tight transition-colors group-hover:text-primary ${isCompleted ? 'text-slate-500 line-through' : 'text-gray-900'}`}>
               {action.title}
             </h3>
             
             <div className="flex items-center gap-2 shrink-0">
-              <span className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded border ${getPriorityColor(action.priority)}`}>
+              <span className={`px-2 py-1 font-sans text-[11px] font-bold uppercase tracking-wider rounded border ${getPriorityColor(action.priority)}`}>
                 {t(getPriorityKey(action.priority) as any) || action.priority}
               </span>
             </div>
           </div>
           
-          <p className="text-secondary-muted text-sm line-clamp-2 pr-8">
+          <p className="font-sans text-[14px] text-secondary-muted line-clamp-2 pr-8">
             {action.description}
           </p>
 
-          <div className="mt-3 flex items-center gap-4 text-xs font-medium text-slate-500">
+          <div className="mt-3 flex items-center gap-4 font-sans text-[12px] font-medium text-slate-500">
             <div className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" />
               <span>{action.timeframe}</span>
@@ -124,21 +124,21 @@ export const ActionCard = ({ action }: ActionCardProps) => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <h4 className="font-sans text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                 <AlertTriangle className="w-3.5 h-3.5" />
                 {t("roadmap.whatToDo") || "What to do"}
               </h4>
-              <p className="text-sm text-secondary leading-relaxed bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+              <p className="font-sans text-[14px] text-secondary leading-relaxed bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                 {action.whatToDo}
               </p>
             </div>
             
             <div>
-              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <h4 className="font-sans text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                 <Target className="w-3.5 h-3.5" />
                 {t("roadmap.expectedOutcome") || "Expected Outcome"}
               </h4>
-              <p className="text-sm text-secondary leading-relaxed bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+              <p className="font-sans text-[14px] text-secondary leading-relaxed bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                 {action.expectedOutcome}
               </p>
             </div>

@@ -1,12 +1,16 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type Language = "en" | "bn" | "hi";
+export type Language = "en" | "bn" | "hi" | "pa" | "mr" | "ta" | "te";
 
 export const SUPPORTED_LANGUAGES: { code: Language; label: string; nativeLabel: string }[] = [
   { code: "en", label: "English", nativeLabel: "English" },
   { code: "bn", label: "Bengali", nativeLabel: "বাংলা" },
-  { code: "hi", label: "Hindi", nativeLabel: "हिन्दी" },
+  { code: "hi", label: "Hindi",   nativeLabel: "हिन्दी" },
+  { code: "pa", label: "Punjabi", nativeLabel: "ਪੰਜਾਬੀ" },
+  { code: "mr", label: "Marathi", nativeLabel: "मराठी" },
+  { code: "ta", label: "Tamil",   nativeLabel: "தமிழ்" },
+  { code: "te", label: "Telugu",  nativeLabel: "తెలుగు" },
 ];
 
 export const detectBrowserLanguage = (): Language => {
@@ -14,6 +18,10 @@ export const detectBrowserLanguage = (): Language => {
   const lang = navigator.language.toLowerCase();
   if (lang.startsWith("bn")) return "bn";
   if (lang.startsWith("hi")) return "hi";
+  if (lang.startsWith("pa")) return "pa";
+  if (lang.startsWith("mr")) return "mr";
+  if (lang.startsWith("ta")) return "ta";
+  if (lang.startsWith("te")) return "te";
   return "en";
 };
 

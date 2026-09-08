@@ -85,7 +85,7 @@ const USP_ITEMS = [
     id: "roadmap",
     category: "Action Plan",
     icon: Target,
-    image: "/feature-4.jpg",
+    image: "/usp-6.png",
     title: "Know what to do next",
     description: "Turn your business plan into clear steps, from checking demand to preparing for launch.",
     points: ["Follow practical next steps", "Track what is completed", "Avoid feeling overwhelmed"],
@@ -618,17 +618,7 @@ export default function LandingPage() {
                   {t("landing.hero1")}
                 </motion.h1>
 
-                {/* Description — frosted pill for legibility over illustration */}
-                <motion.div
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={isPreloading ? { opacity: 0, y: 14 } : { opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  className="mt-5 px-5 py-3 rounded-2xl bg-white/55 backdrop-blur-sm border border-white/40 shadow-sm max-w-[520px]"
-                >
-                  <p className="text-[14px] md:text-[15px] text-[#200813]/80 font-normal leading-relaxed">
-                    {t("landing.heroSub")}
-                  </p>
-                </motion.div>
+
 
                 {/* Buttons */}
                 <motion.div
@@ -746,7 +736,7 @@ export default function LandingPage() {
                   How VentureRoot Works
                 </h2>
                 <p className="text-base md:text-lg text-[#200813]/70 max-w-2xl font-normal">
-                  From a local business idea to a clear, actionable plan — in four steps.
+                  VentureRoot shows you local market demand, matches you with government support, and builds your step-by-step business plan.
                 </p>
               </div>
 

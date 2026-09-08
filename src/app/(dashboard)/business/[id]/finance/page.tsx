@@ -1,11 +1,23 @@
 "use client";
 
-import React from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Map, Compass, TrendingUp, Wallet, PiggyBank, BarChart3 } from "lucide-react";
+import {
+  ArrowLeft, Map, Compass, TrendingUp, Wallet, PiggyBank,
+  BarChart3, CheckCircle2, AlertTriangle, ShieldCheck, ArrowRight,
+  IndianRupee, Clock, Percent, CalendarDays, ChevronLeft, ChevronRight
+} from "lucide-react";
 import { useParams } from "next/navigation";
-import { RepaymentChart } from "@/features/finance/components/RepaymentChart";
 import { WhatIfSimulator } from "@/features/finance/components/WhatIfSimulator";
+import { useBusinessDetails } from "@/lib/data/businesses";
+import {
+  computeFinancialPlan,
+  MICRO_FINANCE_SCHEME,
+  TERM_LOAN_SCHEME,
+  type SchemeDefinition,
+  type FinancialPlan,
+  type RepaymentRow,
+} from "@/features/finance/schemeEngine";
 import financeData from "@/data/finance.json";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -13,20 +25,17 @@ function fmt(n: number) {
   return "₹" + n.toLocaleString("en-IN");
 }
 
+function fmtLakh(n: number): string {
+  if (n >= 10000000) return `₹${(n / 10000000).toFixed(2)} Cr`;
+  if (n >= 100000) return `₹${(n / 100000).toFixed(2)} Lakh`;
+  return fmt(n);
+}
+
 const statusStyle: Record<string, string> = {
-  "Likely relevant":    "bg-green-100 text-green-700 border border-green-200",
-  "May be relevant":    "bg-amber-100 text-amber-700 border border-amber-200",
+  "Likely relevant": "bg-green-100 text-green-700 border border-green-200",
+  "May be relevant": "bg-amber-100 text-amber-700 border border-amber-200",
   "Needs verification": "bg-slate-100 text-slate-600 border border-slate-200",
 };
-
-// ── Derived values ────────────────────────────────────────────────────────────
-const totalAllocation = financeData.fundingAllocation.reduce((s, r) => s + r.amount, 0);
-let balance = financeData.summary.possibleLoan;
-const scheduleRows = financeData.repaymentSchedule.map(r => {
-  const total = r.principal + r.interest;
-  balance = Math.max(0, balance - r.principal);
-  return { ...r, total, balance };
-});
 
 // ── Shared Card wrapper ───────────────────────────────────────────────────────
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
@@ -41,302 +50,547 @@ function CardHeader({
   title, subtitle, accent = false
 }: { title: string; subtitle?: string; accent?: boolean }) {
   return (
-    <div className={`px-6 py-5 border-b border-slate-100 ${accent ? "bg-[#96b827]" : ""}`}>
-      <h2 className={`text-[20px] tracking-tight font-bold ${accent ? "text-white" : "text-slate-900"}`}>{title}</h2>
-      {subtitle && <p className={`text-xs mt-0.5 ${accent ? "text-white/70" : "text-gray-500"}`}>{subtitle}</p>}
+    <div className={`px-6 py-5 border-b border-slate-100 ${accent ? "bg-[#81cc87]" : ""}`}>
+      <h2 className={`font-sans text-[18px] tracking-tight font-bold ${accent ? "text-[#f9faeb]" : "text-slate-900"}`}>{title}</h2>
+      {subtitle && <p className={`font-sans text-[12px] mt-0.5 ${accent ? "text-[#f9faeb]/80" : "text-gray-500"}`}>{subtitle}</p>}
+    </div>
+  );
+}
+
+// ── Auto-Selected Scheme Card ─────────────────────────────────────────────────
+function SchemeCard({ scheme, plan }: { scheme: SchemeDefinition; plan: FinancialPlan }) {
+  const isMicro = scheme.id === "micro-finance";
+
+  return (
+    <div className={`rounded-2xl border-2 overflow-hidden shadow-md ${isMicro ? "border-blue-300 bg-blue-50/30" : "border-emerald-300 bg-emerald-50/30"
+      }`}>
+      {/* Header */}
+      <div className={`px-6 py-5 flex items-center justify-between ${isMicro ? "bg-blue-600" : "bg-emerald-700"
+        }`}>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+            <ShieldCheck className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h3 className="font-sans text-[18px] font-bold text-white">{scheme.name}</h3>
+            <p className="font-sans text-[12px] text-white/80 mt-0.5">Auto-selected based on your project cost</p>
+          </div>
+        </div>
+        <span className="bg-white/20 backdrop-blur-sm text-white px-3 py-1.5 rounded-full font-sans text-[11px] font-bold uppercase tracking-wider border border-white/30 flex items-center gap-1.5">
+          <CheckCircle2 className="w-3.5 h-3.5" /> Recommended for you
+        </span>
+      </div>
+
+      {/* Body */}
+      <div className="px-6 py-6">
+        <p className="font-sans text-[14px] text-gray-700 leading-relaxed mb-6">
+          {scheme.description}
+        </p>
+
+        {/* Parameter Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          {[
+            { label: "Interest Rate", value: `${scheme.interestRate}% p.a.`, icon: Percent, color: isMicro ? "text-blue-700" : "text-emerald-700" },
+            { label: "Tenure", value: `${scheme.tenureYears} years (${scheme.tenureMonths} months)`, icon: CalendarDays, color: isMicro ? "text-blue-700" : "text-emerald-700" },
+            { label: "Moratorium", value: `${scheme.moratoriumMonths} months`, icon: Clock, color: isMicro ? "text-blue-700" : "text-emerald-700" },
+            { label: "Max Loan", value: fmtLakh(scheme.maxLoanAmount), icon: IndianRupee, color: isMicro ? "text-blue-700" : "text-emerald-700" },
+          ].map(item => (
+            <div key={item.label} className="bg-white rounded-xl border border-slate-200 p-4 flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <item.icon className={`w-4 h-4 ${item.color}`} />
+                <span className="font-sans text-[11px] font-bold text-slate-500 uppercase tracking-wider">{item.label}</span>
+              </div>
+              <span className={`font-sans text-[16px] font-bold ${item.color}`}>{item.value}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Financial Outcome */}
+        <div className="bg-white rounded-xl border border-slate-200 p-5">
+          <h4 className="font-sans text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-4">Your Financial Outcome</h4>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div>
+              <span className="font-sans text-[12px] text-slate-500 font-medium block mb-1">Monthly EMI</span>
+              <span className="font-sans text-[22px] font-bold text-gray-900">{fmt(plan.monthlyEMI)}</span>
+            </div>
+            <div>
+              <span className="font-sans text-[12px] text-slate-500 font-medium block mb-1">Total Interest</span>
+              <span className="font-sans text-[22px] font-bold text-gray-900">{fmt(plan.totalInterest)}</span>
+            </div>
+            <div>
+              <span className="font-sans text-[12px] text-slate-500 font-medium block mb-1">Total Repayment</span>
+              <span className="font-sans text-[22px] font-bold text-gray-900">{fmt(plan.totalRepayment)}</span>
+            </div>
+            <div>
+              <span className="font-sans text-[12px] text-slate-500 font-medium block mb-1">Funding Ratio</span>
+              <span className="font-sans text-[22px] font-bold text-gray-900">90 : 10</span>
+              <span className="font-sans text-[11px] text-slate-400 block">Loan : Your share</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function FinancePage() {
+  const [schedulePage, setSchedulePage] = useState(0);
   const params = useParams();
   const id = params?.id as string;
-  const { summary, fundingAllocation, fundingOptions, repaymentPlan } = financeData;
+  const { data: business } = useBusinessDetails(id);
+
+  // Get margin from business data (mock JSON falls back to 150000)
+  const availableMargin = business?.capital?.availableMargin ?? 0;
+
+  // ── Compute the full financial plan from the user's margin ──
+  const plan = useMemo(() => computeFinancialPlan(availableMargin), [availableMargin]);
+
+  const schemeRouted = plan.schemeResult.routed;
+  const scheme = schemeRouted ? (plan.schemeResult as { routed: true; scheme: SchemeDefinition }).scheme : null;
+
+  // ── Existing MUDRA / NABARD options from JSON (kept as-is) ──
+  const { fundingAllocation, fundingOptions } = financeData;
+  const totalAllocation = fundingAllocation.reduce((s, r) => s + r.amount, 0);
+
+  // Dynamically computed repayment schedule from scheme engine
+  const scheduleRows = plan.repaymentSchedule;
+
+  if (!business) return null;
 
   return (
     <div className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-6 bg-[#f4fce8]">
 
-        {/* ── 1. Header ─────────────────────────────────────────────────── */}
-        <div className="mb-8">
-          <Link
-            href={`/business/${id}`}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-primary transition-colors mb-5"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" /> Back to business
-          </Link>
+      {/* ── 1. Header ─────────────────────────────────────────────────── */}
+      <div className="mb-8">
+        <Link
+          href={`/business/${id}`}
+          className="inline-flex items-center gap-1.5 font-sans text-[14px] font-semibold text-gray-500 hover:text-primary transition-colors mb-5"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" /> Back to business
+        </Link>
 
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div>
-              <h1 className="text-[22px] font-heading font-bold text-[#242424] tracking-tight leading-tight">
-                Financial Planning
-              </h1>
-              <p className="text-sm text-slate-500 font-medium mt-0.5">
-                Understand the money needed, possible funding, and repayment burden.
-              </p>
-              <span className="inline-block mt-2 text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full">
-                Preliminary estimate · based on information provided
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <h1 className="font-heading text-[32px] font-bold text-[#242424] tracking-tight leading-tight">
+              Financial Planning
+            </h1>
+            <p className="font-sans text-[14px] text-slate-500 font-medium mt-0.5">
+              Understand the money needed, possible funding, and repayment burden.
+            </p>
+            <span className="inline-block mt-2 font-sans text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full uppercase tracking-wider">
+              Preliminary estimate · based on information provided
+            </span>
+          </div>
+          <div className="flex gap-3 shrink-0">
+            <Link href={`/business/${id}/feasibility`}
+              className="flex items-center gap-2 bg-white border border-slate-200 text-gray-700 px-4 py-2.5 rounded-xl font-sans text-[14px] font-semibold hover:border-primary hover:text-primary transition-all shadow-sm">
+              <Map className="w-4 h-4" /> Feasibility
+            </Link>
+            <Link href={`/business/${id}/roadmap`}
+              className="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-xl font-sans text-[14px] font-semibold hover:bg-primary-light transition-colors shadow-sm">
+              <Compass className="w-4 h-4" /> Action Roadmap
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* ── 2. Summary Strip (DYNAMIC from 10% formula) ────────────────── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {[
+          { label: "Project Cost", value: fmt(plan.projectCost), sub: "Available Margin ÷ 10%", icon: BarChart3, bgClass: "bg-[#094f9e] border-transparent" },
+          { label: "Your Margin (10%)", value: fmt(plan.availableMargin), sub: "Your own capital contribution", icon: Wallet, bgClass: "bg-[#c2a213] border-transparent" },
+          { label: "Loan Amount (90%)", value: fmt(plan.loanAmount), sub: scheme ? `Via ${scheme.name}` : "Scheme not available", icon: PiggyBank, bgClass: "bg-[#8f785a] border-transparent" },
+          { label: "Monthly EMI", value: fmt(plan.monthlyEMI), sub: scheme ? `${scheme.interestRate}% p.a. · ${scheme.tenureYears}yr tenure` : "—", icon: TrendingUp, bgClass: "bg-[#54365e] border-transparent" },
+        ].map(item => (
+          <div key={item.label}
+            className={`rounded-2xl border p-5 flex flex-col gap-3 shadow-sm ${item.bgClass}`}>
+            <div className="flex items-center justify-between">
+              <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-white/70">{item.label}</span>
+              <item.icon className="w-4 h-4 text-white/40" />
+            </div>
+            <div className="font-sans text-[28px] font-bold leading-none text-white" suppressHydrationWarning>
+              {item.value}
+            </div>
+            <p className="font-sans text-[12px] text-white/60">{item.sub}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* ── 3. The 10% Formula Explanation ──────────────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+        <Card>
+          <CardHeader title="How the 10% formula works" accent />
+          <div className="px-6 py-5 flex flex-col gap-4">
+            {[
+              { label: "Your Available Margin (10%)", value: plan.availableMargin, color: "text-primary", dot: "bg-primary", note: "What you bring to the table" },
+              { label: "Total Project Cost", value: plan.projectCost, color: "text-gray-900", dot: "bg-slate-400", note: "Margin ÷ 10% = Full project size" },
+              { label: "Loan from Scheme (90%)", value: plan.loanAmount, color: "text-[#094f9e]", dot: "bg-[#094f9e]", note: scheme ? `Capped at ${fmtLakh(scheme.maxLoanAmount)}` : "—" },
+            ].map(row => (
+              <div key={row.label} className="flex items-center justify-between gap-4 pb-4 border-b border-slate-50 last:border-0 last:pb-0">
+                <div className="flex items-center gap-2.5">
+                  <div className={`w-2 h-2 rounded-full shrink-0 ${row.dot}`} />
+                  <div className="flex flex-col">
+                    <span className="font-sans text-[14px] text-gray-600 font-medium">{row.label}</span>
+                    <span className="font-sans text-[11px] text-gray-400">{row.note}</span>
+                  </div>
+                </div>
+                <span className={`font-sans text-[16px] font-bold shrink-0 ${row.color}`} suppressHydrationWarning>{fmt(row.value)}</span>
+              </div>
+            ))}
+
+            {/* Formula visual */}
+            <div className="bg-slate-50 rounded-xl p-4 mt-2 border border-slate-100">
+              <div className="flex items-center justify-center gap-3 font-mono text-[14px] text-gray-700" suppressHydrationWarning>
+                <span className="bg-primary/10 text-primary font-bold px-3 py-1.5 rounded-lg">{fmt(plan.availableMargin)}</span>
+                <span className="text-gray-400">÷ 10%</span>
+                <span className="text-gray-400">=</span>
+                <span className="bg-slate-200 text-gray-900 font-bold px-3 py-1.5 rounded-lg">{fmt(plan.projectCost)}</span>
+                <span className="text-gray-400">× 90%</span>
+                <span className="text-gray-400">=</span>
+                <span className="bg-[#094f9e]/10 text-[#094f9e] font-bold px-3 py-1.5 rounded-lg">{fmt(plan.loanAmount)}</span>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <CardHeader title="Funding proportion" accent />
+          <div className="px-6 py-5 flex flex-col gap-5 justify-center h-[calc(100%-61px)]">
+            <div className="flex rounded-xl overflow-hidden h-10 shadow-inner border border-slate-100">
+              <div
+                className="bg-primary flex items-center justify-center text-white font-sans text-[14px] font-bold transition-all duration-700"
+                style={{ width: "10%" }}
+              >
+                10%
+              </div>
+              <div
+                className="bg-[#094f9e] flex items-center justify-center text-white font-sans text-[14px] font-bold transition-all duration-700"
+                style={{ width: "90%" }}
+              >
+                90%
+              </div>
+            </div>
+            <div className="flex gap-6 font-sans text-[14px] text-gray-600">
+              <span className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded bg-primary inline-block shrink-0" />
+                Your contribution — {fmt(plan.availableMargin)}
+              </span>
+              <span className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded bg-[#094f9e] inline-block shrink-0" />
+                Concessional loan — {fmt(plan.loanAmount)}
               </span>
             </div>
-            <div className="flex gap-3 shrink-0">
-              <Link href={`/business/${id}/feasibility`}
-                className="flex items-center gap-2 bg-white border border-slate-200 text-gray-700 px-4 py-2.5 rounded-xl text-sm font-semibold hover:border-primary hover:text-primary transition-all shadow-sm">
-                <Map className="w-4 h-4" /> Feasibility
-              </Link>
-              <Link href={`/business/${id}/roadmap`}
-                className="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-primary-light transition-colors shadow-sm">
-                <Compass className="w-4 h-4" /> Action Roadmap
-              </Link>
-            </div>
-          </div>
-        </div>
 
-        {/* ── 2. Summary Strip ──────────────────────────────────────────── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          {[
-            { label: "Total needed",      value: fmt(summary.totalNeeded),     sub: "Estimated project cost",    icon: BarChart3, bgClass: "bg-[#094f9e] border-transparent" },
-            { label: "Your contribution", value: fmt(summary.ownContribution), sub: "Own capital applied",        icon: Wallet,    bgClass: "bg-[#c2a213] border-transparent" },
-            { label: "Possible loan",     value: fmt(summary.possibleLoan),    sub: "To be financed externally", icon: PiggyBank, bgClass: "bg-[#8f785a] border-transparent" },
-            { label: "Monthly surplus",   value: fmt(summary.monthlySurplus),  sub: "After EMI and expenses",    icon: TrendingUp,bgClass: "bg-[#54365e] border-transparent" },
-          ].map(item => (
-            <div key={item.label}
-              className={`rounded-2xl border p-5 flex flex-col gap-3 shadow-sm ${item.bgClass}`}>
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold uppercase tracking-widest text-white/70">{item.label}</span>
-                <item.icon className="w-4 h-4 text-white/40" />
-              </div>
-              <div className="text-2xl md:text-3xl font-black font-heading leading-none text-white">
-                {item.value}
-              </div>
-              <p className="text-xs text-white/60">{item.sub}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* ── 3. Funding Calculation ────────────────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-          <Card>
-            <CardHeader title="How your funding is calculated" accent />
-            <div className="px-6 py-5 flex flex-col gap-4">
-              {[
-                { label: "Estimated project cost", value: summary.totalNeeded,     color: "text-gray-900",  dot: "bg-slate-300" },
-                { label: "Your own capital",        value: summary.ownContribution, color: "text-primary",   dot: "bg-primary" },
-                { label: "Amount to be borrowed",   value: summary.possibleLoan,    color: "text-[#094f9e]", dot: "bg-[#094f9e]" },
-              ].map(row => (
-                <div key={row.label} className="flex items-center justify-between gap-4 pb-4 border-b border-slate-50 last:border-0 last:pb-0">
-                  <div className="flex items-center gap-2.5">
-                    <div className={`w-2 h-2 rounded-full shrink-0 ${row.dot}`} />
-                    <span className="text-sm text-gray-600 font-medium">{row.label}</span>
-                  </div>
-                  <span className={`text-lg font-bold shrink-0 ${row.color}`}>{fmt(row.value)}</span>
-                </div>
-              ))}
-              <p className="text-xs text-gray-400 pt-1">Based on information provided during setup.</p>
-            </div>
-          </Card>
-
-          <Card>
-            <CardHeader title="Funding proportion" accent />
-            <div className="px-6 py-5 flex flex-col gap-5 justify-center h-[calc(100%-61px)]">
-              <div className="flex rounded-xl overflow-hidden h-10 shadow-inner border border-slate-100">
-                <div
-                  className="bg-primary flex items-center justify-center text-white text-sm font-bold transition-all duration-700"
-                  style={{ width: `${Math.round((summary.ownContribution / summary.totalNeeded) * 100)}%` }}
-                >
-                  {Math.round((summary.ownContribution / summary.totalNeeded) * 100)}%
-                </div>
-                <div
-                  className="bg-[#094f9e] flex items-center justify-center text-white text-sm font-bold transition-all duration-700"
-                  style={{ width: `${Math.round((summary.possibleLoan / summary.totalNeeded) * 100)}%` }}
-                >
-                  {Math.round((summary.possibleLoan / summary.totalNeeded) * 100)}%
+            {/* Scheme routing explanation */}
+            <div className={`rounded-xl p-4 border mt-2 ${scheme?.id === "micro-finance"
+                ? "bg-blue-50 border-blue-200"
+                : scheme
+                  ? "bg-emerald-50 border-emerald-200"
+                  : "bg-red-50 border-red-200"
+              }`}>
+              <div className="flex items-start gap-2.5">
+                {schemeRouted ? (
+                  <CheckCircle2 className={`w-5 h-5 mt-0.5 shrink-0 ${scheme?.id === "micro-finance" ? "text-blue-600" : "text-emerald-600"}`} />
+                ) : (
+                  <AlertTriangle className="w-5 h-5 mt-0.5 shrink-0 text-red-600" />
+                )}
+                <div>
+                  <span className={`font-sans text-[13px] font-bold ${scheme?.id === "micro-finance" ? "text-blue-700" : scheme ? "text-emerald-700" : "text-red-700"
+                    }`}>
+                    {schemeRouted
+                      ? `Auto-selected: ${scheme!.name}`
+                      : "No concessional scheme available"}
+                  </span>
+                  <p className="font-sans text-[12px] text-gray-600 mt-1" suppressHydrationWarning>
+                    {schemeRouted
+                      ? `Project cost of ${fmtLakh(plan.projectCost)} falls ${scheme?.id === "micro-finance"
+                        ? "within the ₹1.40 Lakh Micro Finance threshold"
+                        : "between ₹1.40 Lakh and ₹50 Lakh (Term Loan range)"
+                      }.`
+                      : (plan.schemeResult as { routed: false; reason: string }).reason}
+                  </p>
                 </div>
               </div>
-              <div className="flex gap-6 text-sm text-gray-600">
-                <span className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded bg-primary inline-block shrink-0" />
-                  Own contribution — {fmt(summary.ownContribution)}
-                </span>
-                <span className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded bg-[#094f9e] inline-block shrink-0" />
-                  Possible loan — {fmt(summary.possibleLoan)}
-                </span>
-              </div>
             </div>
-          </Card>
-        </div>
-
-        {/* ── 4. Funding Options ───────────────────────────────────────── */}
-        <Card className="mb-6">
-          <CardHeader
-            title="Funding Options"
-            subtitle="Compare options that may suit your business."
-            accent
-          />
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/60">
-                  {["Option", "Why it may suit", "Type", "Possible amount", "Interest", "Period", "Moratorium", "Status"].map(h => (
-                    <th key={h} className="text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest py-3 px-4 first:pl-6 last:pr-6 whitespace-nowrap">
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {fundingOptions.map(opt => (
-                  <tr key={opt.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50/70 transition-colors">
-                    <td className="py-4 px-4 pl-6 font-bold text-gray-900 whitespace-nowrap">{opt.name}</td>
-                    <td className="py-4 px-4 text-gray-500 text-xs max-w-[200px]">{opt.reason}</td>
-                    <td className="py-4 px-4 text-gray-700 whitespace-nowrap">{opt.supportType}</td>
-                    <td className="py-4 px-4 font-semibold text-gray-900 whitespace-nowrap">{opt.amount}</td>
-                    <td className="py-4 px-4 text-gray-700 whitespace-nowrap">{opt.interest}</td>
-                    <td className="py-4 px-4 text-gray-700 whitespace-nowrap">{opt.tenure}</td>
-                    <td className="py-4 px-4 text-gray-700 whitespace-nowrap">{opt.moratorium}</td>
-                    <td className="py-4 px-4 pr-6 whitespace-nowrap">
-                      <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${statusStyle[opt.status] ?? "bg-slate-100 text-slate-600"}`}>
-                        {opt.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         </Card>
+      </div>
 
-        {/* ── 5. Where the money may go ────────────────────────────────── */}
-        <Card className="mb-6">
-          <CardHeader title="Where the money may go" subtitle="Estimated breakdown of project costs." accent />
-          <div className="px-6 py-2">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-slate-100">
-                  {["Item", "Estimated amount", "Share of total", ""].map(h => (
-                    <th key={h} className="text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest py-3 pr-6">
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {fundingAllocation.map(row => {
-                  const pct = Math.round((row.amount / totalAllocation) * 100);
-                  return (
-                    <tr key={row.item} className="border-b border-slate-50 last:border-0">
-                      <td className="py-3.5 pr-6 text-gray-800 font-medium">{row.item}</td>
-                      <td className="py-3.5 pr-6 font-bold text-gray-900">{fmt(row.amount)}</td>
-                      <td className="py-3.5 pr-6 text-gray-500 font-medium">{pct}%</td>
-                      <td className="py-3.5 w-48 hidden sm:table-cell">
-                        <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-primary rounded-full transition-all duration-700"
-                            style={{ width: `${pct}%` }}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-                <tr className="bg-[#f4fce8]">
-                  <td className="py-3.5 pr-6 font-bold text-gray-900 rounded-bl-xl">Total</td>
-                  <td className="py-3.5 pr-6 font-black text-primary text-base">{fmt(totalAllocation)}</td>
-                  <td className="py-3.5 pr-6 text-gray-500 font-medium">100%</td>
-                  <td className="rounded-br-xl hidden sm:table-cell" />
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </Card>
+      {/* ── 4. Auto-Selected Scheme ─────────────────────────────────────── */}
+      {schemeRouted && scheme && (
+        <div className="mb-6">
+          <h2 className="font-sans text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-primary" /> Matched Government Concessional Scheme
+          </h2>
+          <SchemeCard scheme={scheme} plan={plan} />
+        </div>
+      )}
 
-        {/* ── 6. Repayment Plan Summary ─────────────────────────────────── */}
+      {/* ── 5. Repayment Plan Summary ───────────────────────────────────── */}
+      {schemeRouted && scheme && (
         <div className="bg-[#094f9e] rounded-2xl p-6 mb-6 shadow-sm">
-          <h2 className="text-sm font-bold text-white/70 uppercase tracking-widest mb-5">Your repayment plan</h2>
+          <h2 className="font-sans text-[12px] font-bold text-white/70 uppercase tracking-wider mb-5">Your repayment plan · {scheme.name}</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-y-6 gap-x-4">
             {[
-              { label: "Frequency",       value: repaymentPlan.frequency },
-              { label: "Period",          value: repaymentPlan.period },
-              { label: "Interest rate",   value: repaymentPlan.interestRate },
-              { label: "Payment pause",   value: repaymentPlan.moratorium },
-              { label: "Regular payment", value: repaymentPlan.regularPayment },
-              { label: "Total interest",  value: repaymentPlan.totalInterest },
+              { label: "Frequency", value: "Quarterly" },
+              { label: "Period", value: `${scheme.tenureMonths} months (${scheme.tenureYears} years)` },
+              { label: "Interest rate", value: `${scheme.interestRate}% per annum` },
+              { label: "Moratorium", value: `${scheme.moratoriumMonths} months (interest only)` },
+              { label: "Monthly EMI", value: fmt(plan.monthlyEMI) },
+              { label: "Total interest", value: fmt(plan.totalInterest) },
             ].map(item => (
               <div key={item.label} className="flex flex-col gap-1.5">
-                <span className="text-[10px] font-bold text-white/50 uppercase tracking-widest">{item.label}</span>
-                <span className="text-base font-bold text-white leading-tight">{item.value}</span>
+                <span className="font-sans text-[11px] font-bold text-white/50 uppercase tracking-wider">{item.label}</span>
+                <span className="font-sans text-[16px] font-bold text-white leading-tight" suppressHydrationWarning>{item.value}</span>
               </div>
             ))}
           </div>
         </div>
+      )}
 
-        {/* ── 7. Repayment Schedule ─────────────────────────────────────── */}
+      {/* ── 10. Other Available Funding Options (MUDRA / NABARD) ────────── */}
+      <Card className="mb-6">
+        <CardHeader
+          title="Other Available Funding Options"
+          subtitle="Additional schemes and lending products that may also be relevant to your business."
+          accent
+        />
+        <div className="overflow-x-auto">
+          <table className="w-full font-sans text-[14px]">
+            <thead>
+              <tr className="border-b border-[#81cc87] bg-[#81cc87]">
+                {["Option", "Why it may suit", "Type", "Possible amount", "Interest", "Period", "Moratorium", "Status"].map(h => (
+                  <th key={h} className="text-left font-sans text-[11px] font-bold text-[#f9faeb] uppercase tracking-wider py-3 px-4 first:pl-6 last:pr-6 whitespace-nowrap">
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {fundingOptions.map(opt => (
+                <tr key={opt.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50/70 transition-colors">
+                  <td className="py-4 px-4 pl-6 font-sans text-[14px] font-bold text-gray-900 whitespace-nowrap">{opt.name}</td>
+                  <td className="py-4 px-4 text-gray-500 font-sans text-[12px] max-w-[200px]">{opt.reason}</td>
+                  <td className="py-4 px-4 text-gray-700 whitespace-nowrap">{opt.supportType}</td>
+                  <td className="py-4 px-4 font-semibold text-gray-900 whitespace-nowrap">{opt.amount}</td>
+                  <td className="py-4 px-4 text-gray-700 whitespace-nowrap">{opt.interest}</td>
+                  <td className="py-4 px-4 text-gray-700 whitespace-nowrap">{opt.tenure}</td>
+                  <td className="py-4 px-4 text-gray-700 whitespace-nowrap">{opt.moratorium}</td>
+                  <td className="py-4 px-4 pr-6 whitespace-nowrap">
+                    <span className={`font-sans text-[11px] font-bold px-2.5 py-1 rounded-full ${statusStyle[opt.status] ?? "bg-slate-100 text-slate-600"}`}>
+                      {opt.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+
+      {/* ── 6. Dynamic Repayment Schedule ───────────────────────────────── */}
+      {scheduleRows.length > 0 && (
         <Card className="mb-6">
-          <CardHeader title="Repayment schedule" subtitle="Period-by-period breakdown of principal, interest, and outstanding balance." accent />
+          <CardHeader title="Repayment schedule" subtitle="Quarter-by-quarter breakdown of principal, interest, and outstanding balance." accent />
           <div className="overflow-x-auto px-0">
-            <table className="w-full text-sm">
+            <table className="w-full font-sans text-[14px]">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/60">
+                <tr className="border-b border-[#81cc87] bg-[#81cc87]">
                   {["Period", "Type", "Principal", "Interest", "Total payment", "Balance left"].map(h => (
-                    <th key={h} className="text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest py-3 px-4 first:pl-6 last:pr-6 whitespace-nowrap">
+                    <th key={h} className="text-left font-sans text-[11px] font-bold text-[#f9faeb] uppercase tracking-wider py-3 px-4 first:pl-6 last:pr-6 whitespace-nowrap">
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {scheduleRows.map((row, i) => (
+                {scheduleRows.slice(schedulePage * 6, (schedulePage + 1) * 6).map((row, i) => (
                   <tr key={i} className={`border-b border-slate-100 last:border-0 ${row.isMoratorium ? "bg-amber-50/40" : ""}`}>
-                    <td className="py-4 px-4 pl-6 font-bold text-gray-900">{row.period}</td>
+                    <td className="py-4 px-4 pl-6 font-sans text-[14px] font-bold text-gray-900">{row.period}</td>
                     <td className="py-4 px-4">
-                      <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full border ${
-                        row.isMoratorium
+                      <span className={`font-sans text-[11px] font-bold px-2.5 py-1 rounded-full border ${row.isMoratorium
                           ? "bg-amber-100 text-amber-700 border-amber-200"
                           : "bg-green-100 text-green-700 border-green-200"
-                      }`}>
+                        }`}>
                         {row.isMoratorium ? "Moratorium" : "Regular"}
                       </span>
                     </td>
-                    <td className="py-4 px-4 text-gray-700 font-medium">{fmt(row.principal)}</td>
-                    <td className="py-4 px-4 text-gray-700 font-medium">{fmt(row.interest)}</td>
-                    <td className="py-4 px-4 font-bold text-gray-900">{fmt(row.total)}</td>
-                    <td className="py-4 px-4 pr-6 font-bold text-[#094f9e]">{fmt(row.balance)}</td>
+                    <td className="py-4 px-4 font-sans text-[14px] text-gray-700 font-medium" suppressHydrationWarning>{fmt(row.principal)}</td>
+                    <td className="py-4 px-4 font-sans text-[14px] text-gray-700 font-medium" suppressHydrationWarning>{fmt(row.interest)}</td>
+                    <td className="py-4 px-4 font-sans text-[14px] font-bold text-gray-900" suppressHydrationWarning>{fmt(row.total)}</td>
+                    <td className="py-4 px-4 pr-6 font-sans text-[14px] font-bold text-[#094f9e]" suppressHydrationWarning>{fmt(row.balance)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          {scheduleRows.length > 6 && (
+            <div className="px-6 py-3 border-t border-slate-100 bg-slate-50 rounded-b-xl flex items-center justify-between">
+              <p className="text-[12px] text-slate-500">
+                Showing quarters {schedulePage * 6 + 1} - {Math.min((schedulePage + 1) * 6, scheduleRows.length)} of {scheduleRows.length}.
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setSchedulePage(p => Math.max(0, p - 1))}
+                  disabled={schedulePage === 0}
+                  className="p-1.5 rounded-md text-slate-500 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setSchedulePage(p => p + 1)}
+                  disabled={(schedulePage + 1) * 6 >= scheduleRows.length}
+                  className="p-1.5 rounded-md text-slate-500 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
         </Card>
+      )}
 
-        {/* ── 8. Repayment Chart ────────────────────────────────────────── */}
+      {/* ── 7. Repayment Chart (uses dynamic data) ─────────────────────── */}
+      {scheduleRows.length > 0 && (
         <Card className="mb-6">
           <CardHeader title="Repayment chart" subtitle="Visual breakdown of principal and interest across quarters." accent />
           <div className="px-6 py-5">
-            <RepaymentChart businessId={id} />
+            <DynamicRepaymentChart data={scheduleRows} />
           </div>
         </Card>
+      )}
 
-        {/* ── 9. What-If Simulator ──────────────────────────────────────── */}
-        <Card className="mb-6">
-          <CardHeader
-            title="What may happen?"
-            subtitle="Adjust the sliders to explore how different loan sizes, rates, and revenues affect your repayment."
-            accent
+      {/* ── 8. What-If Simulator (pre-populated with scheme defaults) ──── */}
+      <Card className="mb-8">
+        <CardHeader
+          title="What may happen?"
+          subtitle="Adjust the sliders to explore how different loan sizes, rates, and revenues affect your repayment. (Note: Initial values are auto-synced to your selected government scheme)"
+          accent
+        />
+        <div className="px-6 py-6">
+          <WhatIfSimulator
+            defaultLoan={plan.loanAmount}
+            defaultRate={scheme?.interestRate ?? 9}
+            defaultTenure={scheme?.tenureMonths ?? 60}
+            defaultMoratorium={scheme?.moratoriumMonths ?? 6}
           />
-          <div className="px-6 py-6">
-            <WhatIfSimulator />
-          </div>
-        </Card>
-
-        {/* ── 10. Important note ───────────────────────────────────────── */}
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl px-6 py-4 mb-4">
-          <p className="text-xs text-amber-800 leading-relaxed">
-            <strong className="font-bold">Important: </strong>
-            These figures are preliminary estimates only. Final loan terms, scheme eligibility, actual income,
-            and repayment requirements must be verified with a qualified financial advisor or lending institution
-            before making any financial commitment.
-          </p>
         </div>
+      </Card>
+
+      {/* ── 9. Where the money may go ──────────────────────────────────── */}
+      <Card className="mb-6">
+        <CardHeader title="Where the money may go" subtitle="Estimated breakdown of project costs." accent />
+        <div className="px-6 py-2">
+          <table className="w-full font-sans text-[14px]">
+            <thead>
+              <tr className="border-b border-[#81cc87] bg-[#81cc87]">
+                {["Item", "Estimated amount", "Share of total", ""].map(h => (
+                  <th key={h} className="text-left font-sans text-[11px] font-bold text-[#f9faeb] uppercase tracking-wider py-3 px-6">
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {fundingAllocation.map(row => {
+                const pct = Math.round((row.amount / totalAllocation) * 100);
+                return (
+                  <tr key={row.item} className="border-b border-slate-50 last:border-0">
+                    <td className="py-3.5 pr-6 font-sans text-[14px] text-gray-800 font-medium">{row.item}</td>
+                    <td className="py-3.5 pr-6 font-sans text-[14px] font-bold text-gray-900" suppressHydrationWarning>{fmt(row.amount)}</td>
+                    <td className="py-3.5 pr-6 font-sans text-[14px] text-gray-500 font-medium">{pct}%</td>
+                    <td className="py-3.5 w-48 hidden sm:table-cell">
+                      <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-primary rounded-full transition-all duration-700"
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+              <tr className="bg-[#f4fce8]">
+                <td className="py-3.5 pr-6 font-sans text-[14px] font-bold text-gray-900 rounded-bl-xl">Total</td>
+                <td className="py-3.5 pr-6 font-sans text-[16px] font-bold text-primary" suppressHydrationWarning>{fmt(totalAllocation)}</td>
+                <td className="py-3.5 pr-6 font-sans text-[14px] text-gray-500 font-medium">100%</td>
+                <td className="rounded-br-xl hidden sm:table-cell" />
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </Card>
+
+      {/* ── 11. Important note ─────────────────────────────────────────── */}
+      <div className="bg-amber-50 border border-amber-200 rounded-2xl px-6 py-4 mb-4">
+        <p className="font-sans text-[12px] text-amber-800 leading-relaxed">
+          <strong className="font-bold">Important: </strong>
+          These figures are preliminary estimates only. Final loan terms, scheme eligibility, actual income,
+          and repayment requirements must be verified with the State Channelizing Agency (SCA) or a qualified
+          lending institution before making any financial commitment.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ── Inline Repayment Chart (uses dynamic schedule data) ──────────────────────
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell,
+} from "recharts";
+
+function DynamicRepaymentChart({ data }: { data: RepaymentRow[] }) {
+  const MORATORIUM_COLOR = "#d1d5db";
+  const PRINCIPAL_COLOR = "#094f9e";
+  const INTEREST_COLOR = "#8e90f5";
+
+  return (
+    <div className="w-full">
+      <ResponsiveContainer width="100%" height={280}>
+        <BarChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }} barCategoryGap="30%">
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+          <XAxis
+            dataKey="period"
+            stroke="#94a3b8"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+          />
+          <YAxis
+            stroke="#94a3b8"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={v => `₹${v / 1000}k`}
+          />
+          <Tooltip
+            cursor={{ fill: "#f1f5f9" }}
+            contentStyle={{
+              borderRadius: "8px",
+              border: "1px solid #e2e8f0",
+              boxShadow: "0 4px 12px -4px rgba(0,0,0,0.1)",
+              fontSize: 13,
+            }}
+            formatter={(value, name) => [`₹${Number(value ?? 0).toLocaleString("en-IN")}`, String(name)]}
+          />
+          <Legend
+            wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
+            formatter={(value) => <span style={{ color: "#475569", fontWeight: 500 }}>{value}</span>}
+          />
+          <Bar dataKey="principal" name="Principal (₹)" stackId="a" fill={PRINCIPAL_COLOR} radius={[0, 0, 4, 4]} />
+          <Bar dataKey="interest" name="Interest (₹)" stackId="a" fill={INTEREST_COLOR} radius={[4, 4, 0, 0]}>
+            {data.map((entry, i) =>
+              entry.isMoratorium
+                ? <Cell key={i} fill={MORATORIUM_COLOR} />
+                : <Cell key={i} fill={INTEREST_COLOR} />
+            )}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+      <p className="font-sans text-[12px] text-center text-gray-400 mt-2">
+        Grey bars indicate moratorium quarters (interest only). Data computed from your margin input.
+      </p>
     </div>
   );
 }

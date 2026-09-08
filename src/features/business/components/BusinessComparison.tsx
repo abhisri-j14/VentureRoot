@@ -11,7 +11,7 @@ const ALL_BUSINESSES = [
     name: "Dairy Farming & Milk Chilling",
     score: 82,
     viability: "HIGHEST VIABILITY",
-    color: "#402a03",
+    color: "#81cc87",
     dot: "#22c55e",
     financials: { projectCost: "₹10,00,000", margin10: "₹1,00,000", sca: "₹9,00,000" },
     netProfitMargin: "18% – 24%",
@@ -108,14 +108,14 @@ const BusinessSelector = ({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400 shrink-0 leading-tight">
+      <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-gray-400 shrink-0 leading-tight">
         Select Candidates<br />to Evaluate:
       </span>
 
       {selected.map((b) => (
         <div key={b.id} className="relative">
           <div
-            className="flex items-center gap-2 bg-[#402a03] text-[#fffbe6] rounded-lg px-3.5 py-2 text-[13px] font-semibold shadow-sm cursor-pointer select-none"
+            className="flex items-center gap-2 bg-[#81cc87] text-[#f9faeb] rounded-lg px-3.5 py-2 font-sans text-[14px] font-semibold shadow-sm cursor-pointer select-none"
             onClick={() => setOpenDropdown(openDropdown === b.id ? null : b.id)}
           >
             <span className="max-w-[160px] truncate">{b.name}</span>
@@ -135,14 +135,14 @@ const BusinessSelector = ({
                 return (
                   <button
                     key={ab.id}
-                    className="w-full flex items-center justify-between gap-3 px-4 py-2.5 text-[13px] text-gray-700 hover:bg-gray-50 font-medium transition-colors"
+                    className="w-full flex items-center justify-between gap-3 px-4 py-2.5 font-sans text-[14px] text-gray-700 hover:bg-gray-50 font-medium transition-colors"
                     onClick={() => { onToggle(ab.id); setOpenDropdown(null); }}
                   >
                     <span className="flex items-center gap-2">
                       <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: ab.dot }} />
                       {ab.name}
                     </span>
-                    {isSelected && <Check className="w-4 h-4 text-[#402a03] shrink-0" />}
+                    {isSelected && <Check className="w-4 h-4 text-[#81cc87] shrink-0" />}
                   </button>
                 );
               })}
@@ -153,7 +153,7 @@ const BusinessSelector = ({
 
       {selected.length < ALL_BUSINESSES.length && (
         <button
-          className="flex items-center gap-2 border-2 border-dashed border-gray-300 rounded-lg px-3.5 py-2 text-[13px] font-semibold text-gray-500 hover:border-[#402a03] hover:text-[#402a03] transition-colors"
+          className="flex items-center gap-2 border-2 border-dashed border-gray-300 rounded-lg px-3.5 py-2 font-sans text-[14px] font-semibold text-gray-500 hover:border-[#81cc87] hover:text-[#81cc87] transition-colors"
           onClick={onAdd}
         >
           <Plus className="w-4 h-4" /> Add Business
@@ -202,12 +202,12 @@ export const BusinessComparison = () => {
       {/* ── PAGE HEADER ─────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
         <div>
-          <h1 className="text-[22px] font-heading font-bold text-[#242424] tracking-tight leading-tight">Compare Business Ideas</h1>
-          <p className="text-sm text-slate-500 font-medium mt-0.5">Compare potential enterprises side by side before making a decision.</p>
+          <h1 className="font-heading text-[32px] font-bold text-[#242424] tracking-tight leading-tight">Compare Business Ideas</h1>
+          <p className="font-sans text-[14px] text-slate-500 font-medium mt-0.5">Compare potential enterprises side by side before making a decision.</p>
         </div>
         <div className="flex items-center gap-2 opacity-75 shrink-0">
-          <Leaf className="w-6 h-6 text-[#402a03]" />
-          <span className="font-serif italic text-[15px] text-gray-500 text-right leading-snug">
+          <Leaf className="w-6 h-6 text-[#81cc87]" />
+          <span className="font-heading italic text-[15px] text-gray-500 text-right leading-snug">
             "Better Decisions<br />Stronger Tomorrows"
           </span>
         </div>
@@ -227,9 +227,9 @@ export const BusinessComparison = () => {
       {/* ── RADAR CHART ──────────────────────────────────────────── */}
       <div className="bg-[#fffff5] rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] p-6 transition-all duration-300">
         <div className="flex items-center gap-2 mb-4">
-          <BarChart2 className="w-5 h-5 text-[#402a03]" />
-          <span className="text-[15px] font-bold text-gray-900">Visual Comparison</span>
-          <span className="text-[13px] text-gray-400 font-medium ml-1 hidden md:block">Compare key parameters across all selected business ideas.</span>
+          <BarChart2 className="w-5 h-5 text-[#81cc87]" />
+          <span className="font-heading text-[20px] font-bold text-gray-900 tracking-tight">Visual Comparison</span>
+          <span className="font-sans text-[12px] text-gray-400 font-medium ml-1 hidden md:block">Compare key parameters across all selected business ideas.</span>
         </div>
         <div className="flex flex-col lg:flex-row gap-6 items-center">
           <div className="w-full lg:w-[380px] h-[260px] shrink-0">
@@ -252,13 +252,13 @@ export const BusinessComparison = () => {
               {activeBiz.map((b) => (
                 <div key={b.id} className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: b.dot }} />
-                  <span className="text-[13px] font-semibold text-gray-700">{b.name}</span>
+                  <span className="font-sans text-[14px] font-medium text-gray-700">{b.name}</span>
                 </div>
               ))}
             </div>
-            <div className="mt-2 bg-[#fffbe6] rounded-xl p-4 border border-[#402a03]/10 flex items-center gap-3">
-              <Leaf className="w-4 h-4 text-[#402a03] shrink-0" />
-              <p className="font-serif italic text-[14px] text-[#402a03]">"Compare today, build a brighter tomorrow."</p>
+            <div className="mt-2 bg-[#f9faeb] rounded-xl p-4 border border-[#81cc87]/10 flex items-center gap-3">
+              <Leaf className="w-4 h-4 text-[#81cc87] shrink-0" />
+              <p className="font-heading italic text-[14px] font-semibold text-[#81cc87]">"Compare today, build a brighter tomorrow."</p>
             </div>
           </div>
         </div>
@@ -273,26 +273,26 @@ export const BusinessComparison = () => {
 
           {/* ── HEADER ROW: business names ── */}
           <div
-            className="grid border-b-[3px] border-[#402a03]"
+            className="grid border-b-[3px] border-[#81cc87]"
             style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}
           >
             {/* Label column header */}
-            <div className="px-5 py-5 bg-[#402a03]">
-              <span className="text-[11px] font-extrabold uppercase tracking-[0.15em] text-[#fffbe6]/70">Metric</span>
+            <div className="px-5 py-5 bg-[#81cc87]">
+              <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-[#f9faeb]/70">Metric</span>
             </div>
             {activeBiz.map((b) => (
               <div
                 key={b.id}
-                className="flex flex-col items-center justify-center px-4 py-5 border-l border-[#402a03]/20"
-                style={{ background: "rgba(64,42,3,0.04)" }}
+                className="flex flex-col items-center justify-center px-4 py-5 border-l border-[#81cc87]/20"
+                style={{ background: "rgba(129,204,135,0.04)" }}
               >
                 {b.viability && (
-                  <span className="text-[9px] font-extrabold uppercase tracking-[0.15em] bg-[#402a03] text-[#fffbe6] px-2.5 py-0.5 rounded-full mb-2 shadow-sm">
+                  <span className="font-sans text-[11px] font-bold uppercase tracking-wider bg-[#81cc87] text-[#f9faeb] px-2.5 py-0.5 rounded-full mb-2 shadow-sm">
                     {b.viability}
                   </span>
                 )}
-                <h3 className="font-extrabold text-[15px] text-gray-950 text-center leading-snug">{b.name}</h3>
-                <p className="text-[13px] font-bold text-[#402a03] mt-1">Score: {b.score} / 100</p>
+                <h3 className="font-sans text-[18px] font-bold text-gray-950 text-center leading-snug">{b.name}</h3>
+                <p className="font-sans text-[14px] font-bold text-[#81cc87] mt-1">Score: {b.score} / 100</p>
               </div>
             ))}
           </div>
@@ -302,8 +302,8 @@ export const BusinessComparison = () => {
             className="grid"
             style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}
           >
-            <div className="px-5 py-3 bg-[#fffbe6]/50 border-b border-r border-gray-200 flex items-center">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#402a03] bg-[#fffbe6] border border-[#402a03]/10 px-3 py-1 rounded-md">
+            <div className="px-5 py-3 bg-[#f9faeb]/50 border-b border-r border-gray-200 flex items-center">
+              <span className="inline-flex items-center gap-1.5 font-sans text-[11px] font-bold uppercase tracking-wider text-[#81cc87] bg-[#f9faeb] border border-[#81cc87]/10 px-3 py-1 rounded-md">
                 Financials
               </span>
             </div>
@@ -312,16 +312,16 @@ export const BusinessComparison = () => {
                 <table className="w-full">
                   <tbody>
                     <tr>
-                      <td className="text-[13px] text-gray-500 font-semibold pr-3 py-1">Project Cost</td>
-                      <td className="text-[14px] text-gray-900 font-extrabold text-right">{b.financials.projectCost}</td>
+                      <td className="font-sans text-[14px] text-gray-500 font-medium pr-3 py-1">Project Cost</td>
+                      <td className="font-sans text-[14px] text-gray-900 font-bold text-right">{b.financials.projectCost}</td>
                     </tr>
                     <tr>
-                      <td className="text-[13px] text-gray-500 font-semibold pr-3 py-1">10% Margin</td>
-                      <td className="text-[14px] text-gray-900 font-extrabold text-right">{b.financials.margin10}</td>
+                      <td className="font-sans text-[14px] text-gray-500 font-medium pr-3 py-1">10% Margin</td>
+                      <td className="font-sans text-[14px] text-gray-900 font-bold text-right">{b.financials.margin10}</td>
                     </tr>
                     <tr>
-                      <td className="text-[13px] text-gray-500 font-semibold pr-3 py-1">90% SCA Loan</td>
-                      <td className="text-[14px] text-gray-900 font-extrabold text-right">{b.financials.sca}</td>
+                      <td className="font-sans text-[14px] text-gray-500 font-medium pr-3 py-1">90% SCA Loan</td>
+                      <td className="font-sans text-[14px] text-gray-900 font-bold text-right">{b.financials.sca}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -332,14 +332,14 @@ export const BusinessComparison = () => {
           {/* ── ROW: Net Profit Margin ── */}
           <div className="grid border-b border-gray-200" style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}>
             <div className="flex items-center px-5 py-5 border-r border-gray-200 bg-white">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.13em] text-gray-800 bg-gray-100 border border-gray-200 px-3 py-1 rounded-md">
+              <span className="inline-flex items-center gap-1.5 font-sans text-[11px] font-bold uppercase tracking-wider text-gray-800 bg-gray-100 border border-gray-200 px-3 py-1 rounded-md">
                 Net Profit Margin
               </span>
             </div>
             {activeBiz.map((b) => (
               <div key={b.id} className="flex flex-col justify-center px-5 py-5 border-l border-gray-200 bg-white">
-                <p className="text-[20px] font-black text-gray-950 leading-none tracking-tight">{b.netProfitMargin}</p>
-                <p className="text-[13px] text-gray-500 font-semibold mt-1.5">{b.monthlyProfit}</p>
+                <p className="font-sans text-[20px] font-bold text-gray-950 leading-none tracking-tight">{b.netProfitMargin}</p>
+                <p className="font-sans text-[14px] text-gray-500 font-medium mt-1.5">{b.monthlyProfit}</p>
               </div>
             ))}
           </div>
@@ -347,13 +347,13 @@ export const BusinessComparison = () => {
           {/* ── ROW: Time to Break-Even ── */}
           <div className="grid border-b border-gray-200" style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}>
             <div className="flex items-center px-5 py-5 border-r border-gray-200" style={{ background: "rgba(241,245,249,0.6)" }}>
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.13em] text-gray-800 bg-gray-100 border border-gray-200 px-3 py-1 rounded-md">
+              <span className="inline-flex items-center gap-1.5 font-sans text-[11px] font-bold uppercase tracking-wider text-gray-800 bg-gray-100 border border-gray-200 px-3 py-1 rounded-md">
                 Time to Break-Even
               </span>
             </div>
             {activeBiz.map((b) => (
               <div key={b.id} className="flex items-center px-5 py-5 border-l border-gray-200" style={{ background: "rgba(241,245,249,0.6)" }}>
-                <p className="text-[24px] font-black text-gray-950 tracking-tight">{b.breakEven}</p>
+                <p className="font-sans text-[24px] font-bold text-gray-950 tracking-tight">{b.breakEven}</p>
               </div>
             ))}
           </div>
@@ -361,13 +361,13 @@ export const BusinessComparison = () => {
           {/* ── ROW: Local Saturation ── */}
           <div className="grid border-b border-gray-200" style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}>
             <div className="flex items-center px-5 py-5 border-r border-gray-200 bg-white">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.13em] text-gray-800 bg-gray-100 border border-gray-200 px-3 py-1 rounded-md">
+              <span className="inline-flex items-center gap-1.5 font-sans text-[11px] font-bold uppercase tracking-wider text-gray-800 bg-gray-100 border border-gray-200 px-3 py-1 rounded-md">
                 Local Saturation
               </span>
             </div>
             {activeBiz.map((b) => (
               <div key={b.id} className="flex items-center px-5 py-5 border-l border-gray-200 bg-white">
-                <p className="text-[15px] font-bold text-gray-900">{b.localSaturation}</p>
+                <p className="font-sans text-[14px] font-medium text-gray-900">{b.localSaturation}</p>
               </div>
             ))}
           </div>
@@ -375,13 +375,13 @@ export const BusinessComparison = () => {
           {/* ── ROW: Operational Complexity ── */}
           <div className="grid border-b border-gray-200" style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}>
             <div className="flex items-center px-5 py-5 border-r border-gray-200" style={{ background: "rgba(241,245,249,0.6)" }}>
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.13em] text-gray-800 bg-gray-100 border border-gray-200 px-3 py-1 rounded-md">
+              <span className="inline-flex items-center gap-1.5 font-sans text-[11px] font-bold uppercase tracking-wider text-gray-800 bg-gray-100 border border-gray-200 px-3 py-1 rounded-md">
                 Operational Complexity
               </span>
             </div>
             {activeBiz.map((b) => (
               <div key={b.id} className="flex items-center px-5 py-5 border-l border-gray-200" style={{ background: "rgba(241,245,249,0.6)" }}>
-                <p className="text-[15px] font-bold text-gray-900">{b.operationalComplexity}</p>
+                <p className="font-sans text-[14px] font-medium text-gray-900">{b.operationalComplexity}</p>
               </div>
             ))}
           </div>
@@ -389,14 +389,14 @@ export const BusinessComparison = () => {
           {/* ── ROW: Key Local Risk ── */}
           <div className="grid" style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}>
             <div className="flex items-center px-5 py-5 border-r border-gray-200 bg-white">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.13em] text-red-700 bg-red-50 border border-red-200 px-3 py-1 rounded-md">
+              <span className="inline-flex items-center gap-1.5 font-sans text-[11px] font-bold uppercase tracking-wider text-red-700 bg-red-50 border border-red-200 px-3 py-1 rounded-md">
                 Key Local Risk
               </span>
             </div>
             {activeBiz.map((b) => (
               <div key={b.id} className="px-5 py-5 border-l border-gray-200 bg-white">
                 <div className="bg-red-50 border border-red-100 rounded-xl p-3.5">
-                  <p className="text-[14px] text-red-900 font-semibold leading-snug">{b.keyLocalRisk}</p>
+                  <p className="font-sans text-[14px] text-red-900 font-medium leading-snug">{b.keyLocalRisk}</p>
                 </div>
               </div>
             ))}

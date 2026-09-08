@@ -10,6 +10,7 @@
     "postinstall": "prisma skills sync || exit 0"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "@supabase/supabase-js": "^2.115.0",
@@ -17,6 +18,18 @@
     "next": "16.3.4",
     "pg": "^8.23.0",
     "prisma": "^7.10.0",
+=======
+    "@hookform/resolvers": "^5.9.1",
+    "@iamtraction/google-translate": "^3.0.0",
+    "@tanstack/react-query": "^5.102.8",
+    "@types/leaflet": "^1.9.22",
+    "axios": "^1.20.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^13.1.1",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^1.35.0",
+    "next": "16.3.3",
+>>>>>>> 2cf40aa545beb04eb7fbcbf29a2fe4ca1f31ff13
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "zod": "^4.5.4"

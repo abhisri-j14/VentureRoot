@@ -22,13 +22,13 @@ const itemVariants: Variants = {
 
 // --- Typography classes aligned 1:1 with dashboard/page.tsx ---
 const classes = {
-  pageTitle: "text-[22px] font-heading font-bold text-[#242424] tracking-tight leading-tight",
-  cardHeading: "text-[20px] font-bold text-slate-900 tracking-tight",
-  supportingText: "text-sm text-slate-500 font-medium",
-  smallSupporting: "text-[14px] font-medium text-slate-400",
-  profileLabel: "text-[13px] font-semibold text-slate-500",
-  profileValue: "text-[14px] font-semibold text-slate-900",
-  buttonText: "text-[14px] font-bold",
+  pageTitle: "font-heading text-[22px] font-bold text-[#242424] tracking-tight leading-tight",
+  cardHeading: "font-heading text-[20px] font-bold text-slate-900 tracking-tight",
+  supportingText: "font-sans text-[14px] text-slate-500 font-medium",
+  smallSupporting: "font-sans text-[14px] font-medium text-slate-400",
+  profileLabel: "font-sans text-[13px] font-semibold text-slate-500",
+  profileValue: "font-sans text-[14px] font-semibold text-slate-900",
+  buttonText: "font-sans text-[14px] font-bold",
 };
 
 function CompletionRing({ pct }: { pct: number }) {
@@ -54,8 +54,8 @@ function CompletionRing({ pct }: { pct: number }) {
         />
       </svg>
       <div className="absolute flex flex-col items-center justify-center">
-        <span className="text-[20px] font-bold text-slate-900 tracking-tight leading-none">{pct}%</span>
-        <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider mt-0.5">Done</span>
+        <span className="font-heading text-[20px] font-bold text-slate-900 tracking-tight leading-none">{pct}%</span>
+        <span className="font-sans text-[11px] font-medium text-slate-400 uppercase tracking-wider mt-0.5">Done</span>
       </div>
     </div>
   );
@@ -66,7 +66,7 @@ function Avatar({ name, isEditing }: { name: string; isEditing: boolean }) {
   return (
     <div className="relative group shrink-0">
       <div className="w-[80px] h-[80px] rounded-2xl bg-gradient-to-br from-[#80638a] to-[#674b72] flex items-center justify-center shadow-[0_8px_24px_rgba(128,99,138,0.35)] border border-[#80638a]/20">
-        <span className="text-2xl font-bold text-white tracking-tight select-none">{initials}</span>
+        <span className="font-heading text-[24px] font-bold text-white tracking-tight select-none">{initials}</span>
       </div>
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
       {isEditing && (
@@ -193,7 +193,7 @@ export const ProfileView = () => {
         <motion.div variants={itemVariants} whileHover={{ y: -2, boxShadow: "0 8px 28px rgba(128,99,138,0.14)" }}
           className="bg-[#fffff5] rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] p-6 flex flex-col gap-4 transition-shadow">
           <SectionHeading icon={MapPin} label="Location" iconClass="bg-orange-50 text-orange-600" />
-          {isEditing && <p className="text-[12px] font-medium text-orange-700 bg-orange-50 border border-orange-200/60 rounded-xl px-3 py-2">{t("profile.locEditWarn")}</p>}
+          {isEditing && <p className="font-sans text-[12px] font-medium text-orange-700 bg-orange-50 border border-orange-200/60 rounded-xl px-3 py-2">{t("profile.locEditWarn")}</p>}
           <InputField label="State" value={profile.location.state} editable={false} />
           <InputField label="District" value={profile.location.district} editable={false} />
           <InputField label="Block / Taluka" value={profile.location.block} editable={false} />

@@ -18,7 +18,7 @@ export const RiskCard = ({ data }: { data?: RiskItem[] }) => {
         <div className="w-9 h-9 rounded-full bg-orange-50 flex items-center justify-center border border-orange-200">
           <AlertTriangle className="w-5 h-5 text-orange-600" />
         </div>
-        <h3 className="text-2xl font-heading font-bold text-gray-900">
+        <h3 className="font-sans text-[18px] font-bold text-gray-900">
           {t("feasi.risk") || "Risk Analysis"}
         </h3>
       </div>
@@ -69,35 +69,35 @@ const RiskItemComponent = ({ risk }: { risk: RiskItem }) => {
 
       <div className="flex justify-between items-start pl-2">
         <div className="flex flex-col gap-1">
-          <h4 className="text-lg font-bold text-gray-900">{risk.title}</h4>
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">{risk.category} Risk</span>
+          <h4 className="font-sans text-[16px] font-bold text-gray-900">{risk.title}</h4>
+          <span className="font-sans text-[11px] font-bold text-slate-500 uppercase tracking-wider">{risk.category} Risk</span>
         </div>
-        <span className={`px-3 py-1 rounded-full text-xs font-bold border ${style.badge}`}>
+        <span className={`px-3 py-1 rounded-full font-sans text-[11px] font-bold border ${style.badge}`}>
           {risk.severity}
         </span>
       </div>
 
-      <p className="text-base text-gray-800 font-medium leading-relaxed pl-2">
+      <p className="font-sans text-[14px] text-gray-800 font-medium leading-relaxed pl-2">
         {risk.explanation}
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4 pl-2">
         {risk.potentialImpact && (
           <div className="flex-1">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest block mb-1.5">
+            <span className="font-sans text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1.5">
               Potential Impact
             </span>
-            <p className="text-sm text-gray-800 font-medium leading-relaxed">
+            <p className="font-sans text-[12px] text-gray-800 font-medium leading-relaxed">
               {risk.potentialImpact}
             </p>
           </div>
         )}
         {risk.mitigationAdvisory && (
           <div className="flex-1">
-            <span className="text-xs font-bold text-emerald-600 uppercase tracking-widest flex items-center gap-1 mb-1.5">
+            <span className="font-sans text-[11px] font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-1 mb-1.5">
               <ShieldCheck className="w-3.5 h-3.5" /> Mitigation Advisory
             </span>
-            <p className="text-sm text-gray-800 font-medium leading-relaxed">
+            <p className="font-sans text-[12px] text-gray-800 font-medium leading-relaxed">
               {risk.mitigationAdvisory}
             </p>
           </div>

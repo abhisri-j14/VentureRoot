@@ -87,8 +87,8 @@ export const ChatWindow = () => {
             <Bot className="w-5 h-5 text-[#1E6702]" />
           </div>
           <div>
-            <h3 className="font-semibold text-secondary">AI Business Advisor</h3>
-            <p className="text-xs text-secondary-muted">Context-aware assistant</p>
+            <h3 className="font-heading text-[16px] font-semibold text-secondary">AI Business Advisor</h3>
+            <p className="font-sans text-[12px] text-secondary-muted">Context-aware assistant</p>
           </div>
         </div>
         <button
@@ -131,7 +131,7 @@ export const ChatWindow = () => {
                     : "bg-slate-100 text-secondary rounded-tl-sm border border-slate-200"
                 }`}
               >
-                <p className="whitespace-pre-wrap text-sm leading-relaxed">
+                <p className="whitespace-pre-wrap font-sans text-[14px] leading-relaxed">
                   {msg.content}
                 </p>
               </div>
@@ -140,14 +140,14 @@ export const ChatWindow = () => {
               {msg.evidence && (
                 <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-xs flex flex-col gap-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-secondary-muted">Evidence & Confidence</span>
+                    <span className="font-sans text-[13px] font-semibold text-secondary-muted">Evidence & Confidence</span>
                     <EvidenceBadge
                       type={msg.evidence.type}
                       label={`${msg.evidence.confidence}%`}
                     />
                   </div>
                   {msg.evidence.sources && msg.evidence.sources.length > 0 && (
-                    <ul className="list-disc list-inside text-secondary-muted space-y-1">
+                    <ul className="list-disc list-inside font-sans text-[12px] text-secondary-muted space-y-1">
                       {msg.evidence.sources.map((src, i) => (
                         <li key={i}>{src}</li>
                       ))}
@@ -209,7 +209,7 @@ export const ChatWindow = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask about local feasibility, scheme eligibility, or finance..."
-              className="flex-1 bg-transparent border-none focus:ring-0 px-2 py-2 text-sm text-secondary outline-none"
+              className="flex-1 bg-transparent border-none focus:ring-0 px-2 py-2 font-sans text-[14px] text-secondary outline-none"
               disabled={isStreaming}
             />
             <button
