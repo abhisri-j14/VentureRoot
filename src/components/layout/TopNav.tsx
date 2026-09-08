@@ -5,14 +5,20 @@ import { User, ChevronDown, LogOut, Settings, Globe, Menu, X, Home, Briefcase, P
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 import { LanguageSwitcher } from "@/features/i18n/components/LanguageSwitcher";
+import { useProfile } from "@/lib/data/users";
+import { useBusinessesComparison } from "@/lib/data/businesses";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const TopNav = () => {
   const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
+  const { data: profileData } = useProfile();
+  const { data: businesses } = useBusinessesComparison();
   const { t } = useTranslation();
   const pathname = usePathname();
+  const router = useRouter();
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -38,15 +44,21 @@ export const TopNav = () => {
     };
   }, []);
 
+  const activeBusiness = businesses?.[0];
+  const businessBase = activeBusiness?.id ? `/business/${activeBusiness.id}` : "/business/create";
+  const financeBase = activeBusiness?.id ? `/business/${activeBusiness.id}/finance` : "/business/create";
+  const feasibilityBase = activeBusiness?.id ? `/business/${activeBusiness.id}/feasibility` : "/business/create";
+
   const NAV_ITEMS = [
     { href: "/dashboard", tKey: "nav.dashboard", icon: Home },
-    { href: "/business/123", tKey: "nav.myBusiness", icon: Briefcase },
-    { href: "/business/123/finance", tKey: "nav.finance", icon: TrendingUp },
-    { href: "/business/123/feasibility", tKey: "nav.feasibility", icon: ShieldAlert },
+    { href: businessBase, tKey: "nav.myBusiness", icon: Briefcase },
+    { href: financeBase, tKey: "nav.finance", icon: TrendingUp },
+    { href: feasibilityBase, tKey: "nav.feasibility", icon: ShieldAlert },
     { href: "/business/create", tKey: "nav.newBusiness", icon: PlusCircle },
     { href: "/advisor", tKey: "nav.advisor", icon: MessageSquare },
   ];
 
+  const displayName = profileData?.fullName || user?.name || "Entrepreneur";
   const activeRoleLabel = "Entrepreneur";
 
   return (
@@ -134,7 +146,7 @@ export const TopNav = () => {
               </div>
               <div className="hidden md:flex items-center gap-1">
                 <span className="text-[13px] font-bold text-[#200813] truncate max-w-[100px] group-hover:text-[#1E6702] transition-colors duration-300">
-                  {user?.name || "Guest"}
+                  {displayName}
                 </span>
                 <motion.div animate={{ rotate: isProfileOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
                   <ChevronDown className="w-3 h-3 text-[#200813]/40 group-hover:text-[#1E6702] transition-colors duration-300" />
@@ -152,7 +164,7 @@ export const TopNav = () => {
                   className="absolute right-0 mt-3 w-56 bg-white/95 backdrop-blur-xl rounded-[20px] shadow-[0_12px_45px_-10px_rgba(32,8,19,0.15)] border border-white/50 overflow-hidden z-50 p-1.5 origin-top-right"
                 >
                   <div className="px-4 py-3 border-b border-black/5">
-                    <p className="text-sm font-bold text-[#200813] truncate">{user?.name || "Guest"}</p>
+                    <p className="text-sm font-bold text-[#200813] truncate">{displayName}</p>
                     <p className="text-xs font-medium text-[#200813]/50 mt-0.5">{activeRoleLabel}</p>
                   </div>
                   
@@ -169,9 +181,16 @@ export const TopNav = () => {
                   </div>
                   
                   <div className="py-1 border-t border-black/5 mt-1">
-                    <Link href="/login" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-2.5 w-full text-left px-3 py-2.5 text-[13px] font-semibold text-[#200813]/60 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all duration-200">
+                    <button
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        logout();
+                        router.push("/login");
+                      }}
+                      className="flex items-center gap-2.5 w-full text-left px-3 py-2.5 text-[13px] font-semibold text-[#200813]/60 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all duration-200"
+                    >
                       <LogOut className="w-[15px] h-[15px]" /> Sign Out
-                    </Link>
+                    </button>
                   </div>
                 </motion.div>
               )}

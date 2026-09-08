@@ -34,17 +34,70 @@ const compactCurrencyFormatter = (value: any) => {
 
 export const BusinessDetailsView = () => {
   const params = useParams();
-  const id = params?.id as string || "123";
+  const id = params?.id as string || "";
   const { data: fetchedBusiness, isLoading } = useBusinessDetails(id);
   const [business, setBusiness] = useState<BusinessDetails | null>(null);
 
   useEffect(() => {
     if (fetchedBusiness) {
-      setBusiness(fetchedBusiness);
+      const normalized: BusinessDetails = {
+        ...fetchedBusiness,
+        id: fetchedBusiness.id,
+        name: fetchedBusiness.name || "Business Venture",
+        category: (fetchedBusiness.category as any)?.name || fetchedBusiness.category || "General Enterprise",
+        description: fetchedBusiness.description || "Enterprise details and feasibility analysis.",
+        status: (fetchedBusiness.status as any) || "Draft",
+        location: fetchedBusiness.location || { state: "Local", district: "Region" },
+        capital: {
+          availableMargin: fetchedBusiness.capital?.availableMargin ?? Number((fetchedBusiness as any).availableMargin) ?? 0,
+          workingCapital: fetchedBusiness.capital?.workingCapital ?? Math.round((Number((fetchedBusiness as any).availableMargin) || 0) * 0.4),
+          expectedInvestment: fetchedBusiness.capital?.expectedInvestment ?? Number((fetchedBusiness as any).availableMargin) ?? 0,
+        },
+        operations: {
+          expectedRevenue: fetchedBusiness.operations?.expectedRevenue ?? Number((fetchedBusiness as any).expectedRevenue) ?? 0,
+          expectedPrice: fetchedBusiness.operations?.expectedPrice ?? 50,
+          productionQuantity: fetchedBusiness.operations?.productionQuantity ?? 1000,
+        },
+        resources: {
+          existingResources: fetchedBusiness.resources?.existingResources ?? (fetchedBusiness as any).existingResources ?? "Facilities & equipment",
+        },
+      };
+      setBusiness(normalized);
     }
   }, [fetchedBusiness]);
 
-  if (!business) return null;
+  if (isLoading) {
+    return (
+      <div className="w-full h-full p-8 flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-3 border-[#1E6702] border-t-transparent rounded-full animate-spin" />
+          <p className="font-sans text-sm text-slate-500 font-medium">Loading venture details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!business) {
+    return (
+      <div className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col items-center justify-center min-h-[450px]">
+        <div className="max-w-md w-full bg-[#fffff5] rounded-2xl border border-gray-900/10 p-8 shadow-lg text-center flex flex-col items-center gap-4">
+          <div className="w-16 h-16 rounded-2xl bg-[#1E6702]/10 flex items-center justify-center text-[#1E6702]">
+            <Compass className="w-8 h-8" />
+          </div>
+          <h2 className="font-heading text-[22px] font-bold text-slate-900">Venture Not Found</h2>
+          <p className="font-sans text-sm text-slate-500">
+            This venture plan could not be found or you haven't created a business plan yet.
+          </p>
+          <Link
+            href="/business/create"
+            className="mt-2 px-6 py-3 bg-[#1E6702] hover:bg-[#164e01] text-white font-semibold rounded-xl shadow-md transition-all duration-200"
+          >
+            Create New Venture
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-6 relative z-10">

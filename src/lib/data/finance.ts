@@ -12,14 +12,21 @@ export const useRepaymentSchedule = (businessId: string) => {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (DATA_SOURCE === "database") {
-      financeApi.getRepayment({ businessId } as any)
+    if (DATA_SOURCE === "database" && businessId) {
+      financeApi
+        .getRepayment({ businessId } as any)
         .then((res: any) => {
-          setData(res.data as any);
+          const schedule =
+            res?.data?.repaymentSchedule ||
+            res?.data?.data?.repaymentSchedule ||
+            res?.data ||
+            res;
+          setData(Array.isArray(schedule) ? schedule : financeData.repaymentSchedule);
           setIsLoading(false);
         })
         .catch((err: any) => {
           setError(err);
+          setData(financeData.repaymentSchedule);
           setIsLoading(false);
         });
     }

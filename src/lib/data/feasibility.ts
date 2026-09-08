@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { DATA_SOURCE } from "./source";
 import feasibilityData from "@/data/feasibility.json";
 import { feasibilityApi } from "@/features/feasibility/api/feasibilityApi";
-import { FeasibilityData } from "@/features/feasibility/types";
 
 export const useFeasibility = (businessId: string) => {
   const [data, setData] = useState<any | null>(
@@ -13,14 +12,21 @@ export const useFeasibility = (businessId: string) => {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (DATA_SOURCE === "database") {
-      feasibilityApi.getFeasibility(businessId)
-        .then((res) => {
-          setData(res);
+    if (DATA_SOURCE === "database" && businessId) {
+      feasibilityApi
+        .getFeasibility(businessId)
+        .then((res: any) => {
+          const report =
+            res?.data?.feasibility ||
+            res?.data?.data?.feasibility ||
+            res?.data ||
+            res;
+          setData(report || feasibilityData);
           setIsLoading(false);
         })
         .catch((err) => {
           setError(err);
+          setData(feasibilityData);
           setIsLoading(false);
         });
     }

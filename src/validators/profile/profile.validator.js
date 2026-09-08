@@ -65,16 +65,25 @@ export const updateProfileSchema = z.object({
     .min(1)
     .max(201),
 
+  email: z
+    .string()
+    .email()
+    .optional()
+    .nullable()
+    .or(z.literal("")),
+
   phone: z
     .string()
     .trim()
     .min(7)
     .max(20)
-    .optional(),
+    .optional()
+    .nullable()
+    .or(z.literal("")),
 
   location: locationSchema,
 
   financial: financialSchema,
 
   experience: experienceSchema,
-}).strict();
+});

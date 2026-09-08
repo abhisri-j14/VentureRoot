@@ -14,13 +14,21 @@ export const useBusinessesComparison = () => {
 
   useEffect(() => {
     if (DATA_SOURCE === "database") {
-      businessApi.list()
-        .then((res) => {
-          setData(((res.data as any).businesses || (res.data as any).items || []) as any[]);
+      businessApi
+        .list()
+        .then((res: any) => {
+          const list =
+            res?.data?.businesses ||
+            res?.data?.data?.businesses ||
+            res?.data?.items ||
+            res?.items ||
+            [];
+          setData(list);
           setIsLoading(false);
         })
         .catch((err) => {
           setError(err);
+          setData([]);
           setIsLoading(false);
         });
     }
@@ -38,13 +46,26 @@ export const useBusinessDetails = (id: string) => {
 
   useEffect(() => {
     if (DATA_SOURCE === "database") {
-      businessApi.get(id)
-        .then((res) => {
-          setData(res.data as BusinessDetails);
+      if (!id || id === "123") {
+        // Mock ID requested while in database mode
+        setData(null);
+        setIsLoading(false);
+        return;
+      }
+      businessApi
+        .get(id)
+        .then((res: any) => {
+          const details =
+            res?.data?.business ||
+            res?.data?.data?.business ||
+            res?.data ||
+            res;
+          setData(details as BusinessDetails);
           setIsLoading(false);
         })
         .catch((err) => {
           setError(err);
+          setData(null);
           setIsLoading(false);
         });
     }

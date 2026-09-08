@@ -1,5 +1,5 @@
 import {
-  getBusinessController,
+  getBusinessByIdController,
   updateBusinessController,
   deleteBusinessController,
 } from "@/controllers/business.controller";
@@ -40,7 +40,7 @@ export async function GET(
 
     // 3. Fetch owned business
     const response =
-      await getBusinessController(
+      await getBusinessByIdController(
         user,
         businessId
       );
