@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope, Playfair_Display } from "next/font/google";
+import { cookies } from "next/headers";
+import { GoogleTranslateProvider } from "@/features/i18n/components/GoogleTranslateProvider";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -17,14 +19,20 @@ export const metadata: Metadata = {
   description: "VentureRoot — Business Feasibility & Planning Platform",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = await cookies();
+  const locale = cookieStore.get("ventureroot_locale")?.value || "en";
+
   return (
-    <html lang="en" className={`${manrope.variable} ${playfair.variable} font-sans`}>
-      <body className="antialiased text-[#200813] bg-[#f4fce8]">{children}</body>
+    <html lang={locale} className={`${manrope.variable} ${playfair.variable} font-sans`}>
+      <body className="antialiased text-[#200813] bg-[#f4fce8]">
+        <GoogleTranslateProvider />
+        {children}
+      </body>
     </html>
   );
 }

@@ -604,7 +604,7 @@ export default function LandingPage() {
                 >
                   <Leaf className="w-3 h-3 text-[#1E6702]" />
                   <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.18em] text-[#1E6702]">
-                    Local Business Intelligence
+                    {t("landing.tagline")}
                   </span>
                 </motion.div>
 
@@ -615,8 +615,7 @@ export default function LandingPage() {
                   transition={{ duration: 0.6, delay: 0.1 }}
                   className="text-[30px] sm:text-[36px] md:text-[42px] lg:text-[48px] font-heading font-semibold text-[#200813] leading-[1.06] tracking-tight [text-shadow:_0_2px_18px_rgba(255,251,231,1),_0_0_40px_rgba(255,251,231,0.8)]"
                 >
-                  Start and grow your local
-                  <span className="block">business with clarity.</span>
+                  {t("landing.hero1")}
                 </motion.h1>
 
                 {/* Description — frosted pill for legibility over illustration */}
@@ -627,7 +626,7 @@ export default function LandingPage() {
                   className="mt-5 px-5 py-3 rounded-2xl bg-white/55 backdrop-blur-sm border border-white/40 shadow-sm max-w-[520px]"
                 >
                   <p className="text-[14px] md:text-[15px] text-[#200813]/80 font-normal leading-relaxed">
-                    VentureRoot shows you local market demand, matches you with government support, and builds your step-by-step business plan.
+                    {t("landing.heroSub")}
                   </p>
                 </motion.div>
 
@@ -643,14 +642,14 @@ export default function LandingPage() {
                     rippleColor="bg-white/30"
                     className="bg-[#1E6702] text-white px-6 py-2.5 rounded-xl font-semibold text-[13px] md:text-sm hover:bg-[#185901] transition-all shadow-md hover:-translate-y-0.5 flex items-center justify-center gap-1.5"
                   >
-                    Analyze Your Business <ArrowRight className="w-4 h-4" />
+                    {t("landing.analyzeBtn")} <ArrowRight className="w-4 h-4" />
                   </RippleButton>
                   <RippleButton
                     href={isAuthenticated ? "/dashboard" : "/register"}
                     rippleColor="bg-[#1E6702]/10"
                     className="bg-white/65 backdrop-blur-md border border-[#200813]/10 text-[#200813] px-6 py-2.5 rounded-xl font-semibold text-[13px] md:text-sm hover:bg-white/85 transition-all shadow-sm hover:-translate-y-0.5 flex items-center justify-center gap-1.5"
                   >
-                    Dashboard <ArrowRight className="w-4 h-4" />
+                    {t("landing.sampleBtn")} <ArrowRight className="w-4 h-4" />
                   </RippleButton>
                 </motion.div>
               </div>
