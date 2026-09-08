@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Lora } from "next/font/google";
 import { cookies } from "next/headers";
-import { GoogleTranslateProvider } from "@/features/i18n/components/GoogleTranslateProvider";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -32,7 +31,6 @@ export default async function RootLayout({
   return (
     <html lang={locale} className={`${poppins.variable} ${lora.variable} font-sans`}>
       <body className="antialiased text-[#200813] bg-[#f4fce8]">
-        <GoogleTranslateProvider />
         {children}
       </body>
     </html>
