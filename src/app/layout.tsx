@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins, Lora } from "next/font/google";
 import { cookies } from "next/headers";
 import "./globals.css";
+import { GoogleTranslateProvider } from "@/features/i18n/components/GoogleTranslateProvider";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -29,8 +30,9 @@ export default async function RootLayout({
   const locale = cookieStore.get("ventureroot_locale")?.value || "en";
 
   return (
-    <html lang={locale} className={`${poppins.variable} ${lora.variable} font-sans`}>
-      <body className="antialiased text-[#200813] bg-[#f4fce8]">
+    <html lang={locale} className={`${poppins.variable} ${lora.variable} font-sans`} suppressHydrationWarning>
+      <body className="antialiased text-[#200813] bg-[#f4fce8]" suppressHydrationWarning>
+        <GoogleTranslateProvider />
         {children}
       </body>
     </html>

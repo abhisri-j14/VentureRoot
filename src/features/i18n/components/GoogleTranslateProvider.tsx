@@ -22,49 +22,63 @@ export const GoogleTranslateProvider = () => {
   const pathname = usePathname();
   const isInitialized = useRef(false);
 
-  // Apply translation to Google combo
+  /**
+   * Try to apply the language to the Google Translate combo.
+   * Polls every 150ms for up to 5 seconds until the combo element is ready.
+   */
   const applyLanguage = (lang: Language) => {
     if (typeof window === "undefined") return;
 
-    // 1. Set the googtrans cookie for host and root path
-    const cookieValue = `/en/${lang}`;
-    document.cookie = `googtrans=${cookieValue}; path=/;`;
-    document.cookie = `googtrans=${cookieValue}; domain=${window.location.hostname}; path=/;`;
-    
-    // Also clear if switching back to English
+    // Set / clear the googtrans cookie
     if (lang === "en") {
       document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=${window.location.hostname}; path=/;`;
+    } else {
+      const cookieValue = `/en/${lang}`;
+      document.cookie = `googtrans=${cookieValue}; path=/;`;
+      document.cookie = `googtrans=${cookieValue}; domain=${window.location.hostname}; path=/;`;
     }
 
-    // 2. Trigger the Google Translate combo select element
-    const combo = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
-    if (combo) {
-      if (combo.value !== lang) {
-        combo.value = lang;
-        combo.dispatchEvent(new Event("change"));
+    // Poll for the combo element — it appears asynchronously after the Google script loads
+    let attempts = 0;
+    const maxAttempts = 33; // ~5 seconds at 150ms intervals
+    const interval = setInterval(() => {
+      attempts++;
+      const combo = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
+
+      if (combo) {
+        clearInterval(interval);
+        // Set the value only if it's a valid option in the combo
+        const validOption = Array.from(combo.options).some((o) => o.value === lang);
+        if (validOption && combo.value !== lang) {
+          combo.value = lang;
+          combo.dispatchEvent(new Event("change"));
+        } else if (!validOption && lang !== "en") {
+          // Language not in widget options — fall back to page reload with cookie
+          window.location.reload();
+        }
+      } else if (attempts >= maxAttempts) {
+        clearInterval(interval);
+        // Combo never appeared — reload to let Google Translate init from cookie
+        if (lang !== "en") {
+          window.location.reload();
+        }
       }
-    }
+    }, 150);
   };
 
   // Re-apply translation when language or route changes
   useEffect(() => {
     applyLanguage(language);
-    
-    // Check again after a small delay in case DOM just mounted on route transition
-    const timer = setTimeout(() => {
-      applyLanguage(language);
-    }, 400);
-
-    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language, pathname]);
 
   return (
     <>
-      {/* Hidden mount node */}
+      {/* Hidden mount node for Google Translate widget */}
       <div id="google_translate_element" style={{ display: "none" }} />
 
-      {/* Google Translate Init Script */}
+      {/* Google Translate Init Script — runs before the API script loads */}
       <Script
         id="google-translate-init"
         strategy="afterInteractive"
@@ -74,7 +88,7 @@ export const GoogleTranslateProvider = () => {
               new window.google.translate.TranslateElement(
                 {
                   pageLanguage: 'en',
-                  includedLanguages: 'en,bn,hi',
+                  includedLanguages: 'en,bn,hi,pa,mr,ta,te',
                   autoDisplay: false
                 },
                 'google_translate_element'
@@ -83,17 +97,16 @@ export const GoogleTranslateProvider = () => {
           `,
         }}
       />
+      {/* Google Translate API — calls googleTranslateElementInit on load */}
       <Script
         id="google-translate-source"
         src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
         strategy="afterInteractive"
         onLoad={() => {
           isInitialized.current = true;
-          // Apply active language once script is ready
-          setTimeout(() => {
-            const currentLang = useUIStore.getState().language;
-            applyLanguage(currentLang);
-          }, 300);
+          // Trigger language immediately after widget is ready
+          const currentLang = useUIStore.getState().language;
+          applyLanguage(currentLang);
         }}
       />
     </>
