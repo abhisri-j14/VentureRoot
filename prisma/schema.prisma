@@ -1,0 +1,171 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum LocationType {
+  STATE
+  DISTRICT
+  BLOCK
+  VILLAGE
+}
+
+model Location {
+  id       String  @id @default(uuid()) @db.Uuid
+  parentId String? @map("parent_id") @db.Uuid
+
+  name String       @db.VarChar(150)
+  code String?      @db.VarChar(30)
+  type LocationType
+
+  latitude  Decimal? @db.Decimal(10, 7)
+  longitude Decimal? @db.Decimal(10, 7)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  parent   Location?  @relation("LocationHierarchy", fields: [parentId], references: [id], onDelete: Restrict)
+  children Location[] @relation("LocationHierarchy")
+
+  profiles   Profile[]  @relation("ProfileLocation")
+  businesses Business[] @relation("BusinessLocation")
+
+  @@index([parentId])
+  @@map("locations")
+}
+
+model BusinessCategory {
+  id String @id @default(uuid()) @db.Uuid
+
+  name        String  @unique @db.VarChar(150)
+  slug        String  @unique @db.VarChar(150)
+  description String? @db.Text
+
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  businesses Business[] @relation("BusinessCategoryRelation")
+
+  @@map("business_categories")
+}
+
+enum UserRole {
+  ENTREPRENEUR
+}
+
+model Profile {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @unique @map("user_id") @db.Uuid
+
+  firstName String  @map("first_name") @db.VarChar(100)
+  lastName  String? @map("last_name") @db.VarChar(100)
+
+  role UserRole @default(ENTREPRENEUR)
+
+  isVerified Boolean @default(false) @map("is_verified")
+  isActive   Boolean @default(true) @map("is_active")
+
+  phone String? @db.VarChar(20)
+
+  locationId String? @map("location_id") @db.Uuid
+
+  availableCapital Decimal? @map("available_capital") @db.Decimal(15, 2)
+  income           Decimal? @db.Decimal(15, 2)
+
+  businessExperience String? @map("business_experience") @db.Text
+
+  skills Json?
+
+  education String? @db.VarChar(255)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  location Location? @relation("ProfileLocation", fields: [locationId], references: [id], onDelete: Restrict)
+
+  @@index([locationId])
+  @@map("profiles")
+}
+
+enum BusinessStatus {
+  DRAFT
+  ANALYZING
+  READY
+}
+
+model Business {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId     String @map("user_id") @db.Uuid
+  categoryId String @map("category_id") @db.Uuid
+  locationId String @map("location_id") @db.Uuid
+
+  name        String? @db.VarChar(200)
+  description String? @db.Text
+
+  availableMargin   Decimal @map("available_margin") @db.Decimal(15, 2)
+  existingResources String? @map("existing_resources") @db.Text
+  expectedRevenue   Decimal @map("expected_revenue") @db.Decimal(15, 2)
+
+  status BusinessStatus @default(DRAFT)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  category BusinessCategory @relation("BusinessCategoryRelation", fields: [categoryId], references: [id], onDelete: Restrict)
+
+  location Location @relation("BusinessLocation", fields: [locationId], references: [id], onDelete: Restrict)
+
+  reports Report[] @relation("BusinessReports")
+
+  @@index([userId])
+  @@index([categoryId])
+  @@index([locationId])
+  @@map("businesses")
+}
+
+enum ReportStatus {
+  GENERATING
+  READY
+  FAILED
+}
+
+enum ReportType {
+  FEASIBILITY
+  FINANCIAL
+  BUSINESS_PLAN
+  COMPREHENSIVE
+}
+
+model Report {
+  id String @id @default(uuid()) @db.Uuid
+
+  businessId String @map("business_id") @db.Uuid
+  userId     String @map("user_id") @db.Uuid
+
+  title String? @db.VarChar(255)
+
+  type   ReportType
+  status ReportStatus @default(GENERATING)
+
+  fileName String? @map("file_name") @db.VarChar(255)
+  fileUrl  String? @map("file_url") @db.Text
+  fileSize BigInt? @map("file_size")
+
+  generatedAt DateTime? @map("generated_at") @db.Timestamptz
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  business Business @relation("BusinessReports", fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([businessId])
+  @@map("reports")
+}

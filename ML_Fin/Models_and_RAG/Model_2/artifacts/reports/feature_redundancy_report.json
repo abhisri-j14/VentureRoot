@@ -1,0 +1,142 @@
+{
+  "total_ml_features": 19,
+  "features": [
+    "literacy_rate",
+    "female_literacy_rate",
+    "sc_st_population_share",
+    "working_pop_ratio",
+    "workers_cultivator_share",
+    "workers_agri_labour_share",
+    "workers_hh_industry_share",
+    "workers_other_share",
+    "pop_density_per_sqkm",
+    "households_per_village",
+    "inhabited_village_ratio",
+    "msme_micro_per_1k",
+    "msme_small_per_1k",
+    "msme_medium_per_1k",
+    "msme_total_per_1k",
+    "msme_micro_share",
+    "msme_small_share",
+    "pop_0_6_ratio",
+    "gender_ratio_females_per_1k"
+  ],
+  "high_correlation_pairs": [
+    {
+      "feature_1": "literacy_rate",
+      "feature_2": "female_literacy_rate",
+      "pearson_correlation": 0.9741
+    },
+    {
+      "feature_1": "msme_micro_per_1k",
+      "feature_2": "msme_small_per_1k",
+      "pearson_correlation": 0.9624
+    },
+    {
+      "feature_1": "msme_micro_per_1k",
+      "feature_2": "msme_medium_per_1k",
+      "pearson_correlation": 0.888
+    },
+    {
+      "feature_1": "msme_micro_per_1k",
+      "feature_2": "msme_total_per_1k",
+      "pearson_correlation": 1.0
+    },
+    {
+      "feature_1": "msme_small_per_1k",
+      "feature_2": "msme_medium_per_1k",
+      "pearson_correlation": 0.9782
+    },
+    {
+      "feature_1": "msme_small_per_1k",
+      "feature_2": "msme_total_per_1k",
+      "pearson_correlation": 0.9632
+    },
+    {
+      "feature_1": "msme_medium_per_1k",
+      "feature_2": "msme_total_per_1k",
+      "pearson_correlation": 0.8893
+    }
+  ],
+  "near_zero_variance_features": [
+    "msme_small_share"
+  ],
+  "vif_scores": [
+    {
+      "feature": "literacy_rate",
+      "vif": 31.7
+    },
+    {
+      "feature": "female_literacy_rate",
+      "vif": 30.49
+    },
+    {
+      "feature": "sc_st_population_share",
+      "vif": 1.86
+    },
+    {
+      "feature": "working_pop_ratio",
+      "vif": 3.11
+    },
+    {
+      "feature": "workers_cultivator_share",
+      "vif": 1.91
+    },
+    {
+      "feature": "workers_agri_labour_share",
+      "vif": 2.0
+    },
+    {
+      "feature": "workers_hh_industry_share",
+      "vif": 1.12
+    },
+    {
+      "feature": "workers_other_share",
+      "vif": 2.27
+    },
+    {
+      "feature": "pop_density_per_sqkm",
+      "vif": 1.72
+    },
+    {
+      "feature": "households_per_village",
+      "vif": 1.43
+    },
+    {
+      "feature": "inhabited_village_ratio",
+      "vif": 3.36
+    },
+    {
+      "feature": "msme_micro_per_1k",
+      "vif": 100000.0
+    },
+    {
+      "feature": "msme_small_per_1k",
+      "vif": 100000.0
+    },
+    {
+      "feature": "msme_medium_per_1k",
+      "vif": 100000.0
+    },
+    {
+      "feature": "msme_total_per_1k",
+      "vif": 100000.0
+    },
+    {
+      "feature": "msme_micro_share",
+      "vif": 3.23
+    },
+    {
+      "feature": "msme_small_share",
+      "vif": 3.34
+    },
+    {
+      "feature": "pop_0_6_ratio",
+      "vif": 2.4
+    },
+    {
+      "feature": "gender_ratio_females_per_1k",
+      "vif": 4.51
+    }
+  ]
+}

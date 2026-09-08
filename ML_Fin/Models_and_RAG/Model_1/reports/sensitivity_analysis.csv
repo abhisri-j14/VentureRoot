@@ -1,0 +1,11 @@
+component,direction,spearman_rank_correlation,mean_abs_score_change,max_score_change
+demand_proxy,+0.05,,0.3901,2.0119
+demand_proxy,-0.05,,0.4311,2.2237
+purchasing_power_proxy,+0.05,,0.44,2.1857
+purchasing_power_proxy,-0.05,,0.4863,2.4158
+workforce_opportunity,+0.05,,0.775,2.1239
+workforce_opportunity,-0.05,,0.8566,2.3475
+infrastructure_development,+0.05,,0.4485,1.3762
+infrastructure_development,-0.05,,0.4957,1.5211
+market_gap_proxy,+0.05,,1.9191,2.8342
+market_gap_proxy,-0.05,,2.1211,3.1325

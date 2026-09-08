@@ -1,0 +1,125 @@
+# GramBiz Model 1 — Model Configuration
+
+model:
+  name: "GramBiz Hyper-Local Market Potential Engine"
+  version: "1.0.0"
+  type: "market_potential_index"
+  description: >
+    Explainable Hyper-Local Market Potential Scoring and Ranking Engine.
+    Produces a composite Market Potential Index (MPI) based on observable
+    demographic, workforce, consumption, and geographic indicators.
+    Does NOT predict business success, revenue, demand probability, or profit.
+
+random_seed: 42
+
+target:
+  name: "market_potential_index"
+  type: "regression"
+  range: [0, 100]
+  is_supervised_label: false
+  is_constructed_index: true
+  description: >
+    Composite index constructed from normalized demographic, economic,
+    and workforce indicators. Represents relative market opportunity
+    for a given business category at the sub-district level.
+
+validation:
+  n_folds: 5
+  shuffle: true
+  group_column: "district_code"
+  holdout_fraction: 0.15  # ~15% of districts held out completely
+  holdout_strategy: "geographic"  # Entire unseen districts
+
+metrics:
+  primary: "mae"
+  report:
+    - mae
+    - rmse
+    - r2
+    - median_ae
+    - spearman_rank
+  do_not_use:
+    - mape  # Not appropriate as primary metric per user requirement
+
+candidate_models:
+  - name: "DummyRegressor"
+    type: "baseline"
+    params: { strategy: "mean" }
+
+  - name: "Ridge"
+    type: "linear"
+    params: { alpha: 1.0 }
+
+  - name: "RandomForest"
+    type: "ensemble"
+    params:
+      n_estimators: 200
+      max_depth: 10
+      min_samples_leaf: 10
+      random_state: 42
+
+  - name: "GradientBoosting"
+    type: "ensemble"
+    params:
+      n_estimators: 200
+      max_depth: 5
+      learning_rate: 0.1
+      min_samples_leaf: 10
+      random_state: 42
+
+  - name: "XGBoost"
+    type: "boosting"
+    params:
+      n_estimators: 200
+      max_depth: 5
+      learning_rate: 0.1
+      min_child_weight: 10
+      subsample: 0.8
+      colsample_bytree: 0.8
+      random_state: 42
+
+  - name: "LightGBM"
+    type: "boosting"
+    params:
+      n_estimators: 200
+      max_depth: 5
+      learning_rate: 0.1
+      min_child_samples: 10
+      subsample: 0.8
+      colsample_bytree: 0.8
+      random_state: 42
+      verbose: -1
+
+  - name: "CatBoost"
+    type: "boosting"
+    params:
+      iterations: 200
+      depth: 5
+      learning_rate: 0.1
+      l2_leaf_reg: 3
+      random_seed: 42
+      verbose: 0
+
+hyperparameter_tuning:
+  method: "RandomizedSearchCV"
+  n_iter: 30
+  cv_method: "GroupKFold"
+  scoring: "neg_mean_absolute_error"
+
+model_selection:
+  criteria:
+    - geographic_cv_performance
+    - generalization_gap
+    - stability_across_folds
+    - holdout_test_performance
+    - interpretability
+    - computational_efficiency
+  prefer_simpler_model: true
+  max_acceptable_generalization_gap: 0.15  # 15% relative gap
+
+artifacts:
+  model_path: "models/model_1_final.joblib"
+  metadata_path: "models/model_1_metadata.json"
+  feature_schema_path: "models/feature_schema.json"
+  scaler_path: "models/scaler.joblib"
+  best_config_path: "models/best_model_config.json"

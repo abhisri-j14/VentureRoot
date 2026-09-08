@@ -1,0 +1,44 @@
+{
+  "stability_status": "STABLE",
+  "seeds_evaluated": [
+    42,
+    123,
+    2024
+  ],
+  "mean_mae": 0.7544,
+  "std_mae": 0.0,
+  "mean_r2": 0.9997,
+  "std_r2": 0.0,
+  "per_seed_results": [
+    {
+      "mae": 0.7544,
+      "rmse": 0.8691,
+      "r2": 0.9997,
+      "smape": 0.0374,
+      "wape": 0.0375,
+      "median_ae": 0.7244,
+      "spearman": 1.0,
+      "seed": 42
+    },
+    {
+      "mae": 0.7544,
+      "rmse": 0.8691,
+      "r2": 0.9997,
+      "smape": 0.0374,
+      "wape": 0.0375,
+      "median_ae": 0.7244,
+      "spearman": 1.0,
+      "seed": 123
+    },
+    {
+      "mae": 0.7544,
+      "rmse": 0.8691,
+      "r2": 0.9997,
+      "smape": 0.0374,
+      "wape": 0.0375,
+      "median_ae": 0.7244,
+      "spearman": 1.0,
+      "seed": 2024
+    }
+  ]
+}

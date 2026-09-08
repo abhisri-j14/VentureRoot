@@ -1,0 +1,18 @@
+DOCUMENT: West Bengal Agricultural Produce Marketing Regulations & APMC Guidelines
+SOURCE: Department of Agricultural Marketing, Government of West Bengal
+PUBLISHER: West Bengal State Agricultural Marketing Board
+DEPARTMENT: Department of Agricultural Marketing
+STATE: West Bengal
+CATEGORY: State Agriculture Regulation
+EFFECTIVE_DATE: 2024-01-01
+SOURCE_URL: https://wbagrimarketing.gov.in
+
+SECTION 1: APMC MARKET REGISTRATION & LICENSING
+Under the West Bengal Agricultural Produce Marketing (Regulation) Act, any trader, commission agent, processor, or bulk buyer operating within notified Regulated Market Committee (RMC / APMC) market yards (such as Bankura RMC, Bishnupur RMC, Medinipur RMC, Burdwan RMC) must hold a valid operating license issued by the concerned Regulated Market Committee.
+
+SECTION 2: MARKET FEES & LEVIES
+1. Market Fee Rate: A uniform market fee of 1.0% on the sale value of notified agricultural produce (e.g., Potato, Rice/Paddy, Mustard, Vegetables, Jute) is payable by the buyer/purchaser.
+2. Exemption: Direct purchase from farmers outside market yards under contract farming agreements is subject to statutory exemptions as per state rules.
+
+SECTION 3: TRADING PROCEDURES & QUALITY GRADING
+All produce brought into APMC yards must undergo electronic/open auction or price discovery process. Quality grading is conducted based on AGMARK standards for moisture content, foreign matter, and size grading.

@@ -1,0 +1,23 @@
+{
+  "overall_drift_status": "LOW",
+  "high_drift_features_count": 0,
+  "evaluated_columns_count": 2,
+  "column_drift_details": [
+    {
+      "column": "feat",
+      "ks_train_vs_val": 0.1833,
+      "p_train_vs_val": 0.3762,
+      "ks_train_vs_test": 0.14,
+      "p_train_vs_test": 0.7068,
+      "drift_severity": "LOW"
+    },
+    {
+      "column": "normalized_price",
+      "ks_train_vs_val": 0.1033,
+      "p_train_vs_val": 0.9452,
+      "ks_train_vs_test": 0.2,
+      "p_train_vs_test": 0.2779,
+      "drift_severity": "LOW"
+    }
+  ]
+}

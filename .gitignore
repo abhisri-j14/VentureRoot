@@ -1,0 +1,94 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+env.download
+*.download
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+
+
+
+
+
+.env.local
+.env.test
+.env.production
+.env.development
+
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.pytest_cache
+.pytest_cache/
+
+# Audit & API Documentation Markdown Files
+FINAL_BACKEND_ML_AUDIT.md
+API_TESTING_GUIDE.md
+API_EXPECTED_OUTPUTS.md
+CHANGELOG_AUDIT_FIXES.md
+
+# Test Directories & Streamlit Apps
+web_scrapping/tests/
+web_scrapping/.pytest_cache/
+ML_Fin/**/tests/
+ML_Fin/**/test/
+ML_Fin/**/streamlit_app/
+tests/
+test/
+streamlit_app/
+
+# ML_Fin Documentation
+ML_Fin/docs/
+ML_Fin/**/docs/
+
+# ML_Fin Markdown Files (Except README)
+ML_Fin/**/*.md
+!ML_Fin/**/README.md
+!ML_Fin/**/readme.md
+!ML_Fin/**/Readme.md
+
+# Explicitly keep ML models and artifacts pushable
+!ML_Fin/**/models/
+!ML_Fin/**/models/**
+!ML_Fin/**/artifacts/
+!ML_Fin/**/artifacts/**
+!*.joblib
+!*.pkl

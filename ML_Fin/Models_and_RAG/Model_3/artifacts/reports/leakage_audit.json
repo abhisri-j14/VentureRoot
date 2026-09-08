@@ -1,0 +1,21 @@
+{
+  "overall_audit_status": "PASSED",
+  "all_tests_passed": true,
+  "timestamp": "2026-09-05T11:02:28.288629",
+  "target_column": "normalized_price",
+  "feature_count": 22,
+  "checks": [
+    {
+      "test_name": "feature_target_disjointness",
+      "passed": true,
+      "forbidden_cols_found": [],
+      "message": "PASSED: Feature list is completely disjoint from target and contemporaneous price columns."
+    },
+    {
+      "test_name": "temporal_lag_shift_integrity",
+      "passed": true,
+      "max_shift_discrepancy": 0.0,
+      "message": "PASSED: All lag features shift strictly prior to observation date T."
+    }
+  ]
+}

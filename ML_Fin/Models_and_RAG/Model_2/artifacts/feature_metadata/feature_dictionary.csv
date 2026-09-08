@@ -1,0 +1,20 @@
+feature_name,used_for,leakage_status,type
+literacy_rate,ML Model Input,Leakage Safe,Numeric Ratio / Density
+female_literacy_rate,ML Model Input,Leakage Safe,Numeric Ratio / Density
+sc_st_population_share,ML Model Input,Leakage Safe,Numeric Ratio / Density
+working_pop_ratio,ML Model Input,Leakage Safe,Numeric Ratio / Density
+workers_cultivator_share,ML Model Input,Leakage Safe,Numeric Ratio / Density
+workers_agri_labour_share,ML Model Input,Leakage Safe,Numeric Ratio / Density
+workers_hh_industry_share,ML Model Input,Leakage Safe,Numeric Ratio / Density
+workers_other_share,ML Model Input,Leakage Safe,Numeric Ratio / Density
+pop_density_per_sqkm,ML Model Input,Leakage Safe,Numeric Ratio / Density
+households_per_village,ML Model Input,Leakage Safe,Numeric Ratio / Density
+inhabited_village_ratio,ML Model Input,Leakage Safe,Numeric Ratio / Density
+msme_micro_per_1k,ML Model Input,Leakage Safe,Numeric Ratio / Density
+msme_small_per_1k,ML Model Input,Leakage Safe,Numeric Ratio / Density
+msme_medium_per_1k,ML Model Input,Leakage Safe,Numeric Ratio / Density
+msme_total_per_1k,ML Model Input,Leakage Safe,Numeric Ratio / Density
+msme_micro_share,ML Model Input,Leakage Safe,Numeric Ratio / Density
+msme_small_share,ML Model Input,Leakage Safe,Numeric Ratio / Density
+pop_0_6_ratio,ML Model Input,Leakage Safe,Numeric Ratio / Density
+gender_ratio_females_per_1k,ML Model Input,Leakage Safe,Numeric Ratio / Density

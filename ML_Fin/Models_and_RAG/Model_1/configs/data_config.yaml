@@ -1,0 +1,61 @@
+# GramBiz Model 1 — Data Configuration
+# All paths are relative to Models_and_RAG/Model_1/
+
+raw_data:
+  census:
+    pca_state_dist: "data/raw/census/2011-IndiaStateDist-0000.xlsx"
+    pca_full: "data/raw/census/2011-IndiaStateDistSbDistTwn-0000.xlsx"
+    a1_villages: "data/raw/census/A-1_NO_OF_VILLAGES_TOWNS_HOUSEHOLDS_POPULATION_AND_AREA.xlsx"
+    source: "Census 2011 Primary Census Abstract"
+    year: 2011
+    geographic_levels: ["India", "STATE", "DISTRICT", "SUB-DISTRICT", "TOWN"]
+
+  consumption:
+    hces: "data/raw/consumption/HCES.xlsx"
+    hces_sheet_mpce: "MonthlyPerCapitaConsumptionExpe"
+    hces_sheet_composition: "%CompositionMPCE"
+    hces_sheet_trend: "Trend in level of Consumption"
+    source: "NSSO/MoSPI Household Consumption Expenditure Survey"
+    year: "2023-24"
+    geographic_level: "State"
+
+  economic_census:
+    ec_pdf: "data/raw/economic_census/EC.pdf"
+    source: "Economic Census (PDF reference only)"
+    year: "Various"
+    status: "reference_only"
+    note: "PDF with charts/tables. Cannot reliably extract structured ML training data. Ingestion interface created for future CSV/XLSX."
+
+  labour:
+    lfpr: "data/raw/labour/LFPR_June_2026.xlsx"
+    wpr: "data/raw/labour/WPR_June_2026.xlsx"
+    source: "Periodic Labour Force Survey (PLFS)"
+    year: "2025-2026"
+    geographic_level: "National (Rural/Urban only)"
+    header_row: 1
+
+  macro:
+    cpi_state: "data/raw/macro/Annexures_for_Press_Release_in_Excel_July2026_Annex-III.xlsx"
+    source: "MoSPI Consumer Price Index"
+    year: "July 2026"
+    geographic_level: "State"
+
+processed_data:
+  geography_master: "data/processed/geography_master.csv"
+  merged_dataset: "data/processed/merged_dataset.csv"
+  feature_dataset: "data/features/feature_dataset.csv"
+
+modeling:
+  primary_geographic_level: "SUB-DISTRICT"
+  primary_tru: "Rural"
+  expected_rows: 5988  # Rural sub-district rows in Census 2011
+
+data_freshness:
+  census: "2011"
+  hces_mpce: "2023-24"
+  cpi: "July 2026"
+  lfpr_wpr: "2025-2026"
+  disclaimer: >
+    Census demographic data is from 2011. HCES consumption expenditure is from 2023-24.
+    CPI/inflation is from July 2026. Absolute values may differ from current reality.
+    The model provides relative comparisons and ranking of market potential, not absolute predictions.

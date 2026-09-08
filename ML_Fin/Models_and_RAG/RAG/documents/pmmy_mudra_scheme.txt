@@ -1,0 +1,23 @@
+DOCUMENT: Pradhan Mantri MUDRA Yojana (PMMY) Guidelines
+SOURCE: Micro Units Development & Refinance Agency Ltd. (MUDRA), Government of India
+PUBLISHER: Department of Financial Services, Ministry of Finance
+DEPARTMENT: Ministry of Finance
+STATE: All India
+CATEGORY: Central Government Financial Scheme
+EFFECTIVE_DATE: 2024-01-01
+SOURCE_URL: https://www.mudra.org.in
+
+SECTION 1: SCHEME CATEGORIES & LOAN LIMITS
+Pradhan Mantri MUDRA Yojana (PMMY) provides collateral-free loans to non-farm micro and small enterprises. MUDRA loans are divided into three categories:
+
+1. Shishu: Loans covering up to Rs. 50,000/- for start-ups and micro-businesses.
+2. Kishore: Loans covering above Rs. 50,000/- and up to Rs. 5 lakh for expanding units.
+3. Tarun: Loans covering above Rs. 5 lakh and up to Rs. 10 lakh for established units.
+
+SECTION 2: ELIGIBILITY & TARGET BENEFICIARIES
+Non-corporate small business segment (NCSBS) comprising millions of proprietorship/partnership firms running as small manufacturing units, service sector units, shopkeepers, fruits/vegetable vendors, food-service units, repair shops, machine operators, handicrafts, food processing, and small industries in rural and urban areas.
+
+SECTION 3: INTEREST RATES & COLLATERAL
+- Collateral: No collateral security is required for MUDRA loans up to Rs. 10 lakh.
+- Interest Rate: Deregulated; interest rates are determined by banks based on RBI guidelines and borrower risk profile (typically 8.5% to 11.5% p.a.).
+- Processing Fee: Nil for Shishu loans; nominal for Kishore and Tarun.

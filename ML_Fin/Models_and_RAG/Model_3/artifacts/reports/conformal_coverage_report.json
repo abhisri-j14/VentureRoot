@@ -1,0 +1,9 @@
+{
+  "nominal_coverage": 0.9,
+  "empirical_holdout_coverage": 0.9,
+  "coverage_error": 0.0,
+  "mean_interval_width_rs_per_quintal": 34.16,
+  "median_interval_width_rs_per_quintal": 34.16,
+  "conformal_qhat": 17.08,
+  "conformal_integrity_status": "PASSED"
+}

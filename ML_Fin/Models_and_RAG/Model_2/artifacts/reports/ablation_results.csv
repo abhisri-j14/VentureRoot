@@ -1,0 +1,9 @@
+subset_name,feature_count,cv_mae_mean,cv_mae_std,cv_rmse_mean,cv_r2_mean,cv_spearman_mean,generalization_gap,description
+A. All Features,19,0.0013,0.0002,0.0029,1.0,1.0,0.0,Complete set of 19 leakage-safe engineered features
+B. Census-Only,13,0.0433,0.0034,0.3281,0.9919,0.9995,0.007,Census 2011 demographic and workforce features only
+H. Without MSME Features,13,0.0433,0.0034,0.3281,0.9919,0.9995,0.007,All features excluding Udyam MSME metrics
+E. Without Demand Features,17,0.6366,0.0243,1.0045,0.9507,0.9613,0.0204,All features excluding direct demand building blocks
+F. Without Purchasing Power Features,16,1.0027,0.0386,1.3525,0.9121,0.9201,0.0196,All features excluding literacy and working population ratios
+D. Infrastructure-Only,4,1.3658,0.0416,1.8614,0.8343,0.8516,0.0047,Settlement structure and community infrastructure features
+G. Without Infrastructure Features,16,1.6498,0.0414,2.1812,0.7729,0.7517,0.0158,All features excluding village settlement and social infrastructure
+C. Udyam MSME-Only,6,3.0507,0.1995,4.6566,-0.0071,0.0553,0.0056,Udyam MSME density and size distribution features only

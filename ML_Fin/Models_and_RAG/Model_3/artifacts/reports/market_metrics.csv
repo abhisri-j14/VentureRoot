@@ -1,0 +1,39 @@
+market,sample_count,status,mae,rmse,r2,smape,wape,median_ae,spearman
+Anaiyur,1,insufficient_data,,,,,,,
+Bejjenki APMC,1,insufficient_data,,,,,,,
+Bhadrachalam APMC,1,insufficient_data,,,,,,,
+Dammapet APMC,2,insufficient_data,,,,,,,
+Dasda APMC,4,insufficient_data,,,,,,,
+Gingee,40,sufficient_data,657.4268,875.0653,0.8926,14.1673,12.5373,597.2608,0.8705
+Gondatwisa APMC,9,sufficient_data,2134.9618,3409.5272,-0.1003,38.4732,38.2001,1133.6757,0.3333
+Gudiyatham,49,sufficient_data,895.5136,1095.0117,0.9294,19.5459,16.5648,851.7892,0.8443
+Jalaun APMC,10,sufficient_data,1771.6524,1978.2664,-7.2217,61.5165,88.5826,1509.5318,0.6339
+Kahithapattarai,43,sufficient_data,1275.3695,2119.971,0.822,25.0011,25.1737,914.0601,0.8069
+Kariyapatti,36,sufficient_data,963.9058,2142.2252,0.7114,15.0985,17.359,455.4119,0.8993
+Katpadi,53,sufficient_data,1120.23,1750.4392,0.8869,19.7127,18.8993,739.1097,0.8618
+Kopaganj APMC,11,sufficient_data,2520.1694,3505.8989,-1.5289,62.8336,89.1722,1729.5318,0.8246
+Kovilpatti,41,sufficient_data,1072.3784,1835.7503,0.7087,18.9445,17.8984,601.7892,0.8605
+Kulai APMC,6,sufficient_data,2146.4601,2518.8109,-1.2381,39.2923,35.092,2122.4872,0.3088
+Maigalganj APMC,10,sufficient_data,2183.5298,2483.5398,-21.2481,89.883,164.4224,1844.5318,0.1581
+Muthupettai,21,sufficient_data,599.7381,877.9526,0.8661,13.4589,13.2574,383.4879,0.889
+Pallikonda,20,sufficient_data,807.9264,1029.7863,0.267,19.1367,21.4731,645.9466,0.8506
+Perampet,42,sufficient_data,845.9915,1107.1547,0.9316,17.478,15.6458,780.9808,0.8676
+Rajapalayam,39,sufficient_data,1110.6985,1915.9373,0.6762,18.9573,22.0444,608.5818,0.8462
+Roorkee APMC,10,sufficient_data,2669.1165,2878.7652,-11.8068,100.7861,193.4142,2368.0032,0.0851
+Sathur,33,sufficient_data,725.4393,996.6768,0.8085,15.8084,15.9756,514.0601,0.8349
+"Sattupalli (Ramalayam),RBZ",1,insufficient_data,,,,,,,
+Sattupally APMC,1,insufficient_data,,,,,,,
+Shankarapally APMC,4,insufficient_data,,,,,,,
+Sivakasi,36,sufficient_data,665.6803,892.0696,0.8924,15.3855,13.9288,578.3963,0.8135
+Srivilliputhur,38,sufficient_data,710.8693,1145.6308,0.8955,14.0898,14.3801,408.7641,0.8988
+Tamarainagar,3,insufficient_data,,,,,,,
+Thalavaipuram,38,sufficient_data,1088.8148,1855.5123,0.683,19.2297,22.1138,518.1135,0.8466
+Thirupathur APMC,30,sufficient_data,1260.2419,2364.7575,0.7822,18.4358,21.8287,572.0565,0.8892
+Tindivanam APMC,47,sufficient_data,1234.2068,2355.4933,0.7022,18.0164,21.5843,530.0973,0.8446
+Tuticorin,55,sufficient_data,1376.567,2469.7335,0.8356,20.48,18.6297,650.475,0.8862
+Ulundurpettai APMC,32,sufficient_data,1445.6646,2324.6635,-0.3114,27.0494,31.3636,851.3585,0.6906
+Valangaiman APMC,18,sufficient_data,518.5142,717.9441,0.788,12.4318,12.5447,394.2456,0.9377
+Vandavasi,26,sufficient_data,800.2936,1075.7337,0.6147,16.6377,18.5617,619.3395,0.8708
+Vellore APMC,58,sufficient_data,1367.465,1899.0228,0.9494,24.1013,19.7837,1036.1719,0.9105
+Virudhunagar,17,sufficient_data,455.9818,568.3946,0.866,12.2871,11.1857,392.7324,0.9236
+"Weekly Market Area,RBZ APMC",2,insufficient_data,,,,,,,

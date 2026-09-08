@@ -1,0 +1,2 @@
+dataset,raw_rows,raw_columns,cleaned_rows,invalid_price_rows_removed,duplicate_rows_removed,conflicting_records,date_min,date_max,num_states,num_districts,num_markets,num_commodities,missing_values
+agmarknet_daily_prices,5917,10,5916,0,2,1,2026-09-05,2026-09-05,17,91,242,114,"{'state': 0, 'district': 0, 'market': 0, 'commodity': 0, 'variety': 0, 'grade': 0, 'arrival_date': 0, 'min_price': 0, 'max_price': 0, 'modal_price': 0, 'original_price': 0, 'original_unit': 0, 'normalized_price': 0, 'normalized_unit': 0, 'is_unit_usable': 0}"

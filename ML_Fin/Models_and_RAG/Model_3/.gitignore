@@ -1,0 +1,22 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.log
+data/cached/
+
+# Test directories and Streamlit apps
+test/
+tests/
+streamlit_app/
+**/test/
+**/tests/
+**/streamlit_app/
+
+# Allow trained models and artifacts
+!artifacts/
+!artifacts/models/
+!artifacts/models/*.joblib
+
+

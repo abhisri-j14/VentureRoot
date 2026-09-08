@@ -1,0 +1,4 @@
+mae,rmse,r2,smape,wape,median_ae,spearman,fold,group_column,train_districts_count,val_districts_count,group_overlap_count
+70.8342,81.4602,0.0078,4.7718,4.7796,73.1819,-0.0135,1,district,2,2,0
+55.1185,64.5633,-0.1686,3.7771,3.774,49.9866,-0.0788,2,district,3,1,0
+91.805,110.2703,-0.0793,6.059,6.071,90.5724,-0.1273,3,district,3,1,0

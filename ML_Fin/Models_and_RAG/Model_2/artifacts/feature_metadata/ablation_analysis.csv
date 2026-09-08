@@ -1,0 +1,5 @@
+dropped_component,spearman_rank_correlation,spearman_drop,mean_abs_score_change
+demand_proxy,0.9476,0.0524,11.0559
+msme_density,0.9996,0.0004,9.6602
+purchasing_power_proxy,0.8247,0.1753,7.2351
+infrastructure_readiness,0.6507,0.3493,11.9995

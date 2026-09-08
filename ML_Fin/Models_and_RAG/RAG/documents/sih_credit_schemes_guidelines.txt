@@ -1,0 +1,37 @@
+DOCUMENT: Smart India Hackathon (SIH) Rural Credit Schemes — Micro Finance & Term Loan Guidelines
+SOURCE: VentureRoot / GramBiz SIH Financial Engine Specification
+PUBLISHER: Smart India Hackathon (SIH) Rural Financial Inclusivity Framework
+DEPARTMENT: Department of Financial Services & Rural Entrepreneurship
+STATE: All India
+CATEGORY: SIH Credit Schemes
+EFFECTIVE_DATE: 2024-01-01
+SOURCE_URL: https://sih.gov.in
+
+SECTION 1: MICRO FINANCE SCHEME SPECIFICATIONS
+The Micro Finance Scheme is designed for rural micro-enterprises, small farming ventures, and local artisan start-ups:
+- Project Cost Limit: Applicable for total project cost up to Rs. 1,40,000/- (<= Rs. 1.40 Lakh).
+- Beneficiary Contribution (Margin): Exactly 10% of the total project cost.
+- Agency Financing (Loan Percentage): Up to 90% of the total project cost.
+- Maximum Loan Limit: The maximum loan sanctioned under Micro Finance Scheme is Rs. 1,25,000/- (Rs. 1.25 Lakh).
+- Interest Rate: Concessional rate of 6.5% per annum (p.a.).
+- Loan Tenure: Total repayment tenure of 3 years (36 months).
+- Moratorium Period: 3 months grace period / moratorium prior to regular EMI amortization.
+- Moratorium Treatment: Interest accrued during the 3-month moratorium is capitalized into the principal balance before EMI payments begin.
+- Typical Beneficiaries: Micro-dairy units, small vegetable kiosks, rural tailoring, pottery, and household retail.
+
+SECTION 2: TERM LOAN SCHEME SPECIFICATIONS
+The Term Loan Scheme is designed for expanding enterprises, machinery acquisition, and commercial agro-processing units:
+- Project Cost Range: Applicable for total project costs above Rs. 1,40,000/- and up to Rs. 50,00,000/- (> Rs. 1.40 Lakh and <= Rs. 50.00 Lakh).
+- Beneficiary Contribution (Margin): Exactly 10% of the total project cost.
+- Agency Financing (Loan Percentage): Up to 90% of the total project cost.
+- Maximum Loan Limit: The maximum loan sanctioned under Term Loan Scheme is Rs. 45,00,000/- (Rs. 45.00 Lakh).
+- Interest Rate: Standard development rate of 8.0% per annum (p.a.).
+- Loan Tenure: Total repayment tenure of 7 years (84 months).
+- Moratorium Period: 6 months grace period / moratorium for equipment setup and operational stabilization.
+- Moratorium Treatment: Interest accrued during the 6-month moratorium is capitalized into the principal balance before EMI payments begin.
+- Typical Beneficiaries: Commercial food processing, cold storage, packaging plants, small manufacturing, and rural transport units.
+
+SECTION 3: SCHEME ROUTING & STATUTORY PROVISIONS
+- Scheme Selection Rule: Projects with cost <= Rs. 1,40,000 are automatically routed to the Micro Finance Scheme. Projects with cost between Rs. 1,40,000 and Rs. 50,00,000 are routed to the Term Loan Scheme. Projects exceeding Rs. 50,00,000 fall outside the supported scheme limits.
+- Repayment Assumption: Stated tenure includes the moratorium period. Interest accrued during the moratorium is capitalized before monthly EMI repayment begins.
+- Statutory Notice: Financial terms and calculations reflect the SIH GramBiz / VentureRoot scheme parameters. Final loan sanction and disbursement depend on lending institution underwriting.
