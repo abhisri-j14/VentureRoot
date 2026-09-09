@@ -28,8 +28,8 @@ export async function createBusinessController(
 }
 
 
-
-export async function getBusinessController(
+// List businesses (used by GET /businesses)
+export async function getBusinessesController(
   user,
   query
 ) {
@@ -44,6 +44,28 @@ export async function getBusinessController(
       "Businesses fetched successfully",
 
     data: result,
+  };
+}
+
+
+// Single business by ID (used by GET /businesses/:id)
+export async function getBusinessByIdController(
+  user,
+  businessId
+) {
+  const business =
+    await getMyBusinessById(
+      user,
+      businessId
+    );
+
+  return {
+    message:
+      "Business fetched successfully",
+
+    data: {
+      business,
+    },
   };
 }
 

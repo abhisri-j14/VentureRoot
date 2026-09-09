@@ -42,6 +42,16 @@ async function seedBusinessCategories() {
       slug: "handicrafts",
       description: "Traditional handicraft businesses",
     },
+    {
+      name: "Dairy",
+      slug: "dairy",
+      description: "Dairy farming, milk production and livestock",
+    },
+    {
+      name: "Tailoring",
+      slug: "tailoring",
+      description: "Garment manufacturing, tailoring and textiles",
+    },
   ];
 
   for (const category of categories) {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { businessFormSchema, BusinessFormValues } from "../schemas/businessSchema";
@@ -23,7 +23,22 @@ export const BusinessWizard = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [globalError, setGlobalError] = useState<string | null>(null);
+  const [categories, setCategories] = useState<{ id: string; name: string; slug: string }[]>([]);
   const router = useRouter();
+
+  useEffect(() => {
+    businessApi
+      .getCategories()
+      .then((res: any) => {
+        const list = res?.data?.data || res?.data || [];
+        if (Array.isArray(list) && list.length > 0) {
+          setCategories(list);
+        }
+      })
+      .catch(() => {
+        // Fallback to defaults if endpoint unreachable
+      });
+  }, []);
 
   const {
     register,
@@ -66,11 +81,21 @@ export const BusinessWizard = () => {
     setIsSubmitting(true);
     setGlobalError(null);
     try {
-      await businessApi.create(data);
-      router.push("/business/123");
+      const res: any = await businessApi.create(data);
+      const createdBusiness = res?.data?.business || res?.data?.data?.business || res?.business || res?.data;
+      const businessId = createdBusiness?.id;
+      if (businessId) {
+        router.push(`/business/${businessId}`);
+      } else {
+        router.push("/dashboard");
+      }
     } catch (error: any) {
-      console.warn("Backend request failed or offline. Proceeding to mock business route for UI testing.");
-      router.push("/business/123");
+      console.error("Backend business creation error:", error);
+      const errorMsg =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to create business in database. Please check your inputs.";
+      setGlobalError(errorMsg);
     } finally {
       setIsSubmitting(false);
     }
@@ -200,9 +225,24 @@ export const BusinessWizard = () => {
                         className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium"
                       >
                         <option value="">{t("business.wizard.selectCat")}</option>
-                        <option value="dairy">Dairy</option>
-                        <option value="retail">Retail</option>
-                        <option value="tailoring">Tailoring</option>
+                        {categories.length > 0 ? (
+                          categories.map((cat) => (
+                            <option key={cat.id} value={cat.id}>
+                              {cat.name}
+                            </option>
+                          ))
+                        ) : (
+                          <>
+                            <option value="dairy">Dairy</option>
+                            <option value="retail">Retail</option>
+                            <option value="tailoring">Tailoring</option>
+                            <option value="agriculture">Agriculture</option>
+                            <option value="food-processing">Food Processing</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="services">Services</option>
+                            <option value="handicrafts">Handicrafts</option>
+                          </>
+                        )}
                       </select>
                       {errors.categoryId && <p className="text-red-500 font-sans text-[12px] mt-2 font-medium">{errors.categoryId.message}</p>}
                     </div>

@@ -47,8 +47,7 @@ export const useBusinessDetails = (id: string) => {
   useEffect(() => {
     if (DATA_SOURCE === "database") {
       if (!id || id === "123") {
-        // Mock ID requested while in database mode
-        setData(null);
+        setData(businessesData.details as BusinessDetails);
         setIsLoading(false);
         return;
       }

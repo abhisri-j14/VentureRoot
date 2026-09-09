@@ -8,10 +8,13 @@ import {
 
 import {
   findBusinessCategoryById,
+  findBusinessCategoryByIdOrSlug,
+  createOrGetBusinessCategory,
 } from "@/repositories/business-category.repository";
 
 import {
   findLocationByHierarchy,
+  findOrCreateLocationByHierarchy,
   findLocationWithParents,
 } from "@/repositories/location.repository";
 
@@ -78,15 +81,16 @@ async function mapBusinessResponse(business) {
 
 
 async function validateCategory(categoryId) {
-  const category =
-    await findBusinessCategoryById(
+  let category =
+    await findBusinessCategoryByIdOrSlug(
       categoryId
     );
 
   if (!category) {
-    throw new BadRequestError(
-      "Business category not found"
-    );
+    category = await createOrGetBusinessCategory({
+      name: categoryId,
+      slug: categoryId,
+    });
   }
 
   if (!category.isActive) {
@@ -100,13 +104,22 @@ async function validateCategory(categoryId) {
 
 
 async function resolveLocation(data) {
-  const location =
+  let location =
     await findLocationByHierarchy({
       state: data.state,
       district: data.district,
       block: data.block,
       village: data.village,
     });
+
+  if (!location) {
+    location = await findOrCreateLocationByHierarchy({
+      state: data.state,
+      district: data.district,
+      block: data.block,
+      village: data.village,
+    });
+  }
 
   if (!location) {
     throw new BadRequestError(
@@ -122,28 +135,30 @@ export async function createMyBusiness(
   user,
   data
 ) {
-  await validateCategory(
+  const category = await validateCategory(
     data.categoryId
   );
 
   const location =
     await resolveLocation(data);
 
+  const fallbackName = `${category.name} Enterprise (${data.district || data.state || "Rural"})`;
+
   const business =
     await createBusiness({
       userId: user.id,
 
       categoryId:
-        data.categoryId,
+        category.id,
 
       locationId:
         location.id,
 
       name:
-        data.name ?? null,
+        data.name?.trim() || fallbackName,
 
       description:
-        data.description ?? null,
+        data.description?.trim() || `${category.name} business based in ${data.district ? `${data.district}, ` : ""}${data.state}`,
 
       availableMargin:
         data.availableMargin,

@@ -30,7 +30,7 @@ export async function POST(request) {
   const result = testSchema.safeParse(body);
 
   if (!result.success) {
-   return errorResponse({
+    return errorResponse({
       message: "Validation failed",
       errorCode: "VALIDATION_ERROR",
       errors: result.error.flatten().fieldErrors,

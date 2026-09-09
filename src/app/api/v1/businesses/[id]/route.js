@@ -1,5 +1,5 @@
 import {
-  getBusinessController,
+  getBusinessByIdController,
   updateBusinessController,
   deleteBusinessController,
 } from "@/controllers/business.controller";
@@ -38,9 +38,9 @@ export async function GET(
     const { user } =
       await authenticate(request);
 
-    // 3. Fetch owned business
+    // 3. Fetch single owned business by ID
     const response =
-      await getBusinessController(
+      await getBusinessByIdController(
         user,
         businessId
       );

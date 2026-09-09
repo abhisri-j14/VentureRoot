@@ -30,13 +30,13 @@ export default function FeasibilityPage() {
   const params = useParams();
   const id = params?.id as string || "123";
 
-  const { data: fetchedFeasibility, isLoading } = useFeasibility(id);
+  const { data: fetchedFeasibility, isLoading, error } = useFeasibility(id);
   const [feasibilityData, setFeasibilityData] = useState<FeasibilityData | null>(null);
 
   useEffect(() => {
     if (fetchedFeasibility) {
       setFeasibilityData({
-        status: "SUCCESS",
+        status: fetchedFeasibility.status || "SUCCESS",
         market: fetchedFeasibility.market as MarketAnalysis,
         opportunity: fetchedFeasibility.opportunity as OpportunityAnalysis,
         competition: fetchedFeasibility.competition as CompetitionAnalysis,
@@ -46,6 +46,36 @@ export default function FeasibilityPage() {
       });
     }
   }, [fetchedFeasibility]);
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center p-12">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <div className="w-10 h-10 border-4 border-[#1E6702]/30 border-t-[#1E6702] rounded-full animate-spin" />
+          <p className="font-sans text-[15px] font-medium text-slate-500">
+            Running market intelligence analysis…
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || (!isLoading && !feasibilityData)) {
+    return (
+      <div className="w-full h-full flex items-center justify-center p-12">
+        <div className="flex flex-col items-center gap-4 text-center max-w-md">
+          <div className="text-4xl">⚠️</div>
+          <h2 className="font-heading text-[22px] font-bold text-slate-800">Analysis Unavailable</h2>
+          <p className="font-sans text-[14px] text-slate-500">
+            {error?.message || "The ML analysis service is not running. Please start the Python model services (Model 1 on port 8001, Model 2 on port 8002) and try again."}
+          </p>
+          <Link href={`/business/${id}`} className="mt-2 px-4 py-2 bg-[#1E6702] text-white rounded-lg font-sans text-[14px] font-semibold hover:bg-[#185a02] transition-colors">
+            Back to Business
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (!feasibilityData) return null;
 

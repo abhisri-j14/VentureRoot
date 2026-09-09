@@ -1,6 +1,12 @@
 import { z } from "zod";
 
 
+const optionalString = z
+  .string()
+  .trim()
+  .nullish()
+  .transform((val) => (val && val.length > 0 ? val : undefined));
+
 const locationFieldsSchema = z.object({
   state: z
     .string()
@@ -12,17 +18,9 @@ const locationFieldsSchema = z.object({
     .trim()
     .min(1, "District is required"),
 
-  block: z
-    .string()
-    .trim()
-    .min(1)
-    .optional(),
+  block: optionalString,
 
-  village: z
-    .string()
-    .trim()
-    .min(1)
-    .optional(),
+  village: optionalString,
 });
 
 
@@ -30,20 +28,12 @@ export const createBusinessSchema = z
   .object({
     categoryId: z
       .string()
-      .uuid("Invalid category ID"),
-
-    name: z
-      .string()
       .trim()
-      .min(1)
-      .max(200)
-      .optional(),
+      .min(1, "Business category is required"),
 
-    description: z
-      .string()
-      .trim()
-      .min(1)
-      .optional(),
+    name: optionalString,
+
+    description: optionalString,
 
     state:
       locationFieldsSchema.shape.state,
@@ -57,24 +47,20 @@ export const createBusinessSchema = z
     village:
       locationFieldsSchema.shape.village,
 
-    availableMargin: z
+    availableMargin: z.coerce
       .number()
       .nonnegative(
         "Available margin cannot be negative"
       ),
 
-    existingResources: z
-      .string()
-      .trim()
-      .optional(),
+    existingResources: optionalString,
 
-    expectedRevenue: z
+    expectedRevenue: z.coerce
       .number()
       .nonnegative(
         "Expected revenue cannot be negative"
       ),
   })
-  .strict()
   .refine(
     (data) => {
       return !data.village || data.block;
@@ -121,7 +107,6 @@ export const businessQuerySchema = z
 
     categoryId: z
       .string()
-      .uuid("Invalid category ID")
       .optional(),
 
     search: z
@@ -135,7 +120,6 @@ export const businessQuerySchema = z
       .enum([
         "createdAt",
         "updatedAt",
-        "availableMargin",
         "expectedRevenue",
         "name",
       ])

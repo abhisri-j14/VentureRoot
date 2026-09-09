@@ -119,10 +119,12 @@ export async function findLocationByHierarchy({
   block,
   village,
 }) {
+  if (!state || !district) return null;
+
   const stateRecord =
     await prisma.location.findFirst({
       where: {
-        name: state,
+        name: { equals: state.trim(), mode: "insensitive" },
         type: "STATE",
         parentId: null,
       },
@@ -132,11 +134,10 @@ export async function findLocationByHierarchy({
     return null;
   }
 
-
   const districtRecord =
     await prisma.location.findFirst({
       where: {
-        name: district,
+        name: { equals: district.trim(), mode: "insensitive" },
         type: "DISTRICT",
         parentId: stateRecord.id,
       },
@@ -146,41 +147,38 @@ export async function findLocationByHierarchy({
     return null;
   }
 
-
   let currentLocation =
     districtRecord;
 
-
-  if (block) {
+  if (block && block.trim()) {
     const blockRecord =
       await prisma.location.findFirst({
         where: {
-          name: block,
+          name: { equals: block.trim(), mode: "insensitive" },
           type: "BLOCK",
           parentId: districtRecord.id,
         },
       });
 
     if (!blockRecord) {
-      return null;
+      return currentLocation; // fallback to district if block not pre-seeded
     }
 
     currentLocation =
       blockRecord;
 
-
-    if (village) {
+    if (village && village.trim()) {
       const villageRecord =
         await prisma.location.findFirst({
           where: {
-            name: village,
+            name: { equals: village.trim(), mode: "insensitive" },
             type: "VILLAGE",
             parentId: blockRecord.id,
           },
         });
 
       if (!villageRecord) {
-        return null;
+        return currentLocation; // fallback to block if village not pre-seeded
       }
 
       currentLocation =
@@ -188,6 +186,103 @@ export async function findLocationByHierarchy({
     }
   }
 
+  return currentLocation;
+}
+
+export async function findOrCreateLocationByHierarchy({
+  state,
+  district,
+  block,
+  village,
+}) {
+  if (!state || !district) return null;
+
+  const stateName = state.trim();
+  const districtName = district.trim();
+
+  let stateRecord = await prisma.location.findFirst({
+    where: {
+      name: { equals: stateName, mode: "insensitive" },
+      type: "STATE",
+      parentId: null,
+    },
+  });
+
+  if (!stateRecord) {
+    stateRecord = await prisma.location.create({
+      data: {
+        name: stateName,
+        type: "STATE",
+        parentId: null,
+      },
+    });
+  }
+
+  let districtRecord = await prisma.location.findFirst({
+    where: {
+      name: { equals: districtName, mode: "insensitive" },
+      type: "DISTRICT",
+      parentId: stateRecord.id,
+    },
+  });
+
+  if (!districtRecord) {
+    districtRecord = await prisma.location.create({
+      data: {
+        name: districtName,
+        type: "DISTRICT",
+        parentId: stateRecord.id,
+      },
+    });
+  }
+
+  let currentLocation = districtRecord;
+
+  if (block && block.trim()) {
+    const blockName = block.trim();
+    let blockRecord = await prisma.location.findFirst({
+      where: {
+        name: { equals: blockName, mode: "insensitive" },
+        type: "BLOCK",
+        parentId: districtRecord.id,
+      },
+    });
+
+    if (!blockRecord) {
+      blockRecord = await prisma.location.create({
+        data: {
+          name: blockName,
+          type: "BLOCK",
+          parentId: districtRecord.id,
+        },
+      });
+    }
+
+    currentLocation = blockRecord;
+
+    if (village && village.trim()) {
+      const villageName = village.trim();
+      let villageRecord = await prisma.location.findFirst({
+        where: {
+          name: { equals: villageName, mode: "insensitive" },
+          type: "VILLAGE",
+          parentId: blockRecord.id,
+        },
+      });
+
+      if (!villageRecord) {
+        villageRecord = await prisma.location.create({
+          data: {
+            name: villageName,
+            type: "VILLAGE",
+            parentId: blockRecord.id,
+          },
+        });
+      }
+
+      currentLocation = villageRecord;
+    }
+  }
 
   return currentLocation;
 }

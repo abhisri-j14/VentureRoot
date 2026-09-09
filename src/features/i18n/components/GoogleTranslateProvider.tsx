@@ -9,7 +9,34 @@ declare global {
   interface Window {
     googleTranslateElementInit?: () => void;
     google?: any;
+    __dom_patch_applied?: boolean;
   }
+}
+
+// Industry-standard protection against Google Translate / browser extension DOM mutation crashing React
+if (typeof window !== "undefined" && !window.__dom_patch_applied && typeof Node !== "undefined" && Node.prototype) {
+  window.__dom_patch_applied = true;
+  const originalRemoveChild = Node.prototype.removeChild;
+  Node.prototype.removeChild = function (child: any) {
+    if (child.parentNode !== this) {
+      if (typeof console !== "undefined" && console.warn) {
+        console.warn("Ignored removeChild on node re-parented by translator/extension:", child, this);
+      }
+      return child;
+    }
+    return originalRemoveChild.apply(this, arguments as any);
+  };
+
+  const originalInsertBefore = Node.prototype.insertBefore;
+  Node.prototype.insertBefore = function (newNode: any, referenceNode: any) {
+    if (referenceNode && referenceNode.parentNode !== this) {
+      if (typeof console !== "undefined" && console.warn) {
+        console.warn("Ignored insertBefore on node re-parented by translator/extension:", referenceNode, this);
+      }
+      return newNode;
+    }
+    return originalInsertBefore.apply(this, arguments as any);
+  };
 }
 
 /**

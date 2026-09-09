@@ -33,6 +33,11 @@ export const businessApi = {
     return response.data;
   },
 
+  getCategories: async (): Promise<ApiResponse<any[]>> => {
+    const response = await apiClient.get("/business-categories");
+    return response.data;
+  },
+
   delete: async (id: string): Promise<void> => {
     await apiClient.delete(`/businesses/${id}`);
   },

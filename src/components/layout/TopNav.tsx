@@ -50,12 +50,12 @@ export const TopNav = () => {
   const feasibilityBase = activeBusiness?.id ? `/business/${activeBusiness.id}/feasibility` : "/business/create";
 
   const NAV_ITEMS = [
-    { href: "/dashboard", tKey: "nav.dashboard", icon: Home },
-    { href: businessBase, tKey: "nav.myBusiness", icon: Briefcase },
-    { href: financeBase, tKey: "nav.finance", icon: TrendingUp },
-    { href: feasibilityBase, tKey: "nav.feasibility", icon: ShieldAlert },
-    { href: "/business/create", tKey: "nav.newBusiness", icon: PlusCircle },
-    { href: "/advisor", tKey: "nav.advisor", icon: MessageSquare },
+    { id: "nav-dashboard",    href: "/dashboard",     tKey: "nav.dashboard",   icon: Home },
+    { id: "nav-my-business",  href: businessBase,     tKey: "nav.myBusiness",  icon: Briefcase },
+    { id: "nav-finance",      href: financeBase,      tKey: "nav.finance",     icon: TrendingUp },
+    { id: "nav-feasibility",  href: feasibilityBase,  tKey: "nav.feasibility", icon: ShieldAlert },
+    { id: "nav-new-business", href: "/business/create", tKey: "nav.newBusiness", icon: PlusCircle },
+    { id: "nav-advisor",      href: "/advisor",       tKey: "nav.advisor",     icon: MessageSquare },
   ];
 
   const displayName = profileData?.fullName || user?.name || "Entrepreneur";
@@ -96,7 +96,7 @@ export const TopNav = () => {
 
             return (
               <Link 
-                key={link.href}
+                key={link.id}
                 href={link.href} 
                 onMouseEnter={() => setHoveredIndex(idx)}
                 className={`group relative px-4 py-2 text-[13px] font-semibold transition-all duration-300 active:scale-[0.97] flex items-center gap-2 rounded-full ${isActive ? "text-[#FFFBE7]" : "text-white/80 hover:text-white"}`}
@@ -229,7 +229,7 @@ export const TopNav = () => {
 
                 return (
                   <motion.div
-                    key={link.href}
+                    key={link.id}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.05 + 0.1, duration: 0.2 }}

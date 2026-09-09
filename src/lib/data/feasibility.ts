@@ -12,24 +12,30 @@ export const useFeasibility = (businessId: string) => {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (DATA_SOURCE === "database" && businessId) {
-      feasibilityApi
-        .getFeasibility(businessId)
-        .then((res: any) => {
-          const report =
-            res?.data?.feasibility ||
-            res?.data?.data?.feasibility ||
-            res?.data ||
-            res;
-          setData(report || feasibilityData);
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          setError(err);
-          setData(feasibilityData);
-          setIsLoading(false);
-        });
-    }
+    if (DATA_SOURCE !== "database" || !businessId) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    feasibilityApi
+      .getFeasibility(businessId)
+      .then((res: any) => {
+        // API response shape: { success, message, data: { feasibility: { business, profile, mlStatus, feasibility } } }
+        const payload =
+          res?.data?.feasibility?.feasibility ||   // nested: data.feasibility.feasibility (the FeasibilityData)
+          res?.data?.feasibility ||                 // flat: data.feasibility
+          res?.data ||
+          res;
+
+        setData(payload || null);
+        setIsLoading(false);
+      })
+      .catch((err: any) => {
+        // Do NOT fall back to mock JSON — show the real error state
+        setError(err instanceof Error ? err : new Error(err?.message || "Failed to load feasibility data"));
+        setData(null);
+        setIsLoading(false);
+      });
   }, [businessId]);
 
   return { data, isLoading, error };
