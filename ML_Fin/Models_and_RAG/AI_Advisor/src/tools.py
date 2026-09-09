@@ -15,15 +15,18 @@ class ToolRunner:
     def __init__(self):
         self.settings = settings
 
-    def call_model_1(self, location: str, district: str = "Purba Bardhaman", state: str = "West Bengal") -> ToolExecutionResult:
+    def call_model_1(self, location: str, district: str = "Purba Bardhaman", state: str = "West Bengal", business_category: str = "Dairy") -> ToolExecutionResult:
         """Call Model 1 (Hyper-Local Market Potential Engine)."""
         t0 = time.time()
         try:
             if self.settings.model_1_mode == "remote":
                 with httpx.Client(timeout=5.0) as client:
-                    resp = client.post(f"{self.settings.model_1_url}/api/v1/predict", json={"location": location, "district": district, "state": state})
+                    resp = client.post(
+                        f"{self.settings.model_1_url}/api/v1/model1/predict",
+                        json={"subdistrict": location, "district": district, "state": state, "business_category": business_category}
+                    )
                     resp.raise_for_status()
-                    data = resp.json()
+                    m1_res = resp.json()
             else:
                 # Real local model execution
                 from Model_1.src.models.predict import GramBizPredictor
@@ -32,15 +35,16 @@ class ToolRunner:
                     state=state,
                     district=district,
                     subdistrict=location,
-                    business_category="Dairy"
+                    business_category=business_category
                 )
-                data = {
-                    "location": location,
-                    "district": district,
-                    "potential_score": m1_res.get("market_potential_score", 0.0),
-                    "tier": m1_res.get("opportunity_level", "Unknown"),
-                    "top_categories": [f["factor"] for f in m1_res.get("top_positive_factors", [])[:3]] or ["Dairy", "Retail", "Agriculture"]
-                }
+
+            data = {
+                "location": location,
+                "district": district,
+                "potential_score": float(m1_res.get("market_potential_score", 0.0)),
+                "tier": str(m1_res.get("opportunity_level", "Unknown")),
+                "top_categories": [f.get("factor") if isinstance(f, dict) else str(f) for f in m1_res.get("top_positive_factors", [])[:3]] or ["Dairy", "Retail", "Agriculture"]
+            }
             
             validated = Model1Result(**data)
             return ToolExecutionResult(
@@ -63,9 +67,12 @@ class ToolRunner:
         try:
             if self.settings.model_2_mode == "remote":
                 with httpx.Client(timeout=5.0) as client:
-                    resp = client.post(f"{self.settings.model_2_url}/api/v1/predict", json={"business_type": business_type, "location": location, "district": district, "state": state})
+                    resp = client.post(
+                        f"{self.settings.model_2_url}/api/v1/analyze",
+                        json={"business_category": business_type, "subdistrict_name": location, "district_name": district, "state_name": state}
+                    )
                     resp.raise_for_status()
-                    data = resp.json()
+                    m2_res = resp.json()
             else:
                 # Real local model execution
                 from Model_2.src.models.predict import Model2InferenceEngine
@@ -76,14 +83,15 @@ class ToolRunner:
                     subdistrict_name=location,
                     business_category=business_type
                 )
-                cat_details = m2_res.get("selected_category_analysis") or {}
-                data = {
-                    "business_type": business_type,
-                    "viability_score": m2_res.get("overall_viability_score") or 0.0,
-                    "competition_level": str(cat_details.get("competition_score", "Moderate")),
-                    "market_gap_score": float(cat_details.get("demand_proxy_score", 50.0)),
-                    "risk_level": str(m2_res.get("score_band", "Moderate"))
-                }
+
+            cat_details = m2_res.get("selected_category_analysis") or {}
+            data = {
+                "business_type": business_type,
+                "viability_score": float(m2_res.get("overall_viability_score") or 0.0),
+                "competition_level": str(cat_details.get("competition_score", "Moderate")),
+                "market_gap_score": float(cat_details.get("demand_proxy_score", 50.0)),
+                "risk_level": str(m2_res.get("score_band", "Moderate"))
+            }
             
             validated = Model2Result(**data)
             return ToolExecutionResult(

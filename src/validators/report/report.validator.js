@@ -3,7 +3,8 @@ import { z } from "zod";
 
 export const reportIdSchema = z
   .string()
-  .uuid("Invalid report ID");
+  .trim()
+  .min(1, "Report ID is required");
 
 
 export const generateReportSchema = z

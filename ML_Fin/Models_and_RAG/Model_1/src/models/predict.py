@@ -53,6 +53,8 @@ class GramBizPredictor:
         self.model = joblib.load(os.path.join(models_dir, "model_1_final.joblib"))
         self.scaler = joblib.load(os.path.join(models_dir, "scaler.joblib"))
         self.imputer = joblib.load(os.path.join(models_dir, "imputer.joblib"))
+        if hasattr(self.imputer, "_fit_dtype") and not hasattr(self.imputer, "_fill_dtype"):
+            self.imputer._fill_dtype = self.imputer._fit_dtype
 
         with open(os.path.join(models_dir, "feature_schema.json"), "r") as f:
             self.feature_schema = json.load(f)
@@ -135,8 +137,15 @@ class GramBizPredictor:
             )
 
         # ---- Predict ----
-        X = np.array(feature_values).reshape(1, -1)
-        X = self.imputer.transform(X)
+        X = np.array(feature_values, dtype=np.float64).reshape(1, -1)
+        if hasattr(self.imputer, "_fit_dtype") and not hasattr(self.imputer, "_fill_dtype"):
+            self.imputer._fill_dtype = self.imputer._fit_dtype
+        try:
+            X = self.imputer.transform(X)
+        except Exception:
+            if hasattr(self.imputer, "statistics_"):
+                nan_mask = np.isnan(X)
+                X[nan_mask] = np.take(self.imputer.statistics_, np.where(nan_mask)[1])
         X = self.scaler.transform(X)
         raw_prediction = float(self.model.predict(X)[0])
         mpi_score = max(0, min(100, raw_prediction))

@@ -58,12 +58,17 @@ export const useReportDetails = (id: string) => {
             res?.data?.data?.report ||
             res?.data ||
             res;
-          setData(report || null);
+          setData(report || reportsData.find((r) => r.id === id) || null);
           setIsLoading(false);
         })
         .catch((err) => {
-          setError(err);
-          setData(null);
+          const fallback = reportsData.find((r) => r.id === id);
+          if (fallback) {
+            setData(fallback);
+          } else {
+            setError(err);
+            setData(null);
+          }
           setIsLoading(false);
         });
     }
@@ -83,8 +88,12 @@ export const getReportDetails = async (id: string): Promise<any | null> => {
         res;
       return report || reportsData.find((r) => r.id === id) || null;
     } catch (e) {
-      console.error(e);
-      return reportsData.find((r) => r.id === id) || null;
+      const fallback = reportsData.find((r) => r.id === id);
+      if (fallback) {
+        return fallback;
+      }
+      console.error("[getReportDetails] Report error:", e);
+      return null;
     }
   }
   return reportsData.find((r) => r.id === id) || null;

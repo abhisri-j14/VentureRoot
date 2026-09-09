@@ -11,11 +11,15 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 ADVISOR_DIR = Path(__file__).resolve().parent.parent
+ML_FIN_DIR = ADVISOR_DIR.parent.parent
 sys.path.insert(0, str(ADVISOR_DIR))
+if str(ML_FIN_DIR) not in sys.path:
+    sys.path.insert(0, str(ML_FIN_DIR))
 
 from src.agent import GramBizAdvisorAgent
 from src.schemas import AdvisoryRequest
 from src.config import settings
+from common.backend_client import fetch_business_by_id
 
 app = FastAPI(
     title="GramBiz AI Advisory Agent Microservice",
@@ -48,6 +52,16 @@ def health_check():
 def get_advisory(req: AdvisoryRequest):
     """Generate comprehensive hyper-local business advisory report."""
     try:
+        if req.business_id:
+            biz = fetch_business_by_id(req.business_id)
+            if biz:
+                req.location = f"{biz.get('district', '')}, {biz.get('state', '')}".strip(", ") or req.location
+                req.district = biz.get("district") or req.district
+                req.proposed_business = biz.get("category_name") or req.proposed_business
+                margin = float(biz.get("available_margin") or 100000.0)
+                req.own_margin = margin
+                req.investment_amount = margin * 5.0
+
         res = agent.process_request(req)
         return res
     except Exception as e:

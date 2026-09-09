@@ -60,6 +60,7 @@ class AgentPlan(BaseModel):
     planning_reason: str
 
 class AdvisoryRequest(BaseModel):
+    business_id: Optional[str] = Field(None, description="UUID of business to fetch from backend")
     user_query: str
     location: str = "Bankura, West Bengal"
     district: str = "Bankura"

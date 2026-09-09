@@ -19,6 +19,8 @@ import {
   BadRequestError,
 } from "@/errors/http-error";
 
+import reportsData from "@/data/reports.json";
+
 
 function buildReportTitle({
   businessName,
@@ -115,19 +117,24 @@ export async function getReport({
   userId,
   reportId,
 }) {
-  const report =
-    await findReportByIdAndUserId({
-      reportId,
-      userId,
-    });
-
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(reportId);
+  const report = isUuid
+    ? await findReportByIdAndUserId({
+        reportId,
+        userId,
+      })
+    : null;
 
   if (!report) {
+    const mockReport = reportsData.find((r) => r.id === reportId);
+    if (mockReport) {
+      return mockReport;
+    }
+
     throw new NotFoundError(
       "Report not found"
     );
   }
-
 
   return mapReport(
     report
