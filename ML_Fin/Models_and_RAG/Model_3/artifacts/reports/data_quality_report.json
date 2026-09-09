@@ -1,0 +1,32 @@
+{
+  "dataset": "agmarknet_daily_prices",
+  "raw_rows": 5917,
+  "raw_columns": 10,
+  "cleaned_rows": 5916,
+  "invalid_price_rows_removed": 0,
+  "duplicate_rows_removed": 2,
+  "conflicting_records": 1,
+  "date_min": "2026-09-05",
+  "date_max": "2026-09-05",
+  "num_states": 17,
+  "num_districts": 91,
+  "num_markets": 242,
+  "num_commodities": 114,
+  "missing_values": {
+    "state": 0,
+    "district": 0,
+    "market": 0,
+    "commodity": 0,
+    "variety": 0,
+    "grade": 0,
+    "arrival_date": 0,
+    "min_price": 0,
+    "max_price": 0,
+    "modal_price": 0,
+    "original_price": 0,
+    "original_unit": 0,
+    "normalized_price": 0,
+    "normalized_unit": 0,
+    "is_unit_usable": 0
+  }
+}

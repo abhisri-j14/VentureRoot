@@ -1,0 +1,54 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments & OS
+.venv/
+env/
+venv/
+ENV/
+.DS_Store
+Thumbs.db
+.env
+
+# Test directories and Streamlit apps
+test/
+tests/
+streamlit_app/
+**/test/
+**/tests/
+**/streamlit_app/
+
+# Documentation and Markdown files (except README)
+docs/
+**/docs/
+*.md
+**/*.md
+!README.md
+!**/README.md
+!readme.md
+!**/readme.md
+!Readme.md
+!**/Readme.md
+
+# Explicitly KEEP trained models, artifacts, metadata, reports, plots, and notebooks
+!artifacts/
+!artifacts/**
+!**/artifacts/
+!**/artifacts/**
+!models/
+!models/**
+!**/models/
+!**/models/**
+!*.joblib
+!*.pkl
+!*.json
+!*.csv
+!reports/
+!plots/
+!notebooks/
+!*.ipynb

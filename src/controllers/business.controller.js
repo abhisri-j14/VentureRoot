@@ -29,7 +29,7 @@ export async function createBusinessController(
 
 
 
-export async function getBusinessesController(
+export async function getBusinessController(
   user,
   query
 ) {
@@ -44,28 +44,6 @@ export async function getBusinessesController(
       "Businesses fetched successfully",
 
     data: result,
-  };
-}
-
-export const getBusinessController = getBusinessesController;
-
-export async function getBusinessByIdController(
-  user,
-  businessId
-) {
-  const business =
-    await getMyBusinessById(
-      user,
-      businessId
-    );
-
-  return {
-    message:
-      "Business fetched successfully",
-
-    data: {
-      business,
-    },
   };
 }
 

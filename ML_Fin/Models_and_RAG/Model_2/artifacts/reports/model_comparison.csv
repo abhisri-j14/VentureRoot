@@ -1,0 +1,9 @@
+model,gkf_mae_mean,gkf_mae_std,gkf_rmse_mean,gkf_r2_mean,gkf_spearman_mean,generalization_gap,training_time_s,selected
+Ridge,0.0016,0.0002,0.0035,1.0,1.0,0.0667,0.1,True
+CatBoost,0.2352,0.0205,0.6415,0.9797,0.9948,0.4527,2.1,False
+GradientBoosting,0.2831,0.018,0.6666,0.9785,0.9923,0.9951,22.75,False
+XGBoost,0.31,0.0191,0.7347,0.9743,0.9917,2.0422,2.24,False
+LightGBM,0.3408,0.0236,0.7568,0.9728,0.99,0.4386,0.96,False
+RandomForest,0.5543,0.0199,0.9171,0.9615,0.9693,0.5761,3.92,False
+DummyRegressor,3.078,0.1177,4.7571,-0.0037,0.0,0.0007,0.11,False
+DeterministicBaseline,3.2963,0.3326,4.4418,0.1012,0.2051,0.1508,0.1,False

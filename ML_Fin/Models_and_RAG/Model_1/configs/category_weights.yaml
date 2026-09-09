@@ -1,0 +1,135 @@
+# GramBiz Model 1 — Category-Specific MPI Weights
+#
+# Each business category has specific weights for the 5 MPI components.
+# Weights must sum to 1.0 for each category.
+#
+# Weight source: domain-informed defaults based on business characteristics.
+# These are NOT empirically validated from business outcome data.
+# They represent expert heuristics about which indicators matter more
+# for each business type in rural/semi-urban Indian contexts.
+#
+# weight_type: "domain_informed" | "data_derived" | "empirically_validated"
+# Currently all weights are domain_informed.
+
+weight_type: "domain_informed"
+
+mpi_components:
+  - demand_proxy
+  - purchasing_power_proxy
+  - workforce_opportunity
+  - infrastructure_development
+  - market_gap_proxy
+
+# Default weights (used for categories not explicitly listed)
+default:
+  demand_proxy: 0.25
+  purchasing_power_proxy: 0.20
+  workforce_opportunity: 0.25
+  infrastructure_development: 0.15
+  market_gap_proxy: 0.15
+
+categories:
+  dairy:
+    demand_proxy: 0.25
+    purchasing_power_proxy: 0.15
+    workforce_opportunity: 0.30    # Higher: agricultural workforce matters
+    infrastructure_development: 0.10
+    market_gap_proxy: 0.20
+    workforce_relevance_columns:
+      - cultivator_ratio
+      - agricultural_labour_ratio
+
+  retail:
+    demand_proxy: 0.30             # Higher: population density and households
+    purchasing_power_proxy: 0.30   # Higher: consumer spending matters most
+    workforce_opportunity: 0.10
+    infrastructure_development: 0.15
+    market_gap_proxy: 0.15
+    workforce_relevance_columns:
+      - other_worker_ratio
+
+  textiles:
+    demand_proxy: 0.20
+    purchasing_power_proxy: 0.25
+    workforce_opportunity: 0.25
+    infrastructure_development: 0.15
+    market_gap_proxy: 0.15
+    workforce_relevance_columns:
+      - hh_industry_ratio
+      - main_worker_ratio
+
+  food_processing:
+    demand_proxy: 0.30
+    purchasing_power_proxy: 0.20
+    workforce_opportunity: 0.25
+    infrastructure_development: 0.10
+    market_gap_proxy: 0.15
+    workforce_relevance_columns:
+      - agricultural_labour_ratio
+      - cultivator_ratio
+
+  poultry:
+    demand_proxy: 0.25
+    purchasing_power_proxy: 0.15
+    workforce_opportunity: 0.30
+    infrastructure_development: 0.10
+    market_gap_proxy: 0.20
+    workforce_relevance_columns:
+      - cultivator_ratio
+      - agricultural_labour_ratio
+
+  agriculture_services:
+    demand_proxy: 0.15
+    purchasing_power_proxy: 0.10
+    workforce_opportunity: 0.40    # Highest: agricultural workforce is key
+    infrastructure_development: 0.15
+    market_gap_proxy: 0.20
+    workforce_relevance_columns:
+      - cultivator_ratio
+      - agricultural_labour_ratio
+
+  handicrafts:
+    demand_proxy: 0.20
+    purchasing_power_proxy: 0.25
+    workforce_opportunity: 0.25
+    infrastructure_development: 0.15
+    market_gap_proxy: 0.15
+    workforce_relevance_columns:
+      - hh_industry_ratio
+      - marginal_worker_ratio
+
+  tailoring:
+    demand_proxy: 0.30
+    purchasing_power_proxy: 0.25
+    workforce_opportunity: 0.15
+    infrastructure_development: 0.15
+    market_gap_proxy: 0.15
+    workforce_relevance_columns:
+      - hh_industry_ratio
+
+  repair_services:
+    demand_proxy: 0.30
+    purchasing_power_proxy: 0.20
+    workforce_opportunity: 0.15
+    infrastructure_development: 0.20
+    market_gap_proxy: 0.15
+    workforce_relevance_columns:
+      - other_worker_ratio
+
+  small_manufacturing:
+    demand_proxy: 0.20
+    purchasing_power_proxy: 0.15
+    workforce_opportunity: 0.30
+    infrastructure_development: 0.20
+    market_gap_proxy: 0.15
+    workforce_relevance_columns:
+      - hh_industry_ratio
+      - main_worker_ratio
+
+  other:
+    demand_proxy: 0.25
+    purchasing_power_proxy: 0.20
+    workforce_opportunity: 0.25
+    infrastructure_development: 0.15
+    market_gap_proxy: 0.15
+    workforce_relevance_columns: []

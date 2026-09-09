@@ -1,0 +1,80 @@
+{
+  "model_name": "GramBiz Hyper-Local Market Potential Engine",
+  "model_type": "Ridge",
+  "version": "1.0.0",
+  "training_date": "2026-09-04T19:04:38.736603",
+  "category": "default",
+  "target_definition": "Market Potential Index (composite, NOT supervised label)",
+  "is_supervised_label": false,
+  "is_constructed_index": true,
+  "dataset_versions": {
+    "census": "2011",
+    "hces_mpce": "2023-24",
+    "cpi": "July 2026"
+  },
+  "feature_count": 30,
+  "training_rows": 5065,
+  "holdout_rows": 814,
+  "validation_method": "5-fold GroupKFold by district + geographic holdout",
+  "train_metrics": {
+    "mae": 0.6467,
+    "rmse": 1.0274,
+    "r2": 0.9445,
+    "median_ae": 0.4818,
+    "spearman_rank": 0.9734,
+    "spearman_p_value": 0.0
+  },
+  "holdout_metrics": {
+    "mae": 0.6975,
+    "rmse": 0.9249,
+    "r2": 0.9505,
+    "median_ae": 0.5241,
+    "spearman_rank": 0.9744,
+    "spearman_p_value": 0.0
+  },
+  "generalization_gap": 0.0786,
+  "hyperparameters": {
+    "alpha": 1.0
+  },
+  "feature_list": [
+    "population",
+    "households",
+    "household_size",
+    "log_population",
+    "log_households",
+    "literacy_rate",
+    "female_ratio",
+    "child_ratio",
+    "sc_ratio",
+    "st_ratio",
+    "worker_participation_rate",
+    "main_worker_ratio",
+    "marginal_worker_ratio",
+    "cultivator_ratio",
+    "agricultural_labour_ratio",
+    "hh_industry_ratio",
+    "other_worker_ratio",
+    "non_worker_ratio",
+    "agri_workforce_ratio",
+    "non_agri_worker_ratio",
+    "population_density",
+    "household_density",
+    "log_area",
+    "settlement_density",
+    "avg_village_population",
+    "avg_village_households",
+    "mpce_rural",
+    "log_mpce_rural",
+    "cpi_rural",
+    "inflation_rural"
+  ],
+  "geographic_level": "sub-district",
+  "limitations": [
+    "Census data is from 2011 -- absolute values may differ from current reality",
+    "HCES MPCE is state-level only -- all sub-districts in same state share MPCE",
+    "No actual business outcome labels -- MPI is a constructed index",
+    "No geospatial radius calculation -- lat/lon not available",
+    "No competitor/establishment count data",
+    "Model provides relative ranking, not absolute demand prediction"
+  ]
+}

@@ -1,0 +1,4 @@
+"""
+GramBiz Gemini AI Advisory Agent Package.
+"""
+__version__ = "1.0.0"

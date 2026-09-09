@@ -1,0 +1,31 @@
+DOCUMENT: Prime Minister's Employment Generation Programme (PMEGP) Scheme Guidelines
+SOURCE: Ministry of Micro, Small and Medium Enterprises (MoMSME), Government of India
+PUBLISHER: KVIC / MoMSME
+DEPARTMENT: Ministry of MSME
+STATE: All India / West Bengal
+CATEGORY: Central Government Scheme
+EFFECTIVE_DATE: 2024-01-01
+SOURCE_URL: https://msme.gov.in/pmegp
+
+SECTION 1: OVERVIEW & OBJECTIVE
+The Prime Minister's Employment Generation Programme (PMEGP) is a credit-linked subsidy scheme administered by the Ministry of MSME, Government of India. The scheme aims to generate continuous and sustainable employment opportunities in rural and urban areas of the country through setting up of micro-enterprises.
+
+SECTION 2: ELIGIBILITY CRITERIA
+1. Any individual above 18 years of age is eligible.
+2. There is no income ceiling for assistance under PMEGP.
+3. Educational qualification: At least VIII standard pass for projects costing above Rs. 10 lakh in Manufacturing sector and above Rs. 5 lakh in Service/Business sector.
+4. Self Help Groups (SHGs), Charitable Trusts, and Co-operative Societies are also eligible.
+
+SECTION 3: FINANCIAL ASSISTANCE & SUBSIDY RATES
+1. Maximum Cost of Project/Unit Allowed:
+   - Manufacturing Sector: Rs. 50 lakh
+   - Service / Business Sector: Rs. 20 lakh
+
+2. Subsidy Rates (Margin Money):
+   - General Category (Urban): 15% of project cost as subsidy (Own contribution: 10%)
+   - General Category (Rural): 25% of project cost as subsidy (Own contribution: 10%)
+   - Special Category (SC/ST/OBC/Minorities/Women/Ex-Servicemen/PH/NER/Hill Areas) (Urban): 25% of project cost as subsidy (Own contribution: 5%)
+   - Special Category (SC/ST/OBC/Minorities/Women/Ex-Servicemen/PH/NER/Hill Areas) (Rural): 35% of project cost as subsidy (Own contribution: 5%)
+
+SECTION 4: APPLICATION PROCEDURE & DOCUMENTS
+Applications are submitted online through the PMEGP e-Portal (https://www.kviconline.gov.in/pmegpeportal). Required documents include Aadhaar Card, PAN Card, Project Report (DPR), Educational Qualification Certificate, Caste Certificate (if applicable), and Rural Area Certificate (if applicable).

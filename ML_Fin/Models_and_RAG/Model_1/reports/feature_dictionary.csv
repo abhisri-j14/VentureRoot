@@ -1,0 +1,31 @@
+feature_name,source_dataset,source_column,transformation,unit,geographic_level,year,description
+population,Census 2011,TOT_P,direct,count,sub-district,2011,Total population
+households,Census 2011,No_HH,direct,count,sub-district,2011,Total households
+household_size,Census 2011,TOT_P / No_HH,derived ratio,ratio,sub-district,2011,Average persons per household
+log_population,Census 2011,log1p(TOT_P),log transform,log-count,sub-district,2011,Log-transformed population
+log_households,Census 2011,log1p(No_HH),log transform,log-count,sub-district,2011,Log-transformed households
+literacy_rate,Census 2011,P_LIT / TOT_P,derived ratio,proportion,sub-district,2011,Proportion of literate population
+female_ratio,Census 2011,TOT_F / TOT_P,derived ratio,proportion,sub-district,2011,Proportion female
+child_ratio,Census 2011,P_06 / TOT_P,derived ratio,proportion,sub-district,2011,Proportion aged 0-6
+sc_ratio,Census 2011,P_SC / TOT_P,derived ratio,proportion,sub-district,2011,Proportion Scheduled Caste
+st_ratio,Census 2011,P_ST / TOT_P,derived ratio,proportion,sub-district,2011,Proportion Scheduled Tribe
+worker_participation_rate,Census 2011,TOT_WORK_P / TOT_P,derived ratio,proportion,sub-district,2011,Worker participation rate
+main_worker_ratio,Census 2011,MAINWORK_P / TOT_P,derived ratio,proportion,sub-district,2011,Main workers per capita
+marginal_worker_ratio,Census 2011,MARGWORK_P / TOT_P,derived ratio,proportion,sub-district,2011,Marginal workers per capita
+cultivator_ratio,Census 2011,MAIN_CL_P / TOT_P,derived ratio,proportion,sub-district,2011,Cultivators per capita
+agricultural_labour_ratio,Census 2011,MAIN_AL_P / TOT_P,derived ratio,proportion,sub-district,2011,Agricultural labourers per capita
+hh_industry_ratio,Census 2011,MAIN_HH_P / TOT_P,derived ratio,proportion,sub-district,2011,Household industry workers per capita
+other_worker_ratio,Census 2011,MAIN_OT_P / TOT_P,derived ratio,proportion,sub-district,2011,Other workers per capita
+non_worker_ratio,Census 2011,NON_WORK_P / TOT_P,derived ratio,proportion,sub-district,2011,Non-workers per capita
+agri_workforce_ratio,Census 2011,(CL + AL) / TOT_P,derived ratio,proportion,sub-district,2011,Combined agricultural workforce ratio
+non_agri_worker_ratio,Census 2011,(HH + OT) / TOT_P,derived ratio,proportion,sub-district,2011,Non-agricultural worker ratio
+population_density,Census 2011 + A-1,TOT_P / area_sqkm,derived ratio,persons/sqkm,sub-district,2011,Population density
+household_density,Census 2011 + A-1,No_HH / area_sqkm,derived ratio,hh/sqkm,sub-district,2011,Household density
+log_area,A-1,log1p(area_sqkm),log transform,log-sqkm,sub-district,2011,Log-transformed area
+settlement_density,A-1,villages_inhabited / area_sqkm,derived ratio,villages/sqkm,sub-district,2011,Village density per area
+avg_village_population,Census 2011 + A-1,TOT_P / villages_inhabited,derived ratio,persons/village,sub-district,2011,Average population per village
+avg_village_households,Census 2011 + A-1,No_HH / villages_inhabited,derived ratio,hh/village,sub-district,2011,Average households per village
+mpce_rural,HCES 2023-24,direct (state-level),hierarchical mapping,Rs./month,state,2023-24,Monthly per capita consumption expenditure (Rural)
+log_mpce_rural,HCES 2023-24,log1p(mpce_rural),log transform,log-Rs.,state,2023-24,Log-transformed rural MPCE
+cpi_rural,CPI July 2026,direct (state-level),hierarchical mapping,index,state,July 2026,Consumer Price Index (Rural)
+inflation_rural,CPI July 2026,direct (state-level),hierarchical mapping,percent,state,July 2026,Rural inflation rate

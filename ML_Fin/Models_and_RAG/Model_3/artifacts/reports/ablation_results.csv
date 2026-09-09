@@ -1,0 +1,5 @@
+subset_name,num_features,mae,rmse,r2,smape,spearman
+A. Historical Price Lags Only,2,65.9862,86.1249,0.0216,3.3108,0.206
+B. Temporal / Seasonal Only,2,66.8067,89.4014,-0.0543,3.3522,-0.0857
+C. WPI / Economic Only,1,69.2932,89.3693,-0.0535,3.478,-0.1594
+D. All Features Combined,4,64.594,87.5897,-0.012,3.2414,0.1865

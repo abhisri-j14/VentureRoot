@@ -1,0 +1,16 @@
+{
+  "total_queries": 10,
+  "supported_queries": 7,
+  "unsupported_queries": 3,
+  "correct_retrievals": 6,
+  "correct_abstentions": 3,
+  "incorrect_abstentions": 1,
+  "recall_at_5": 0.8571,
+  "precision_at_5": 0.8571,
+  "mrr": 0.8571,
+  "grounded_answer_rate": 0.2857,
+  "abstention_accuracy": 1.0,
+  "ood_abstention_accuracy": 1.0,
+  "mean_retrieval_latency_ms": 1.92,
+  "readiness_status": "PRODUCTION READY"
+}

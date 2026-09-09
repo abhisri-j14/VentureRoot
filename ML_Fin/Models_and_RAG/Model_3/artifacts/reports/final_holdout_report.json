@@ -1,0 +1,12 @@
+{
+  "champion_model": "Ridge Regressor",
+  "test_sample_count": 888,
+  "date_range": "2026-09-05 to 2026-09-05",
+  "holdout_metrics": {
+    "mae": 1096.2145,
+    "rmse": 1825.7968,
+    "r2": 0.8256,
+    "smape": 22.1248,
+    "spearman": 0.8046
+  }
+}

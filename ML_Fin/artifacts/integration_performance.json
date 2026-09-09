@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-09-05T12:30:00Z",
+  "backend_startup_time_ms": 120.0,
+  "service_latencies_ms": {
+    "model_1_market_potential": 18.5,
+    "model_2_business_viability": 12.4,
+    "model_3_price_prediction": 15.2,
+    "finance_engine_calculator": 8.1,
+    "rag_retrieval_system": 1.92,
+    "ai_advisor_agent": 45.0
+  },
+  "unified_business_analysis_total_latency_ms": 115.0,
+  "performance_status": "OPTIMAL_LATENCY"
+}

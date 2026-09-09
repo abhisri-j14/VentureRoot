@@ -1,0 +1,12 @@
+{
+  "documents_seen": 6,
+  "documents_ingested": 6,
+  "documents_skipped": 0,
+  "documents_failed": 0,
+  "duplicates_detected": 0,
+  "pages_processed": 6,
+  "chunks_created": 30,
+  "total_chunks_in_store": 30,
+  "errors": [],
+  "generated_at": "2026-09-08T15:38:30.745673+00:00"
+}

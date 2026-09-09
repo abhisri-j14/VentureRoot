@@ -119,89 +119,75 @@ export async function findLocationByHierarchy({
   block,
   village,
 }) {
-  if (!state || !district) return null;
-
-  let stateRecord = await prisma.location.findFirst({
-    where: {
-      name: { equals: state.trim(), mode: "insensitive" },
-      type: "STATE",
-      parentId: null,
-    },
-  });
-
-  if (!stateRecord) {
-    stateRecord = await prisma.location.create({
-      data: {
-        name: state.trim(),
+  const stateRecord =
+    await prisma.location.findFirst({
+      where: {
+        name: state,
         type: "STATE",
         parentId: null,
       },
     });
+
+  if (!stateRecord) {
+    return null;
   }
 
-  let districtRecord = await prisma.location.findFirst({
-    where: {
-      name: { equals: district.trim(), mode: "insensitive" },
-      type: "DISTRICT",
-      parentId: stateRecord.id,
-    },
-  });
 
-  if (!districtRecord) {
-    districtRecord = await prisma.location.create({
-      data: {
-        name: district.trim(),
+  const districtRecord =
+    await prisma.location.findFirst({
+      where: {
+        name: district,
         type: "DISTRICT",
         parentId: stateRecord.id,
       },
     });
+
+  if (!districtRecord) {
+    return null;
   }
 
-  let currentLocation = districtRecord;
 
-  if (block && block.trim()) {
-    let blockRecord = await prisma.location.findFirst({
-      where: {
-        name: { equals: block.trim(), mode: "insensitive" },
-        type: "BLOCK",
-        parentId: districtRecord.id,
-      },
-    });
+  let currentLocation =
+    districtRecord;
 
-    if (!blockRecord) {
-      blockRecord = await prisma.location.create({
-        data: {
-          name: block.trim(),
+
+  if (block) {
+    const blockRecord =
+      await prisma.location.findFirst({
+        where: {
+          name: block,
           type: "BLOCK",
           parentId: districtRecord.id,
         },
       });
+
+    if (!blockRecord) {
+      return null;
     }
 
-    currentLocation = blockRecord;
+    currentLocation =
+      blockRecord;
 
-    if (village && village.trim()) {
-      let villageRecord = await prisma.location.findFirst({
-        where: {
-          name: { equals: village.trim(), mode: "insensitive" },
-          type: "VILLAGE",
-          parentId: blockRecord.id,
-        },
-      });
 
-      if (!villageRecord) {
-        villageRecord = await prisma.location.create({
-          data: {
-            name: village.trim(),
+    if (village) {
+      const villageRecord =
+        await prisma.location.findFirst({
+          where: {
+            name: village,
             type: "VILLAGE",
             parentId: blockRecord.id,
           },
         });
+
+      if (!villageRecord) {
+        return null;
       }
 
-      currentLocation = villageRecord;
+      currentLocation =
+        villageRecord;
     }
   }
+
 
   return currentLocation;
 }

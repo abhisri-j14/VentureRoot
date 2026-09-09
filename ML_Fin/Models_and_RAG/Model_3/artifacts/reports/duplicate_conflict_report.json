@@ -1,0 +1,15 @@
+{
+  "dataset": "agmarknet_daily_prices",
+  "composite_key_definition": [
+    "state",
+    "district",
+    "market",
+    "commodity",
+    "variety",
+    "arrival_date"
+  ],
+  "total_duplicate_rows_detected": 0,
+  "conflicting_price_keys_count": 0,
+  "resolution_policy": "Deterministic resolution: retained latest observation ('keep=last') after sorting by arrival date.",
+  "post_resolution_rows": 1
+}

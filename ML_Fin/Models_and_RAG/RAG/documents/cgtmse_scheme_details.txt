@@ -1,0 +1,21 @@
+DOCUMENT: Credit Guarantee Fund Trust for Micro and Small Enterprises (CGTMSE)
+SOURCE: Ministry of MSME and SIDBI
+PUBLISHER: CGTMSE Trust
+DEPARTMENT: Ministry of MSME
+STATE: All India
+CATEGORY: Credit Guarantee Scheme
+EFFECTIVE_DATE: 2024-01-01
+SOURCE_URL: https://www.cgtmse.in
+
+SECTION 1: OVERVIEW
+The Credit Guarantee Scheme (CGS) for Micro and Small Enterprises was launched to make available collateral-free credit to the micro and small enterprise sector. Both existing and new enterprises are eligible to be covered under the scheme.
+
+SECTION 2: GUARANTEE COVERAGE & LOAN LIMITS
+1. Maximum Credit Facility: Up to Rs. 5 crore per borrower unit (enhanced from Rs. 2 crore).
+2. Extent of Guarantee Cover:
+   - Up to 85% for micro enterprises for credit up to Rs. 5 lakh.
+   - Up to 85% for women entrepreneurs / SC-ST entrepreneurs / MSEs in North East Region (NER).
+   - Up to 75% for general category credit facilities up to Rs. 5 crore.
+
+SECTION 3: ELIGIBLE INSTITUTIONS
+Scheduled Commercial Banks (Public and Private), Select Regional Rural Banks, Small Finance Banks, and Non-Banking Financial Companies (NBFCs) registered as Member Lending Institutions (MLIs).

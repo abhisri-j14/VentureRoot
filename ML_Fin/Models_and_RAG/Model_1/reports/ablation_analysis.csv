@@ -1,0 +1,6 @@
+removed_component,original_weight,spearman_rank_correlation,mean_abs_score_change,ranking_impact
+demand_proxy,0.25,,2.7305,Low
+purchasing_power_proxy,0.2,,2.31,Low
+workforce_opportunity,0.25,,5.4249,Low
+infrastructure_development,0.15,,1.6622,Low
+market_gap_proxy,0.15,,7.1121,Low

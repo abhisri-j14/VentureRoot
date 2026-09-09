@@ -1,0 +1,72 @@
+[
+  {
+    "market_id": "mkt_wb_bht_01",
+    "name": "Bhatar Gramin Krishi Haat",
+    "market_type": "WEEKLY_HAAT",
+    "state": "West Bengal",
+    "district": "Purba Bardhaman",
+    "block": "Bhatar",
+    "latitude": 23.4170,
+    "longitude": 87.9195,
+    "operating_days": "TUESDAY_FRIDAY",
+    "commodities": ["Paddy (Dhan)", "Vegetables", "Mustard", "Fish"],
+    "source": "State Agricultural Marketing Board",
+    "authority_level": "LEVEL_2_STATE_GOVERNMENT"
+  },
+  {
+    "market_id": "mkt_wb_bdn_01",
+    "name": "Burdwan APMC Principal Yard",
+    "market_type": "APMC_REGULATED_MANDI",
+    "state": "West Bengal",
+    "district": "Purba Bardhaman",
+    "block": "Burdwan",
+    "latitude": 23.2420,
+    "longitude": 87.8630,
+    "operating_days": "DAILY",
+    "commodities": ["Paddy (Dhan)", "Potato", "Mustard", "Jute", "Wheat"],
+    "source": "Agmarknet Mandi Directory",
+    "authority_level": "LEVEL_1_CENTRAL_GOVERNMENT"
+  },
+  {
+    "market_id": "mkt_bih_dnp_01",
+    "name": "Danapur Sabzi & Anaaj Mandi",
+    "market_type": "APMC_REGULATED_MANDI",
+    "state": "Bihar",
+    "district": "Patna",
+    "block": "Danapur",
+    "latitude": 25.6250,
+    "longitude": 85.0450,
+    "operating_days": "DAILY",
+    "commodities": ["Wheat", "Maize", "Potato", "Onion", "Pulses"],
+    "source": "eNAM Regulated Market Directory",
+    "authority_level": "LEVEL_1_CENTRAL_GOVERNMENT"
+  },
+  {
+    "market_id": "mkt_pun_jag_01",
+    "name": "Jagraon Grain Market (Dana Mandi)",
+    "market_type": "APMC_REGULATED_MANDI",
+    "state": "Punjab",
+    "district": "Ludhiana",
+    "block": "Jagraon",
+    "latitude": 30.7850,
+    "longitude": 75.4850,
+    "operating_days": "DAILY",
+    "commodities": ["Wheat", "Paddy (Dhan)", "Cotton", "Maize"],
+    "source": "Punjab Mandi Board / eNAM",
+    "authority_level": "LEVEL_1_CENTRAL_GOVERNMENT"
+  },
+  {
+    "market_id": "mkt_mah_nph_01",
+    "name": "Pimpalgaon Baswant Onion & Grape APMC",
+    "market_type": "APMC_REGULATED_MANDI",
+    "state": "Maharashtra",
+    "district": "Nashik",
+    "block": "Niphad",
+    "latitude": 20.1750,
+    "longitude": 73.9880,
+    "operating_days": "DAILY",
+    "commodities": ["Onion", "Grapes", "Tomato", "Soybean"],
+    "source": "MSAMB / Agmarknet",
+    "authority_level": "LEVEL_1_CENTRAL_GOVERNMENT"
+  }
+]

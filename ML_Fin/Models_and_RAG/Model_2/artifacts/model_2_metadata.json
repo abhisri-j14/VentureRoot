@@ -1,0 +1,59 @@
+{
+  "model_name": "GramBiz Hyper-Local Business Viability & Opportunity Engine",
+  "model_version": "1.0.0",
+  "methodology_version": "1.0.0",
+  "feature_version": "1.0.0",
+  "random_seed": 42,
+  "training_timestamp": "2026-09-05T00:39:49.388545",
+  "selected_model_architecture": "Ridge",
+  "training_rows": 5100,
+  "holdout_rows": 888,
+  "train_metrics": {
+    "mae": 0.0012,
+    "rmse": 0.0018,
+    "r2": 1.0,
+    "median_ae": 0.0009,
+    "spearman_rank": 1.0,
+    "spearman_p_value": 0.0
+  },
+  "holdout_metrics": {
+    "mae": 0.0013,
+    "rmse": 0.0018,
+    "r2": 1.0,
+    "median_ae": 0.001,
+    "spearman_rank": 1.0,
+    "spearman_p_value": 0.0
+  },
+  "absolute_mae_gap": 0.0001,
+  "relative_mae_gap_ratio": 0.0833,
+  "overfitting_status": "Passed (No significant overfitting detected under evaluated protocol)",
+  "feature_names": [
+    "literacy_rate",
+    "female_literacy_rate",
+    "sc_st_population_share",
+    "working_pop_ratio",
+    "workers_cultivator_share",
+    "workers_agri_labour_share",
+    "workers_hh_industry_share",
+    "workers_other_share",
+    "pop_density_per_sqkm",
+    "households_per_village",
+    "inhabited_village_ratio",
+    "msme_micro_per_1k",
+    "msme_small_per_1k",
+    "msme_medium_per_1k",
+    "msme_total_per_1k",
+    "msme_micro_share",
+    "msme_small_share",
+    "pop_0_6_ratio",
+    "gender_ratio_females_per_1k"
+  ],
+  "limitations": [
+    "No direct business-success labels exist in public data; viability score is an engineered index.",
+    "Mixed dataset temporal anchors: Census 2011, Udyam MSME 2023-24, ASI 2012-2024.",
+    "Geographic resolution is aggregated at the sub-district / block level.",
+    "True 5-10 km geospatial radius analysis is unavailable without exact lat/lon coordinates.",
+    "Competitor density is strictly omitted unless verified establishment count data exists.",
+    "High R2 reflects mathematical index reproduction fit, NOT real-world demand prediction accuracy."
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "cgtmse_scheme_details": {
+    "document_id": "cgtmse_scheme_details",
+    "title": "Cgtmse Scheme Details",
+    "document_hash": "9d538758ae219f0aa2d1f2bf26cf105fe8dac75181b9fcd114eed0de8d717cbf",
+    "version": 1,
+    "status": "NEW",
+    "effective_date": "",
+    "source_url": "",
+    "created_at": "2026-09-05T06:02:38.476702+00:00",
+    "last_updated": "2026-09-05T06:02:38.476702+00:00",
+    "version_history": [],
+    "is_active": true
+  },
+  "pmegp_scheme_guidelines": {
+    "document_id": "pmegp_scheme_guidelines",
+    "title": "Pmegp Scheme Guidelines",
+    "document_hash": "a42d11d83ef2de46937cc837529722c26cf7af122d4f6b487261da2fab703069",
+    "version": 1,
+    "status": "NEW",
+    "effective_date": "",
+    "source_url": "",
+    "created_at": "2026-09-05T06:02:38.478700+00:00",
+    "last_updated": "2026-09-05T06:02:38.478700+00:00",
+    "version_history": [],
+    "is_active": true
+  },
+  "pmmy_mudra_scheme": {
+    "document_id": "pmmy_mudra_scheme",
+    "title": "Pmmy Mudra Scheme",
+    "document_hash": "bbc1fe6a4431efb1536b5a416d8013184cb6a3180a4f38c822ab62d7f0ef7960",
+    "version": 1,
+    "status": "NEW",
+    "effective_date": "",
+    "source_url": "",
+    "created_at": "2026-09-05T06:02:38.480208+00:00",
+    "last_updated": "2026-09-05T06:02:38.480208+00:00",
+    "version_history": [],
+    "is_active": true
+  },
+  "standup_india_scheme": {
+    "document_id": "standup_india_scheme",
+    "title": "Standup India Scheme",
+    "document_hash": "d25b058159665d4c79fe76d00743f04ee0f377c3df06519af53311dee505b0cd",
+    "version": 1,
+    "status": "NEW",
+    "effective_date": "",
+    "source_url": "",
+    "created_at": "2026-09-05T06:02:38.481855+00:00",
+    "last_updated": "2026-09-05T06:02:38.481855+00:00",
+    "version_history": [],
+    "is_active": true
+  },
+  "west_bengal_apmc_regulations": {
+    "document_id": "west_bengal_apmc_regulations",
+    "title": "West Bengal Apmc Regulations",
+    "document_hash": "46c08d8c1026b961615c4f0ba466c6b73e4655fec4b3594ce3277e11b826b7d4",
+    "version": 1,
+    "status": "NEW",
+    "effective_date": "",
+    "source_url": "",
+    "created_at": "2026-09-05T06:02:38.483857+00:00",
+    "last_updated": "2026-09-05T06:02:38.483857+00:00",
+    "version_history": [],
+    "is_active": true
+  },
+  "test_doc": {
+    "document_id": "test_doc",
+    "title": "Test Scheme",
+    "document_hash": "d9236e2a7c62881ae4d008403903f7ff5963ca57fb953f7fd83390d04e471876",
+    "version": 1,
+    "status": "NEW",
+    "effective_date": "",
+    "source_url": "",
+    "created_at": "2026-09-05T06:06:48.516873+00:00",
+    "last_updated": "2026-09-05T06:06:48.516873+00:00",
+    "version_history": [],
+    "is_active": true
+  },
+  "sih_credit_schemes_guidelines": {
+    "document_id": "sih_credit_schemes_guidelines",
+    "title": "Sih Credit Schemes Guidelines",
+    "document_hash": "3b46ec4b8a9338e79b04db4ffe6855475be29049190e70c98b181ad35c07e43a",
+    "version": 1,
+    "status": "NEW",
+    "effective_date": "",
+    "source_url": "",
+    "created_at": "2026-09-08T15:38:30.741830+00:00",
+    "last_updated": "2026-09-08T15:38:30.741830+00:00",
+    "version_history": [],
+    "is_active": true
+  }
+}

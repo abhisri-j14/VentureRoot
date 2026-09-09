@@ -1,0 +1,20 @@
+feature_name,standardized_coefficient,absolute_importance,driver_direction
+sc_st_population_share,-2.4385,2.4385,Negative Associated Driver
+inhabited_village_ratio,2.2042,2.2042,Positive Associated Driver
+literacy_rate,1.6671,1.6671,Positive Associated Driver
+working_pop_ratio,1.3187,1.3187,Positive Associated Driver
+pop_density_per_sqkm,1.0627,1.0627,Positive Associated Driver
+msme_micro_per_1k,0.2194,0.2194,Positive Associated Driver
+msme_total_per_1k,0.2174,0.2174,Positive Associated Driver
+msme_small_per_1k,0.0116,0.0116,Positive Associated Driver
+female_literacy_rate,0.0059,0.0059,Positive Associated Driver
+msme_medium_per_1k,-0.0052,0.0052,Negative Associated Driver
+gender_ratio_females_per_1k,0.001,0.001,Positive Associated Driver
+pop_0_6_ratio,0.0003,0.0003,Positive Associated Driver
+workers_agri_labour_share,0.0002,0.0002,Positive Associated Driver
+households_per_village,-0.0002,0.0002,Negative Associated Driver
+workers_other_share,0.0002,0.0002,Positive Associated Driver
+msme_micro_share,0.0001,0.0001,Positive Associated Driver
+workers_hh_industry_share,0.0001,0.0001,Positive Associated Driver
+workers_cultivator_share,0.0,0.0,Positive Associated Driver
+msme_small_share,0.0,0.0,Positive Associated Driver

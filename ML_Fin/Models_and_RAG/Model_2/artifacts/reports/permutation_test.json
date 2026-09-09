@@ -1,0 +1,19 @@
+{
+  "random_seed": 42,
+  "n_samples": 5988,
+  "n_features": 19,
+  "normal_target_metrics": {
+    "cv_mae_mean": 0.0013,
+    "cv_rmse_mean": 0.0029,
+    "cv_r2_mean": 1.0,
+    "cv_spearman_mean": 1.0
+  },
+  "permuted_target_metrics": {
+    "cv_mae_mean": 3.064,
+    "cv_rmse_mean": 4.6927,
+    "cv_r2_mean": -0.0105,
+    "cv_spearman_mean": -0.0197
+  },
+  "performance_collapse_verified": true,
+  "anti_leakage_status": "PASSED"
+}

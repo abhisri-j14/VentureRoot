@@ -1,0 +1,29 @@
+{
+  "test_name": "target_permutation_sanity_check",
+  "passed": true,
+  "original_r2": 1.0,
+  "permuted_r2": -77.823,
+  "normal_mae": 0.0014,
+  "permuted_mae": 101.9192,
+  "normal_metrics": {
+    "mae": 0.0014,
+    "rmse": 0.0014,
+    "r2": 1.0,
+    "smape": 0.0007,
+    "wape": 0.0007,
+    "median_ae": 0.0014,
+    "spearman": 1.0
+  },
+  "shuffled_metrics": {
+    "mae": 101.9192,
+    "rmse": 102.3888,
+    "r2": -77.823,
+    "smape": 59.8044,
+    "wape": 46.1173,
+    "median_ae": 101.9192,
+    "spearman": 1.0
+  },
+  "performance_collapsed": true,
+  "mae_increased": true,
+  "message": "PASSED: Target permutation caused expected model performance collapse. Zero spurious leakage."
+}

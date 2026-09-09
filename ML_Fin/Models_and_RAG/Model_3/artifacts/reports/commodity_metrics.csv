@@ -1,0 +1,76 @@
+mae,rmse,r2,smape,wape,median_ae,spearman,commodity,sample_count,status
+757.1781,950.8958,-0.0032,28.1261,26.898,750.0,0.0,Amaranthus,20,sufficient_data
+1041.6667,1244.847,-0.2046,12.2469,12.0773,1375.0,0.0,Amla(Nelli Kai),6,sufficient_data
+,,,,,,,Apple,4,insufficient_data
+224.5024,278.897,-0.0138,9.5976,9.4638,160.2606,0.0,Ashgourd,18,sufficient_data
+1772.1123,2085.1479,-0.4162,37.9114,39.3435,1884.6256,0.0,Banana,19,sufficient_data
+698.0666,966.5877,-0.0985,20.5772,20.253,592.7324,0.0,Banana - Green,22,sufficient_data
+951.498,1188.8206,-0.0001,11.4067,11.7107,861.9837,0.0,Beans,16,sufficient_data
+805.0531,1027.4288,-1.3748,18.5956,18.9054,565.0597,0.0,Beetroot,18,sufficient_data
+,,,,,,,Betal Leaves,1,insufficient_data
+815.372,1031.3557,-0.1965,27.1794,27.297,555.0034,0.0,Bhindi(Ladies Finger),27,sufficient_data
+1593.5662,2219.1777,-0.0253,30.6846,29.0373,860.846,0.0,Bitter gourd,25,sufficient_data
+718.9568,885.9906,-0.3198,34.4306,36.3492,600.0,0.0,Bottle gourd,24,sufficient_data
+770.3794,1132.033,-0.1338,24.0833,21.6331,449.9778,0.0,Brinjal,27,sufficient_data
+545.0,735.3456,-0.0479,19.8183,18.1667,492.7324,0.0,Cabbage,20,sufficient_data
+1347.5449,1516.6359,-0.0185,23.959,23.9412,1232.8143,0.0,Capsicum,7,sufficient_data
+1530.2407,1916.1941,-0.7416,30.1331,30.1353,1421.7141,0.0,Carrot,19,sufficient_data
+1090.9131,1291.029,-0.145,34.4201,34.1622,1097.2608,0.0,Cauliflower,15,sufficient_data
+1022.4073,1093.757,-0.4199,25.1306,26.0486,875.0,0.0,Chikoos(Sapota),8,sufficient_data
+524.6956,640.5872,-0.0092,14.1351,14.1279,652.7392,0.0,Chow Chow,18,sufficient_data
+610.5084,751.0714,-0.01,18.2989,17.931,479.3241,0.0,Cluster beans,21,sufficient_data
+1213.8692,1594.6024,-0.4807,25.0107,24.4052,867.6386,0.0,Coconut,21,sufficient_data
+1030.5004,1500.2812,-0.3909,22.8226,21.2945,740.3744,0.0,Colacasia,14,sufficient_data
+638.6901,804.6264,-0.0006,15.6192,15.473,601.7892,0.0,Coriander(Leaves),18,sufficient_data
+,,,,,,,Cowpea(Veg),4,insufficient_data
+1488.0317,1925.4731,-0.0071,43.8961,39.8011,1400.475,0.0,Cucumbar(Kheera),15,sufficient_data
+,,,,,,,Custard Apple(Sharifa),3,insufficient_data
+859.6974,1140.5547,-0.0998,24.2763,23.8805,693.6381,0.0,Drumstick,18,sufficient_data
+513.7906,709.8102,-0.2289,10.4109,10.3796,250.0,0.0,Elephant Yam(Suran)/Amorphophallus,10,sufficient_data
+,,,,,,,Fig(Anjura/Anjeer),1,insufficient_data
+1287.8302,1756.2298,-0.0681,5.6616,5.7419,1014.8111,0.0,Garlic,7,sufficient_data
+3520.5662,4193.8328,-0.0719,24.6952,23.544,3250.0,0.0,Ginger(Green),16,sufficient_data
+,,,,,,,Grapes,2,insufficient_data
+764.0292,1053.5449,-0.0011,12.0603,12.5353,619.9027,0.0,Green Avare(W),20,sufficient_data
+1012.1438,2103.9027,-0.0752,16.5776,18.5792,608.5818,0.0,Green Chilli,22,sufficient_data
+,,,,,,,Green Peas,2,insufficient_data
+496.9942,608.4012,-0.7176,6.6467,6.614,478.9595,0.0,Groundnut,7,sufficient_data
+820.306,934.5827,-1.0622,15.9517,16.5255,884.6256,0.0,Guava,18,sufficient_data
+714.4514,937.4225,-0.1598,13.5309,13.2657,733.72,0.0,Indian Beans(Seam),7,sufficient_data
+,,,,,,,Jack Fruit(Ripe),1,insufficient_data
+,,,,,,,Jasmine,1,insufficient_data
+975.0779,1188.179,-0.1429,28.7895,28.2177,1125.7014,0.0,Knool Khol,9,sufficient_data
+4231.1471,5419.0929,-0.0001,30.4366,29.0967,3125.0,0.0,Lemon,18,sufficient_data
+5745.4256,6654.4083,-1.6034,72.335,58.6767,6430.6383,0.0,Lime,6,sufficient_data
+,,,,,,,Maize,1,insufficient_data
+,,,,,,,Mango,2,insufficient_data
+990.0,1200.5418,-0.0073,12.7519,12.3596,888.0163,0.0,Mango(Raw-Ripe),10,sufficient_data
+,,,,,,,Marigold(Calcutta),3,insufficient_data
+,,,,,,,Mashrooms,2,insufficient_data
+794.2067,1029.5513,-0.3823,18.4244,18.2576,858.5818,0.0,Mint(Pudina),19,sufficient_data
+,,,,,,,Mousambi(Sweet Lime),3,insufficient_data
+420.9943,627.7604,-0.2186,7.9037,7.6303,283.2671,0.0,Onion,23,sufficient_data
+596.6512,814.0421,-0.0143,8.0672,7.9342,383.4879,0.0,Onion Green,20,sufficient_data
+,,,,,,,Orange,1,insufficient_data
+,,,,,,,Paddy(Common),3,insufficient_data
+664.1982,808.2216,-0.1789,18.9241,18.7833,600.9278,0.0,Papaya,18,sufficient_data
+,,,,,,,Pointed gourd(Parval),1,insufficient_data
+,,,,,,,Pomegranate,3,insufficient_data
+711.9573,857.7678,-0.0706,22.9326,22.355,594.9966,0.0,Potato,23,sufficient_data
+479.6992,622.1216,-0.0615,22.6055,20.7116,333.6757,0.0,Pumpkin,23,sufficient_data
+659.1145,824.1902,-0.0018,23.2206,22.3862,509.5318,0.0,Raddish,21,sufficient_data
+,,,,,,,Rice,1,insufficient_data
+862.7815,1017.5379,-0.1061,19.8473,19.9322,743.6824,0.0,Ridgeguard(Tori),21,sufficient_data
+,,,,,,,Rose(Local),3,insufficient_data
+702.0323,847.2221,-0.2463,20.5264,20.648,776.6071,0.0,Snakeguard,21,sufficient_data
+1043.9875,1152.2914,-0.406,29.8715,31.8168,1025.475,0.0,Sweet Corn ,8,sufficient_data
+1376.9591,1616.7643,-0.1742,30.5458,32.2567,1341.4182,0.0,Sweet Potato,8,sufficient_data
+,,,,,,,Tamarind Fruit,1,insufficient_data
+513.5709,753.3886,-0.2027,13.3033,13.8269,155.0034,0.0,Tapioca,7,sufficient_data
+496.1122,594.5348,-0.4139,16.086,16.0901,405.0034,0.0,Tender Coconut,9,sufficient_data
+711.4008,785.5952,-0.0003,17.2853,17.0947,648.2108,0.0,Thondekai,13,sufficient_data
+570.6677,864.0012,-0.1312,22.028,23.1352,485.8903,0.0,Tomato,24,sufficient_data
+,,,,,,,Water Melon,4,insufficient_data
+,,,,,,,White Pumpkin,1,insufficient_data
+,,,,,,,Wood,1,insufficient_data
+1484.8877,1809.5416,-0.2197,25.189,24.9282,1224.6632,0.0,Yam(Ratalu),15,sufficient_data
