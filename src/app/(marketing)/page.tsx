@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   ArrowRight,
   ChevronRight,
+  ChevronLeft,
   Leaf,
   TrendingUp,
   Sparkles,
@@ -28,6 +29,7 @@ import {
 import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 import { CleanNavbar } from "@/components/ui/clean-navbar";
 import { RippleButton } from "@/components/ui/ripple-button";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { motion, AnimatePresence } from "framer-motion";
 import { TextEffect } from "@/components/ui/text-effect";
@@ -440,49 +442,102 @@ type FeatureId = typeof HOW_IT_WORKS_FEATURES[number]["id"];
 function HowItWorksSelector() {
   const [active, setActive] = React.useState<FeatureId>("idea");
 
-  const current = HOW_IT_WORKS_FEATURES.find(f => f.id === active)!;
+  const currentIndex = HOW_IT_WORKS_FEATURES.findIndex((f) => f.id === active);
+  const current = HOW_IT_WORKS_FEATURES[currentIndex !== -1 ? currentIndex : 0];
+
+  const handlePrev = () => {
+    const prevIndex = (currentIndex - 1 + HOW_IT_WORKS_FEATURES.length) % HOW_IT_WORKS_FEATURES.length;
+    setActive(HOW_IT_WORKS_FEATURES[prevIndex].id as FeatureId);
+  };
+
+  const handleNext = () => {
+    const nextIndex = (currentIndex + 1) % HOW_IT_WORKS_FEATURES.length;
+    setActive(HOW_IT_WORKS_FEATURES[nextIndex].id as FeatureId);
+  };
 
   return (
     <div>
-      {/* Top selector row */}
-      <div className="flex gap-2.5 overflow-x-auto pb-2 mb-6 no-scrollbar" role="tablist" aria-label="How VentureRoot works">
-        {HOW_IT_WORKS_FEATURES.map((feature) => {
-          const Icon = feature.icon;
-          const isActive = active === feature.id;
-          return (
-            <button
-              key={feature.id}
-              role="tab"
-              aria-selected={isActive}
-              aria-controls={`panel-${feature.id}`}
-              onClick={() => setActive(feature.id as FeatureId)}
-              className={`flex items-center gap-2.5 px-4 py-3 rounded-2xl border text-left shrink-0 transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-[#1E6702] ${isActive
-                ? "bg-white border-[#1E6702] shadow-[0_0_0_1px_#1E6702,0_4px_16px_rgba(30,103,2,0.12)] text-[#200813]"
-                : "bg-white/60 border-black/8 text-[#200813]/60 hover:border-[#1E6702]/30 hover:bg-white hover:text-[#200813]/80"
+      {/* Top selector row with small < > arrow buttons beside */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+        {/* Step buttons (Your Idea, Market, Finance, Action Plan) */}
+        <div
+          className="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar items-center flex-1"
+          role="tablist"
+          aria-label="How VentureRoot works"
+        >
+          {HOW_IT_WORKS_FEATURES.map((feature, idx) => {
+            const Icon = feature.icon;
+            const isActive = active === feature.id;
+            return (
+              <button
+                key={feature.id}
+                role="tab"
+                aria-selected={isActive}
+                aria-controls={`panel-${feature.id}`}
+                onClick={() => setActive(feature.id as FeatureId)}
+                className={`group flex items-center gap-2.5 px-4 py-3 rounded-2xl border-2 text-left shrink-0 transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-[#1E6702] cursor-pointer select-none ${
+                  isActive
+                    ? "bg-white border-[#1E6702] shadow-[0_4px_18px_-2px_rgba(30,103,2,0.18)] text-[#200813]"
+                    : "bg-white/70 border-stone-800/12 text-[#200813]/65 hover:border-[#aed455] hover:bg-white hover:text-[#200813] hover:shadow-[0_4px_14px_-2px_rgba(174,212,85,0.25)]"
                 }`}
+              >
+                <div
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+                    isActive ? "bg-[#aed455]/25 border border-[#aed455]/50" : "bg-stone-100 group-hover:bg-[#aed455]/15"
+                  }`}
+                >
+                  <Icon className={`w-3.5 h-3.5 transition-colors ${isActive ? "text-[#1E6702]" : "text-stone-400 group-hover:text-[#1E6702]"}`} />
+                </div>
+                <div className="flex flex-col items-start">
+                  <span className={`text-xs font-bold leading-tight ${isActive ? "text-[#200813]" : "text-[#200813]/70"}`}>
+                    {feature.shortLabel}
+                  </span>
+                  {isActive ? (
+                    <span className="text-[9px] font-bold text-[#144801] bg-[#aed455]/40 border border-[#aed455]/60 px-1.5 py-0.5 rounded-full uppercase tracking-wider mt-0.5">
+                      Active
+                    </span>
+                  ) : (
+                    <span className="text-[9px] font-semibold text-stone-400 uppercase tracking-wider mt-0.5">
+                      0{idx + 1}
+                    </span>
+                  )}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Small < > arrow navigation buttons beside the cards */}
+        <div className="flex items-center gap-2 self-end sm:self-center shrink-0 bg-white/80 backdrop-blur-sm px-2 py-1.5 rounded-2xl border border-stone-800/12 shadow-sm">
+          <span className="text-[11px] font-semibold text-stone-500 px-1">
+            0{currentIndex + 1} / 0{HOW_IT_WORKS_FEATURES.length}
+          </span>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={handlePrev}
+              aria-label="Previous step"
+              className="w-7 h-7 rounded-xl bg-stone-50 hover:bg-[#aed455]/25 border border-stone-200 hover:border-[#aed455] text-[#200813] hover:text-[#144801] flex items-center justify-center transition-all duration-150 active:scale-95 cursor-pointer shadow-xs"
             >
-              <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-colors ${isActive ? "bg-[#f4fce8]" : "bg-slate-100"
-                }`}>
-                <Icon className={`w-3.5 h-3.5 ${isActive ? "text-[#1E6702]" : "text-slate-400"}`} />
-              </div>
-              <div className="flex flex-col items-start">
-                <span className={`text-xs font-bold leading-tight ${isActive ? "text-[#200813]" : "text-[#200813]/60"}`}>
-                  {feature.shortLabel}
-                </span>
-                {isActive && (
-                  <span className="text-[9px] font-bold text-[#1E6702] uppercase tracking-widest">Active</span>
-                )}
-              </div>
+              <ChevronLeft className="w-4 h-4" />
             </button>
-          );
-        })}
+            <button
+              type="button"
+              onClick={handleNext}
+              aria-label="Next step"
+              className="w-7 h-7 rounded-xl bg-stone-50 hover:bg-[#aed455]/25 border border-stone-200 hover:border-[#aed455] text-[#200813] hover:text-[#144801] flex items-center justify-center transition-all duration-150 active:scale-95 cursor-pointer shadow-xs"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Large content panel */}
+      {/* Large content panel with pastel green light background */}
       <div
         id={`panel-${active}`}
         role="tabpanel"
-        className="w-full bg-white rounded-3xl border border-black/6 shadow-[0_4px_30px_rgba(0,0,0,0.04)] overflow-hidden"
+        className="relative w-full bg-[#EDF7E7] rounded-3xl border border-[#200813]/10 shadow-[0_8px_32px_rgba(30,103,2,0.06)] overflow-hidden"
       >
         <AnimatePresence mode="wait">
           <motion.div
@@ -494,33 +549,65 @@ function HowItWorksSelector() {
             className="grid grid-cols-1 lg:grid-cols-[42fr_58fr] min-h-[380px]"
           >
             {/* Left: text */}
-            <div className="px-8 py-10 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-black/5">
-              <div className="inline-flex items-center gap-2 mb-4">
-                <div className="w-6 h-6 rounded-lg bg-[#f4fce8] border border-[#1E6702]/20 flex items-center justify-center">
-                  {React.createElement(current.icon, { className: "w-3.5 h-3.5 text-[#1E6702]" })}
+            <div className="px-8 md:px-10 py-10 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#200813]/8 relative z-10">
+              <div>
+                <div className="inline-flex items-center gap-2 mb-4">
+                  <div className="w-6 h-6 rounded-lg bg-[#1E6702]/15 border border-[#1E6702]/25 flex items-center justify-center">
+                    {React.createElement(current.icon, { className: "w-3.5 h-3.5 text-[#1E6702]" })}
+                  </div>
+                  <span className="text-[10px] font-bold text-[#1E6702] uppercase tracking-widest">{current.label}</span>
                 </div>
-                <span className="text-[10px] font-bold text-[#1E6702] uppercase tracking-widest">{current.label}</span>
+
+                <h3 className="text-2xl md:text-3xl font-sans font-bold text-[#200813] leading-tight mb-3">
+                  {current.title}
+                </h3>
+                <p className="text-sm md:text-base text-[#200813]/70 leading-relaxed mb-6 font-normal">
+                  {current.description}
+                </p>
+
+                <ul className="flex flex-col gap-2.5">
+                  {current.points.map((pt) => (
+                    <li key={pt} className="flex items-start gap-2.5 text-sm text-[#200813]/85 font-medium">
+                      <CheckCircle2 className="w-4 h-4 text-[#1E6702] mt-0.5 shrink-0" />
+                      {pt}
+                    </li>
+                  ))}
+                </ul>
               </div>
 
-              <h3 className="text-2xl md:text-3xl font-sans font-bold text-[#200813] leading-tight mb-3">
-                {current.title}
-              </h3>
-              <p className="text-sm md:text-base text-[#200813]/65 leading-relaxed mb-6 font-normal">
-                {current.description}
-              </p>
+              {/* Bottom in-card quick navigation with small < > arrows */}
+              <div className="mt-8 pt-5 border-t border-[#200813]/10 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-[#1E6702] uppercase tracking-wider">
+                    Step 0{currentIndex + 1} of 0{HOW_IT_WORKS_FEATURES.length}
+                  </span>
+                  <span className="text-xs text-[#200813]/30">•</span>
+                  <span className="text-xs font-semibold text-[#200813]/60">{current.shortLabel}</span>
+                </div>
 
-              <ul className="flex flex-col gap-2.5">
-                {current.points.map((pt) => (
-                  <li key={pt} className="flex items-start gap-2.5 text-sm text-[#200813]/80 font-medium">
-                    <CheckCircle2 className="w-4 h-4 text-[#1E6702] mt-0.5 shrink-0" />
-                    {pt}
-                  </li>
-                ))}
-              </ul>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={handlePrev}
+                    aria-label="Previous step"
+                    className="w-7 h-7 rounded-lg bg-white/80 hover:bg-white border border-[#200813]/15 hover:border-[#1E6702]/40 text-[#200813] hover:text-[#1E6702] flex items-center justify-center transition-all duration-150 active:scale-95 cursor-pointer shadow-xs"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    aria-label="Next step"
+                    className="w-7 h-7 rounded-lg bg-white/80 hover:bg-white border border-[#200813]/15 hover:border-[#1E6702]/40 text-[#200813] hover:text-[#1E6702] flex items-center justify-center transition-all duration-150 active:scale-95 cursor-pointer shadow-xs"
+                  >
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
             </div>
 
             {/* Right: visual */}
-            <div className="bg-[#fafdf6] px-8 py-10 flex items-center justify-center">
+            <div className="bg-white/60 px-8 py-10 flex items-center justify-center">
               <div className="w-full max-w-sm">
                 {current.visual}
               </div>
@@ -531,6 +618,60 @@ function HowItWorksSelector() {
     </div>
   );
 }
+
+// ── Hero Title Formatter (Editorial Serif Italic Accent) ─────────────────────
+
+const renderHeroTitle = (text: string) => {
+  if (!text) return null;
+
+  // Check if string contains markdown asterisks like *local business*
+  if (text.includes("*")) {
+    const parts = text.split("*");
+    return (
+      <>
+        {parts[0]}
+        <span className="font-heading italic font-normal text-[#964828] [text-shadow:_0_2px_18px_rgba(150,72,40,0.18)]">
+          {parts[1]}
+        </span>
+        {parts[2]}
+      </>
+    );
+  }
+
+  // Key phrases to highlight in various supported languages
+  const targetPhrases = [
+    "local business",
+    "स्थानीय व्यवसाय",
+    "उद्यम",
+    "స్థానిక వ్యాపారాన్ని",
+    "உள்ளூர் வணிகத்தை",
+    "स्थानिक व्यवसाय",
+    "ਸਥਾਨਕ ਕਾਰੋਬਾਰ",
+    "উদ্যোগ",
+  ];
+
+  for (const phrase of targetPhrases) {
+    const lowerText = text.toLowerCase();
+    const lowerPhrase = phrase.toLowerCase();
+    const idx = lowerText.indexOf(lowerPhrase);
+    if (idx !== -1) {
+      const before = text.slice(0, idx);
+      const match = text.slice(idx, idx + phrase.length);
+      const after = text.slice(idx + phrase.length);
+      return (
+        <>
+          {before}
+          <span className="font-heading italic font-normal text-[#964828] [text-shadow:_0_2px_18px_rgba(150,72,40,0.2)]">
+            {match}
+          </span>
+          {after}
+        </>
+      );
+    }
+  }
+
+  return text;
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -575,72 +716,73 @@ export default function LandingPage() {
       <div className="flex flex-col min-h-screen bg-background">
         <main className="flex-1 flex flex-col items-center w-full">
           {/* ── 1. Hero Section — Full Width, No Card ── */}
-          <section className="relative w-full flex flex-col overflow-hidden" style={{ minHeight: "min(100svh, 700px)" }}>
-            {/* Background illustration — covers lower 50% of hero */}
-            <div className="absolute inset-0 z-0 pointer-events-none">
+          <section className="relative w-full flex flex-col overflow-hidden min-h-[540px] sm:min-h-[580px] md:min-h-0" style={{ aspectRatio: "16 / 8.4" }}>
+            {/* Background illustration — 16:9 intact and fully visible */}
+            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-[#FFFBE7]">
               <img
                 src="/hero-card-bg.jpg"
                 alt=""
                 aria-hidden="true"
-                className="w-full h-full object-cover object-[center_bottom]"
+                className="w-full h-full object-cover object-bottom"
               />
-              {/* Soft gradient fade from top so sky reads clean behind text */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#FFFBE7]/80 via-[#FFFBE7]/20 to-transparent" />
+              {/* Soft subtle gradient fade from top so sky reads clean behind text */}
+              <div className="absolute inset-0 bg-gradient-to-b from-[#FFFBE7]/40 via-transparent to-transparent pointer-events-none" />
             </div>
 
             {/* Navbar — transparent, integrated */}
             <CleanNavbar />
 
             {/* Hero Content */}
-            <div className="relative z-10 flex-1 flex flex-col items-center justify-start px-6 pt-4 pb-28 md:pb-36">
-              <div className="flex flex-col items-center text-center max-w-[700px] mx-auto w-full">
+            <div className="relative z-10 flex-1 flex flex-col items-center justify-start px-6 pt-3 md:pt-4 pb-8">
+              <div className="flex flex-col items-center text-center max-w-[760px] mx-auto w-full">
 
-                {/* Label */}
+                {/* Label — Soft Frosted Pill inspired by reference header */}
                 <motion.div
                   initial={{ opacity: 0, y: 14 }}
                   animate={isPreloading ? { opacity: 0, y: 14 } : { opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/70 backdrop-blur-sm border border-[#1E6702]/20 shadow-sm"
+                  className="mb-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#EFE9DE]/80 hover:bg-[#EAE1D3] transition-colors duration-200 backdrop-blur-md border border-[#DDD3C5] shadow-[0_2px_10px_-2px_rgba(32,8,19,0.06)]"
                 >
-                  <Leaf className="w-3 h-3 text-[#1E6702]" />
-                  <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.18em] text-[#1E6702]">
+                  <Sparkles className="w-3.5 h-3.5 text-[#964828]" />
+                  <span className="text-[11px] md:text-xs font-medium text-[#484039] tracking-normal">
                     {t("landing.tagline")}
                   </span>
                 </motion.div>
 
-                {/* Heading — smaller, two natural lines */}
+                {/* Heading — clean modern typography with warm editorial serif italic accent */}
                 <motion.h1
                   initial={{ opacity: 0, y: 16 }}
                   animate={isPreloading ? { opacity: 0, y: 16 } : { opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.1 }}
-                  className="text-[30px] sm:text-[36px] md:text-[42px] lg:text-[48px] font-heading font-semibold text-[#200813] leading-[1.06] tracking-tight [text-shadow:_0_2px_18px_rgba(255,251,231,1),_0_0_40px_rgba(255,251,231,0.8)]"
+                  className="text-[30px] sm:text-[38px] md:text-[44px] lg:text-[50px] font-sans font-semibold text-[#1F1714] leading-[1.14] tracking-tight [text-shadow:_0_2px_24px_rgba(255,251,231,0.9),_0_0_50px_rgba(255,251,231,0.6)]"
                 >
-                  {t("landing.hero1")}
+                  {renderHeroTitle(t("landing.hero1"))}
                 </motion.h1>
 
-
-
-                {/* Buttons */}
+                {/* CTA Buttons — Clamped Magnetic Pill Call-To-Action */}
                 <motion.div
                   initial={{ opacity: 0, y: 12 }}
                   animate={isPreloading ? { opacity: 0, y: 12 } : { opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  className="flex flex-col sm:flex-row gap-3 mt-7 w-full sm:w-auto justify-center"
+                  transition={{ duration: 0.5, delay: 0.25 }}
+                  className="flex flex-col sm:flex-row gap-4 mt-8 sm:mt-9 w-full sm:w-auto justify-center items-center"
                 >
-                  <RippleButton
+                  <MagneticButton
                     href={isAuthenticated ? "/dashboard" : "/register"}
-                    rippleColor="bg-white/30"
-                    className="bg-[#1E6702] text-white px-6 py-2.5 rounded-xl font-semibold text-[13px] md:text-sm hover:bg-[#185901] transition-all shadow-md hover:-translate-y-0.5 flex items-center justify-center gap-1.5"
+                    variant="espresso"
+                    className="px-7 py-3 rounded-full text-white font-semibold text-[13px] md:text-sm tracking-wide"
                   >
-                    {t("landing.analyzeBtn")} <ArrowRight className="w-4 h-4" />
-                  </RippleButton>
-                  <RippleButton
+                    <span>{t("landing.analyzeBtn")}</span>
+                    <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                  </MagneticButton>
+
+                  <MagneticButton
                     href={isAuthenticated ? "/dashboard" : "/register"}
-                    rippleColor="bg-[#1E6702]/10"
-                    className="bg-white/65 backdrop-blur-md border border-[#200813]/10 text-[#200813] px-6 py-2.5 rounded-xl font-semibold text-[13px] md:text-sm hover:bg-white/85 transition-all shadow-sm hover:-translate-y-0.5 flex items-center justify-center gap-1.5"
+                    variant="espresso-translucent"
+                    className="px-7 py-3 rounded-full font-semibold text-[13px] md:text-sm tracking-wide"
                   >
-                    {t("landing.sampleBtn")} <ArrowRight className="w-4 h-4" />
-                  </RippleButton>
+                    <span>{t("landing.sampleBtn")}</span>
+                    <ChevronRight className="w-4 h-4 text-[#361606] transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </MagneticButton>
                 </motion.div>
               </div>
             </div>
