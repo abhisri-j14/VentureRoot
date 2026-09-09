@@ -4,6 +4,10 @@ export const LOCALE_MAP: Record<Language, string> = {
   en: "en-IN",
   bn: "bn-IN",
   hi: "hi-IN",
+  pa: "pa-IN",
+  mr: "mr-IN",
+  ta: "ta-IN",
+  te: "te-IN",
 };
 
 /**
