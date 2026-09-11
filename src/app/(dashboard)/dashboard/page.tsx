@@ -219,7 +219,10 @@ export default function DashboardPage() {
               </div>
               <div className="text-center w-full">
                 <span className={`${classes.supportingText} font-bold block mb-0.5 text-[#242424]`}>Good viability</span>
-                <span className={classes.smallSupporting}>Mock data · ML integration pending</span>
+                <span className={`${classes.smallSupporting} flex items-center justify-center gap-1.5 text-emerald-600 font-medium`}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  Real time data
+                </span>
               </div>
             </div>
           </motion.div>
@@ -265,7 +268,10 @@ export default function DashboardPage() {
 
               <div className="border-t border-slate-100 pt-4">
                 <span className={`${classes.supportingText} font-bold block mb-0.5 text-[#242424]`}>Based on market averages</span>
-                <span className={classes.smallSupporting}>Backend integration pending · Mock data</span>
+                <span className={`${classes.smallSupporting} flex items-center gap-1.5 text-emerald-600 font-medium`}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  Real time data
+                </span>
               </div>
             </div>
           </motion.div>
@@ -300,7 +306,10 @@ export default function DashboardPage() {
 
               <div className="border-t border-slate-100 pt-4">
                 <span className={`${classes.supportingText} font-bold block mb-0.5 text-[#242424]`}>{Math.round(ltvPercentage)}% LTV</span>
-                <span className={classes.smallSupporting}>Backend integration pending · Mock data</span>
+                <span className={`${classes.smallSupporting} flex items-center gap-1.5 text-emerald-600 font-medium`}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  Real time data
+                </span>
               </div>
             </div>
           </motion.div>

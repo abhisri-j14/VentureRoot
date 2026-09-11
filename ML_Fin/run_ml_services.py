@@ -47,6 +47,12 @@ SERVICES = [
         "port": 8003,
     },
     {
+        "name": "Finance Engine (Scheme & Subsidies)",
+        "dir": BASE_DIR / "Finance_Engine" / "module_2",
+        "cmd": [sys.executable, "-m", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8004"],
+        "port": 8004,
+    },
+    {
         "name": "AI Advisor (Gemini Agent)",
         "dir": BASE_DIR / "Models_and_RAG" / "AI_Advisor",
         "cmd": [sys.executable, "-m", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8005"],

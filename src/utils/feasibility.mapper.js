@@ -319,20 +319,70 @@ function mapRisks(m1, m2, businessCategory) {
 }
 
 /**
- * Build pricing analysis — currently derived from Model 2 viability score.
- * Model 3 (price prediction) can be integrated here later.
+ * Build pricing analysis from Model 3 (local APMC price prediction & conformal bounds)
+ * with graceful fallback to Model 1 & 2 heuristics if Model 3 is offline.
  */
-function mapPricing(m1, m2, business) {
+function mapPricing(m1, m2, m3, business) {
   const viabilityScore = m2?.overall_viability_score ?? m1?.market_potential_score ?? 60;
+
+  // ── If Model 3 returned live APMC predictions with conformal bounds ──
+  if (m3 && m3.expected_market_price != null) {
+    const expectedPrice = Math.round(m3.expected_market_price);
+    const observedPrice = Math.round(m3.recent_observed_price ?? expectedPrice);
+    const interval = m3.prediction_interval || {};
+    const minPrice = Math.round(interval.lower ?? (expectedPrice * 0.85));
+    const maxPrice = Math.round(interval.upper ?? (expectedPrice * 1.15));
+
+    const unit = m3.target_unit || "₹/quintal";
+    const marketName = m3.location?.market || "Regional APMC";
+
+    const observations = [
+      `Benchmark APMC market: ${marketName} (${unit})`,
+      interval.display_range ? `90% Conformal price interval: ${interval.display_range}` : null,
+      m3.reference_selling_price ? `Recommended reference price: ₹${Math.round(m3.reference_selling_price)} ${unit}` : null,
+      m3.prediction_reliability ? `Prediction reliability: ${m3.prediction_reliability}` : null,
+      ...(m3.warnings || []).slice(0, 2),
+    ].filter(Boolean);
+
+    const pricingFactors = [
+      ...(m3.positive_price_drivers || []),
+      ...(m3.negative_price_drivers || []),
+    ];
+
+    const confScore = m3.model_confidence === "HIGH" ? 85 : m3.model_confidence === "LOW" ? 50 : 70;
+    const confLevel = m3.model_confidence === "HIGH" ? "HIGH" : m3.model_confidence === "LOW" ? "LOW" : "MEDIUM";
+
+    return {
+      expectedLocalPrice: expectedPrice,
+      observedMarketPrice: observedPrice,
+      priceRange: { min: minPrice, max: maxPrice },
+      marketValue: expectedPrice >= observedPrice ? "Above Average" : "Average",
+      observations: observations.slice(0, 4),
+      pricingFactors: pricingFactors.length ? pricingFactors.slice(0, 4) : [
+        "APMC daily arrivals and mandi clearing rate",
+        "Seasonal price fluctuations and harvest cycle",
+        "Conformal prediction lower/upper interval coverage",
+      ],
+      evidence: [
+        { type: "PREDICTION", label: "Model 3 APMC Price Forecast", source: "GramBiz Model 3 (Conformal Inference)" },
+      ],
+      confidence: {
+        score: confScore,
+        level: confLevel,
+        reasons: (m3.warnings || []).slice(0, 2),
+      },
+    };
+  }
+
+  // ── Deterministic fallback based on Model 1 purchasing power & Model 2 viability ──
   const purchasingPower = m1?.purchasing_power_score;
   const marketGap = m1?.market_gap_score;
 
-  // Derive a price multiplier from purchasing power and market gap
   const priceMultiplier = purchasingPower != null
-    ? 0.8 + (purchasingPower / 100) * 0.6  // 0.8x to 1.4x of typical market rate
+    ? 0.8 + (purchasingPower / 100) * 0.6
     : 1.0;
 
-  const basePrice = 100; // normalized ₹/unit placeholder
+  const basePrice = 100;
   const expectedPrice = Math.round(basePrice * priceMultiplier);
   const observedPrice = Math.round(expectedPrice * 0.9);
 
@@ -367,14 +417,14 @@ function mapPricing(m1, m2, business) {
 }
 
 /**
- * Master mapper: combines Model 1, Model 2, and census data into FeasibilityData.
+ * Master mapper: combines Model 1, Model 2, Model 3, and census data into FeasibilityData.
  *
- * @param {{ model1, model2, census, location, businessCategory }} mlResult
+ * @param {{ model1, model2, model3, census, location, businessCategory }} mlResult
  * @param {object} business Business record from DB
  * @returns {import("@/features/feasibility/types").FeasibilityData}
  */
 export function mapMlPredictionToFeasibility(mlResult, business) {
-  const { model1: m1, model2: m2, census } = mlResult;
+  const { model1: m1, model2: m2, model3: m3, census } = mlResult;
   const businessCategory = mlResult.businessCategory || business?.category?.name || "Retail";
 
   return {
@@ -384,6 +434,6 @@ export function mapMlPredictionToFeasibility(mlResult, business) {
     competition: mapCompetition(m2, businessCategory),
     swot: mapSWOT(m1, m2, businessCategory),
     risks: mapRisks(m1, m2, businessCategory),
-    pricing: mapPricing(m1, m2, business),
+    pricing: mapPricing(m1, m2, m3, business),
   };
 }

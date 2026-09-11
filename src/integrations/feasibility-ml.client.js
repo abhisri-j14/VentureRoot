@@ -12,6 +12,7 @@
 
 const MODEL1_URL = process.env.MODEL1_URL || "http://127.0.0.1:8001";
 const MODEL2_URL = process.env.MODEL2_URL || "http://127.0.0.1:8002";
+const MODEL3_URL = process.env.MODEL3_URL || "http://127.0.0.1:8003";
 const DATA_SERVICE_URL = process.env.DATA_SERVICE_URL || "http://127.0.0.1:8000";
 
 // Timeout for each ML call (ms)
@@ -29,6 +30,26 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = ML_TIMEOUT_MS) {
   } finally {
     clearTimeout(timer);
   }
+}
+
+/**
+ * Maps a business category to the closest APMC commodity supported by Model 3.
+ */
+function mapCategoryToCommodity(category) {
+  const cat = String(category || "").toLowerCase();
+  if (cat.includes("dairy") || cat.includes("milk") || cat.includes("ghee")) return "Dairy";
+  if (cat.includes("rice") || cat.includes("paddy")) return "Rice";
+  if (cat.includes("wheat") || cat.includes("flour") || cat.includes("bakery")) return "Wheat";
+  if (cat.includes("onion")) return "Onion";
+  if (cat.includes("tomato")) return "Tomato";
+  if (cat.includes("garlic")) return "Garlic";
+  if (cat.includes("ginger")) return "Ginger";
+  if (cat.includes("banana")) return "Banana";
+  if (cat.includes("apple") || cat.includes("fruit")) return "Apple";
+  if (cat.includes("poultry") || cat.includes("feed")) return "Wheat";
+  if (cat.includes("retail") || cat.includes("kirana") || cat.includes("grocery")) return "Wheat";
+  if (cat.includes("food")) return "Potato";
+  return "Potato";
 }
 
 /**
@@ -85,6 +106,34 @@ async function callModel2({ state, district, subdistrict, businessCategory }) {
 }
 
 /**
+ * Call Model 3 — Local Market Price Prediction & Conformal Intervals
+ * Returns: expected_market_price, prediction_interval, recent_observed_price, target_unit, etc.
+ */
+async function callModel3({ state, district, businessCategory }) {
+  const commodity = mapCategoryToCommodity(businessCategory);
+  const payload = {
+    state: state || "Gujarat",
+    district: district || "Anand",
+    market: `${district || "Anand"} APMC`,
+    commodity,
+  };
+
+  try {
+    const res = await fetchWithTimeout(`${MODEL3_URL}/api/v1/predict`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) return null;
+    return res.json();
+  } catch (err) {
+    console.warn(`[feasibility-ml.client] Model 3 price prediction unavailable (${err.message}). Falling back.`);
+    return null;
+  }
+}
+
+/**
  * Call Data Service — Census population/housing statistics for location context
  * Returns: reach (radius5km, radius10km), market size, commercial units, etc.
  */
@@ -107,7 +156,7 @@ async function callDataService({ state }) {
 
 /**
  * Main ML prediction function.
- * Calls Model 1 + Model 2 in parallel and returns a combined prediction object.
+ * Calls Model 1 + Model 2 + Model 3 in parallel and returns a combined prediction object.
  * Optionally enriches with census data from the data service.
  *
  * @param {{ business: object, profile: object }} params
@@ -123,18 +172,20 @@ export async function predictFeasibility({ business, profile }) {
   const longitude = loc.longitude !== undefined && loc.longitude !== null ? Number(loc.longitude) : null;
   const businessCategory = business?.category?.name || "Retail";
 
-  // Run Model 1, Model 2, and Data Service in parallel for performance
-  const [model1Result, model2Result, censusData] = await Promise.allSettled([
+  // Run Model 1, Model 2, Model 3, and Data Service in parallel for maximum performance
+  const [model1Result, model2Result, model3Result, censusData] = await Promise.allSettled([
     callModel1({ state, district, subdistrict, village, businessCategory, latitude, longitude }),
     callModel2({ state, district, subdistrict, businessCategory }),
+    callModel3({ state, district, businessCategory }),
     callDataService({ state }),
   ]);
 
   const m1 = model1Result.status === "fulfilled" ? model1Result.value : null;
   const m2 = model2Result.status === "fulfilled" ? model2Result.value : null;
+  const m3 = model3Result.status === "fulfilled" ? model3Result.value : null;
   const census = censusData.status === "fulfilled" ? censusData.value : null;
 
-  // At least one model must succeed
+  // At least one core model (Model 1 or Model 2) must succeed
   if (!m1 && !m2) {
     const errors = [
       model1Result.status === "rejected" ? model1Result.reason?.message : null,
@@ -146,6 +197,7 @@ export async function predictFeasibility({ business, profile }) {
   return {
     model1: m1,
     model2: m2,
+    model3: m3,
     census,
     location: { state, district, subdistrict, village },
     businessCategory,

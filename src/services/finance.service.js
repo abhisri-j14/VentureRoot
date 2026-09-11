@@ -112,6 +112,65 @@ export async function calculateBusinessRepayment({
 }
 
 
+function evaluateSchemeAndRecommendation({ projectCost, revenue, expenses, monthlyEmi }) {
+  const operatingProfit = Math.max(0, Number(revenue || 0) - Number(expenses || 0));
+  const emi = Number(monthlyEmi || 0);
+  const netCashFlow = operatingProfit - emi;
+  const dscr = emi > 0 ? (operatingProfit / emi) : 2.0;
+
+  let recommendationStatus = "FEASIBLE";
+  if (netCashFlow < 0 || dscr < 1.1) {
+    recommendationStatus = "HIGH_RISK";
+  } else if (dscr < 1.5) {
+    recommendationStatus = "MODERATE_RISK";
+  }
+
+  let scheme = null;
+  if (projectCost <= 140000) {
+    scheme = {
+      schemeId: "micro_finance",
+      name: "Micro Finance Scheme",
+      maxProjectCost: 140000,
+      maxLoan: 125000,
+      standardInterestRate: 0.065,
+      standardTenureMonths: 36,
+      moratoriumMonths: 3,
+      beneficiaryContributionPct: 10,
+      statusMessage: "Project cost qualifies for Micro Finance Scheme with 6.5% interest rate and 3-month moratorium.",
+    };
+  } else if (projectCost <= 5000000) {
+    scheme = {
+      schemeId: "term_loan",
+      name: "Term Loan Scheme (PMEGP / MUDRA Credit Linkage)",
+      maxProjectCost: 5000000,
+      maxLoan: 4500000,
+      standardInterestRate: 0.08,
+      standardTenureMonths: 84,
+      moratoriumMonths: 6,
+      beneficiaryContributionPct: 10,
+      statusMessage: "Project cost qualifies for Term Loan Scheme with up to ₹45 Lakh eligible loan and 6-month moratorium.",
+    };
+  } else {
+    scheme = {
+      schemeId: "outside_range",
+      name: "Commercial Lending / Outside Micro Scheme Range",
+      maxProjectCost: 5000000,
+      maxLoan: 4500000,
+      standardInterestRate: 0.10,
+      standardTenureMonths: 84,
+      moratoriumMonths: 6,
+      beneficiaryContributionPct: 15,
+      statusMessage: "Project cost exceeds government micro-enterprise limits (₹50 Lakh). Standard commercial rates apply.",
+    };
+  }
+
+  return {
+    recommendationStatus,
+    dscr: Math.round(dscr * 100) / 100,
+    scheme,
+  };
+}
+
 export async function buildFinanceStructure({
   user,
   data,
@@ -139,6 +198,14 @@ export async function buildFinanceStructure({
         repayment.monthlyEmi,
     });
 
+  const margin = Number(business.availableMargin || 0);
+  const projectCost = Number(data.loanAmount) + margin;
+  const evaluation = evaluateSchemeAndRecommendation({
+    projectCost,
+    revenue: data.revenue,
+    expenses: data.expenses,
+    monthlyEmi: repayment.monthlyEmi,
+  });
 
   return {
     business: {
@@ -175,14 +242,18 @@ export async function buildFinanceStructure({
         data.moratorium,
 
       moratoriumApplied:
-        false,
+        Boolean(data.moratorium && data.moratorium > 0),
     },
 
     repayment,
 
     cashFlow,
 
+    dscr: evaluation.dscr,
+
+    scheme: evaluation.scheme,
+
     recommendationStatus:
-      "NOT_EVALUATED",
+      evaluation.recommendationStatus,
   };
 }
