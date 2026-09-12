@@ -61,9 +61,16 @@ function LoginPageContent() {
       const backendUser = res?.data?.user || res?.data?.data?.user || res?.user;
       const token = session?.access_token || "mock-token-xyz-123";
       
+      const metaName = backendUser?.user_metadata?.full_name || backendUser?.user_metadata?.name;
+      const metaFirst = backendUser?.user_metadata?.first_name || (metaName ? metaName.trim().split(/\s+/)[0] : null);
+      const emailFirst = backendUser?.email ? backendUser.email.split('@')[0].split(/[._0-9]/)[0] : "User";
+      const cleanEmailFirst = emailFirst ? emailFirst.charAt(0).toUpperCase() + emailFirst.slice(1) : "Entrepreneur";
+      const resolvedFirst = metaFirst || cleanEmailFirst;
+
       const authUser = backendUser ? {
         id: backendUser.id,
-        name: backendUser.user_metadata?.full_name || backendUser.email?.split('@')[0] || "User",
+        name: metaName || resolvedFirst,
+        firstName: resolvedFirst,
         email: backendUser.email || data.email,
         roleLabel: backendUser.user_metadata?.role || "Business Owner",
       } : mockUser!;
