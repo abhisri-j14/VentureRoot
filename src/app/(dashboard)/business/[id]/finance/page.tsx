@@ -203,23 +203,23 @@ export default function FinancePage() {
 
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <h1 className="font-heading text-[32px] font-bold text-[#242424] tracking-tight leading-tight">
+            <h1 className="font-heading text-[24px] sm:text-[32px] font-bold text-[#242424] tracking-tight leading-tight">
               Financial Planning
             </h1>
-            <p className="font-sans text-[14px] text-slate-500 font-medium mt-0.5">
+            <p className="font-sans text-[13px] sm:text-[14px] text-slate-500 font-medium mt-0.5">
               Understand the money needed, possible funding, and repayment burden.
             </p>
-            <span className="inline-block mt-2 font-sans text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full uppercase tracking-wider">
+            <span className="inline-block mt-2 font-sans text-[10px] sm:text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full uppercase tracking-wider">
               Preliminary estimate · based on information provided
             </span>
           </div>
-          <div className="flex gap-3 shrink-0">
+          <div className="flex flex-wrap gap-2 sm:gap-3 shrink-0">
             <Link href={`/business/${id}/feasibility`}
-              className="flex items-center gap-2 bg-white border border-slate-200 text-gray-700 px-4 py-2.5 rounded-xl font-sans text-[14px] font-semibold hover:border-primary hover:text-primary transition-all shadow-sm">
+              className="flex items-center gap-2 bg-white border border-slate-200 text-gray-700 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl font-sans text-[13px] sm:text-[14px] font-semibold hover:border-primary hover:text-primary transition-all shadow-sm">
               <Map className="w-4 h-4" /> Feasibility
             </Link>
             <Link href={`/business/${id}/roadmap`}
-              className="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-xl font-sans text-[14px] font-semibold hover:bg-primary-light transition-colors shadow-sm">
+              className="flex items-center gap-2 bg-primary text-white px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl font-sans text-[13px] sm:text-[14px] font-semibold hover:bg-primary-light transition-colors shadow-sm">
               <Compass className="w-4 h-4" /> Action Roadmap
             </Link>
           </div>
@@ -227,7 +227,7 @@ export default function FinancePage() {
       </div>
 
       {/* ── 2. Summary Strip (DYNAMIC from 10% formula) ────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
         {[
           { label: "Project Cost", value: fmt(plan.projectCost), sub: "Available Margin ÷ 10%", icon: BarChart3, bgClass: "bg-[#094f9e] border-transparent" },
           { label: "Your Margin (10%)", value: fmt(plan.availableMargin), sub: "Your own capital contribution", icon: Wallet, bgClass: "bg-[#c2a213] border-transparent" },
@@ -512,8 +512,8 @@ export default function FinancePage() {
       {/* ── 9. Where the money may go ──────────────────────────────────── */}
       <Card className="mb-6">
         <CardHeader title="Where the money may go" subtitle="Estimated breakdown of project costs." accent />
-        <div className="px-6 py-2">
-          <table className="w-full font-sans text-[14px]">
+        <div className="px-4 sm:px-6 py-2 overflow-x-auto no-scrollbar">
+          <table className="min-w-[440px] w-full font-sans text-[14px]">
             <thead>
               <tr className="border-b border-[#81cc87] bg-[#81cc87]">
                 {["Item", "Estimated amount", "Share of total", ""].map(h => (

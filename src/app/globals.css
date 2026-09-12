@@ -2,8 +2,16 @@
 @config "../../tailwind.config.ts";
 
 @layer base {
+    html {
+        -webkit-text-size-adjust: 100%;
+        touch-action: manipulation;
+    }
+
     body {
         @apply bg-background text-secondary font-sans antialiased;
+        -webkit-tap-highlight-color: transparent;
+        overscroll-behavior-y: none;
+        -webkit-overflow-scrolling: touch;
     }
 
     h1,
@@ -15,6 +23,16 @@
         @apply font-heading tracking-tight text-secondary;
     }
 }
+
+/* Hide scrollbar for clean horizontal mobile carousels */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 
 /* ─── Premium Dashboard Animations ─── */
 

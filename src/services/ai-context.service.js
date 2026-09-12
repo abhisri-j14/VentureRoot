@@ -1,5 +1,6 @@
 import {
   findBusinessByIdAndUserId,
+  findBusinessesByUserId,
 } from "@/repositories/business.repository";
 
 import {
@@ -69,7 +70,7 @@ function mapBusinessContext(
 }
 
 
-function mapProfileContext(profile) {
+function mapProfileContext(profile, fullLocation = null) {
   if (!profile) {
     return null;
   }
@@ -77,6 +78,17 @@ function mapProfileContext(profile) {
   return {
     firstName:
       profile.firstName,
+
+    lastName:
+      profile.lastName || null,
+
+    phone:
+      profile.phone || null,
+
+    location:
+      fullLocation
+        ? buildLocationResponse(fullLocation)
+        : null,
 
     businessExperience:
       profile.businessExperience,
@@ -113,47 +125,62 @@ export async function loadAiContext({
       userId
     );
 
+  let profileLocation = null;
+  if (profile?.locationId) {
+    try {
+      profileLocation = await findLocationWithParents(profile.locationId);
+    } catch {
+      // Non-blocking location fetch
+    }
+  }
+
+  let targetBusinessId = businessId;
+
+  // Auto-discover user's active/latest business if not explicitly provided
+  if (!targetBusinessId) {
+    try {
+      const [businesses] = await findBusinessesByUserId({
+        userId,
+        limit: 1,
+      });
+      if (businesses && businesses.length > 0) {
+        targetBusinessId = businesses[0].id;
+      }
+    } catch (e) {
+      console.warn("[ai-context.service] Auto-discovery of business fallback:", e?.message);
+    }
+  }
 
   let businessContext = null;
 
-
-  if (businessId) {
+  if (targetBusinessId) {
     const business =
       await findBusinessByIdAndUserId({
-        businessId,
+        businessId: targetBusinessId,
         userId,
       });
 
+    if (business) {
+      let fullLocation = null;
 
-    if (!business) {
-      throw new NotFoundError(
-        "Business not found"
-      );
-    }
+      if (business.locationId) {
+        fullLocation =
+          await findLocationWithParents(
+            business.locationId
+          );
+      }
 
-
-    let fullLocation = null;
-
-
-    if (business.locationId) {
-      fullLocation =
-        await findLocationWithParents(
-          business.locationId
+      businessContext =
+        mapBusinessContext(
+          business,
+          fullLocation
         );
     }
-
-
-    businessContext =
-      mapBusinessContext(
-        business,
-        fullLocation
-      );
   }
-
 
   return {
     profile:
-      mapProfileContext(profile),
+      mapProfileContext(profile, profileLocation),
 
     business:
       businessContext,

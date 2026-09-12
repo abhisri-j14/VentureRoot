@@ -98,25 +98,25 @@ export default function FeasibilityPage() {
       <main className="flex-1 w-full max-w-full flex flex-col gap-6">
         
         {/* Header Section */}
-        <div className="mb-6">
-          <Link href={`/business/${id}`} className="inline-flex items-center gap-1.5 font-sans text-[14px] font-semibold text-secondary-muted hover:text-primary transition-colors mb-3">
+        <div className="mb-4 sm:mb-6">
+          <Link href={`/business/${id}`} className="inline-flex items-center gap-1.5 font-sans text-[13px] sm:text-[14px] font-semibold text-secondary-muted hover:text-primary transition-colors mb-2 sm:mb-3">
             <ArrowLeft className="w-3.5 h-3.5" /> Back to business details
           </Link>
-          <div className="flex justify-between items-end">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
             <div>
-              <h1 className="font-heading text-[32px] font-bold text-[#242424] tracking-tight leading-tight">
+              <h1 className="font-heading text-[24px] sm:text-[32px] font-bold text-[#242424] tracking-tight leading-tight">
                 Business Intelligence
               </h1>
-              <p className="font-sans text-[14px] text-slate-500 font-medium mt-0.5">
+              <p className="font-sans text-[13px] sm:text-[14px] text-slate-500 font-medium mt-0.5">
                 Hyper-local market demand, competitor positioning, and feasibility intelligence.
               </p>
             </div>
             
-            <div className="hidden md:flex gap-3">
-              <Link href={`/business/${id}/finance`} className="px-4 py-2 bg-surface text-primary border border-slate-200 font-sans text-[14px] font-semibold rounded-full shadow-sm hover:bg-slate-50 transition-colors">
+            <div className="flex flex-wrap gap-2 mt-1 sm:mt-0 shrink-0">
+              <Link href={`/business/${id}/finance`} className="px-3.5 py-1.5 sm:px-4 sm:py-2 bg-surface text-primary border border-slate-200 font-sans text-[13px] sm:text-[14px] font-semibold rounded-full shadow-sm hover:bg-slate-50 transition-colors">
                 ₹ Finance
               </Link>
-              <Link href={`/business/${id}/roadmap`} className="px-4 py-2 bg-surface text-vr-red border border-slate-200 font-sans text-[14px] font-semibold rounded-full shadow-sm hover:bg-slate-50 transition-colors">
+              <Link href={`/business/${id}/roadmap`} className="px-3.5 py-1.5 sm:px-4 sm:py-2 bg-surface text-vr-red border border-slate-200 font-sans text-[13px] sm:text-[14px] font-semibold rounded-full shadow-sm hover:bg-slate-50 transition-colors">
                 ⊕ Roadmap
               </Link>
             </div>

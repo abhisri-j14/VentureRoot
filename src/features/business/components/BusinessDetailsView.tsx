@@ -100,7 +100,7 @@ export const BusinessDetailsView = () => {
   }
 
   return (
-    <div className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-6 relative z-10">
+    <div className="w-full h-full p-3.5 sm:p-6 lg:p-8 flex flex-col gap-5 sm:gap-6 relative z-10">
 
       <div className="flex flex-col gap-6 relative z-10 w-full">
         {/* HEADER */}
@@ -108,9 +108,9 @@ export const BusinessDetailsView = () => {
           <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-[#402a03]/70">
             {business.category} • {business.subcategory || 'DAIRY FARMING'}
           </span>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <h1 className="font-heading text-[32px] font-bold text-[#402a03] tracking-tight leading-tight">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-4">
+              <h1 className="font-heading text-[24px] sm:text-[32px] font-bold text-[#402a03] tracking-tight leading-tight">
                 {business.name}
               </h1>
               <span className="px-2.5 py-1 rounded-full bg-[#402a03]/10 font-sans text-[12px] font-bold text-[#402a03] flex items-center gap-1.5 shadow-sm border border-[#402a03]/20">

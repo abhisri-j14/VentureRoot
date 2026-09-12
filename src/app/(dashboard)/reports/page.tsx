@@ -38,14 +38,14 @@ export default function ReportsPage() {
   };
 
   return (
-    <div className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="w-full h-full p-3.5 sm:p-6 lg:p-8 flex flex-col gap-5 sm:gap-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h1 className="font-heading text-[22px] font-bold text-[#242424] tracking-tight leading-tight flex items-center gap-2">
-            <FileText className="w-6 h-6 text-[#242424]" />
+          <h1 className="font-heading text-[20px] sm:text-[22px] font-bold text-[#242424] tracking-tight leading-tight flex items-center gap-2">
+            <FileText className="w-5 sm:w-6 h-5 sm:h-6 text-[#242424]" />
             {t("reports.title") || "Business Reports"}
           </h1>
-          <p className="font-sans text-[14px] text-slate-500 font-medium mt-0.5">
+          <p className="font-sans text-[13px] sm:text-[14px] text-slate-500 font-medium mt-0.5">
             {t("reports.subtitle") || "Access and generate comprehensive business intelligence reports."}
           </p>
         </div>
@@ -53,9 +53,9 @@ export default function ReportsPage() {
         {!isGenerating && (
           <button
             onClick={() => setIsGenerating(true)}
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary text-white font-sans text-[14px] font-semibold rounded-xl hover:bg-primary/90 transition-colors shadow-sm"
+            className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-primary text-white font-sans text-[13px] sm:text-[14px] font-semibold rounded-xl hover:bg-primary/90 transition-colors shadow-sm w-full sm:w-auto"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
             {t("reports.generate.new") || "Generate New Report"}
           </button>
         )}

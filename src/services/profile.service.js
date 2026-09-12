@@ -49,6 +49,9 @@ function mapProfileResponse({
         .filter(Boolean)
         .join(" "),
 
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+
       email,
 
       phone: profile.phone,
