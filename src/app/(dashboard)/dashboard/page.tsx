@@ -78,10 +78,25 @@ export default function DashboardPage() {
   const { data: businesses, isLoading: isBusinessesLoading } = useBusinessesComparison();
   const activeBusiness = businesses?.[0];
 
-  const firstName =
-    profileData?.fullName?.split(" ")[0] ||
-    user?.name?.split(" ")[0] ||
+  // Resolve user's actual first name entered in profile/onboarding form
+  const rawFirstName =
+    profileData?.firstName ||
+    profileData?.fullName?.trim().split(/\s+/)[0] ||
+    (user as any)?.firstName ||
+    user?.name?.trim().split(/\s+/)[0] ||
     "Entrepreneur";
+
+  // Clean up any email-like artifact (e.g. "abhisri.j14" -> "Abhisri")
+  const cleanedFirstName = rawFirstName.includes("@")
+    ? rawFirstName.split("@")[0].split(/[._0-9]/)[0]
+    : rawFirstName.includes(".") || /[0-9]/.test(rawFirstName)
+    ? rawFirstName.split(/[._0-9]/)[0]
+    : rawFirstName;
+
+  const firstName =
+    cleanedFirstName && cleanedFirstName.length > 0
+      ? cleanedFirstName.charAt(0).toUpperCase() + cleanedFirstName.slice(1)
+      : "Entrepreneur";
 
   const locationStr = profileData?.location?.state
     ? `${profileData.location.village ? profileData.location.village + ", " : ""}${profileData.location.district ? profileData.location.district + ", " : ""}${profileData.location.state}`

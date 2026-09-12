@@ -87,7 +87,24 @@ export const TopNav = () => {
     }
   };
 
-  const displayName = profileData?.fullName || user?.name || "Entrepreneur";
+  const rawDisplayName =
+    profileData?.fullName ||
+    profileData?.firstName ||
+    (user as any)?.firstName ||
+    user?.name ||
+    "Entrepreneur";
+
+  const cleanDisplayName = rawDisplayName.includes("@")
+    ? rawDisplayName.split("@")[0].split(/[._0-9]/)[0]
+    : rawDisplayName.includes(".") || /[0-9]{2,}/.test(rawDisplayName)
+    ? rawDisplayName.split(/[._0-9]/)[0]
+    : rawDisplayName;
+
+  const displayName =
+    cleanDisplayName && cleanDisplayName.length > 0
+      ? cleanDisplayName.charAt(0).toUpperCase() + cleanDisplayName.slice(1)
+      : "Entrepreneur";
+
   const activeRoleLabel = "Entrepreneur";
 
   return (

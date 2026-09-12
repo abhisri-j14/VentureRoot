@@ -1,18 +1,54 @@
 import { supabase } from "@/lib/supabase";
 import { mapAuthError } from "@/errors/auth-error";
+import { upsertProfile } from "@/repositories/profile.repository";
+
+function splitFullName(fullName) {
+  if (!fullName || typeof fullName !== "string") {
+    return { firstName: "Entrepreneur", lastName: null };
+  }
+  const parts = fullName.trim().split(/\s+/);
+  return {
+    firstName: parts[0] || "Entrepreneur",
+    lastName: parts.length > 1 ? parts.slice(1).join(" ") : null,
+  };
+}
 
 export async function registerUser({
   email,
   password,
+  fullName,
 }) {
+  const options = fullName
+    ? {
+        data: {
+          full_name: fullName,
+          name: fullName,
+        },
+      }
+    : undefined;
+
   const { data, error } =
     await supabase.auth.signUp({
       email,
       password,
+      options,
     });
 
   if (error) {
     throw mapAuthError(error);
+  }
+
+  if (data?.user?.id && fullName) {
+    try {
+      const { firstName, lastName } = splitFullName(fullName);
+      await upsertProfile({
+        userId: data.user.id,
+        firstName: firstName || "Entrepreneur",
+        lastName,
+      });
+    } catch (profileErr) {
+      console.warn("[auth.service] Initial profile creation notice:", profileErr?.message);
+    }
   }
 
   return data;
