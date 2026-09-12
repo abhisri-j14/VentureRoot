@@ -36,7 +36,16 @@ export default function ReportDetailPage({
     }
   }, [id]);
 
-  if (!report) return null;
+  if (!report) {
+    return (
+      <div className="w-full min-h-screen flex items-center justify-center bg-[#81cc87]/10">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-3 border-emerald-700 border-t-transparent rounded-full animate-spin" />
+          <p className="font-sans text-sm font-semibold text-slate-700">Synthesizing Detailed Project Report (DPR)...</p>
+        </div>
+      </div>
+    );
+  }
 
   return <ReportDetailView report={report} />;
 }

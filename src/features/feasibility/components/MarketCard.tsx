@@ -6,7 +6,19 @@ import { MarketAnalysis } from "../types";
 import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 import { LocationIntelligenceMap } from "@/features/location/components/LocationIntelligenceMap";
 
-export const MarketCard = ({ data }: { data?: MarketAnalysis }) => {
+export const MarketCard = ({
+  data,
+  centerCoords,
+  locationName,
+  category,
+  competitors,
+}: {
+  data?: MarketAnalysis;
+  centerCoords?: [number, number];
+  locationName?: string;
+  category?: string;
+  competitors?: any[];
+}) => {
   const { t } = useTranslation();
 
   if (!data) return null;
@@ -25,7 +37,12 @@ export const MarketCard = ({ data }: { data?: MarketAnalysis }) => {
         </div>
 
         <div className="w-full rounded-2xl overflow-hidden border border-slate-200 relative min-h-[450px] bg-slate-50">
-          <LocationIntelligenceMap />
+          <LocationIntelligenceMap
+            center={centerCoords}
+            locationName={locationName}
+            category={category}
+            competitors={competitors}
+          />
         </div>
       </div>
 
@@ -43,23 +60,33 @@ export const MarketCard = ({ data }: { data?: MarketAnalysis }) => {
         </div>
 
         {/* Population Stats */}
-        <div className="flex gap-3">
-          <div className="flex-1 bg-slate-50 p-4 rounded-xl border border-slate-100">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
             <div className="font-sans text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1">
-              <MapPin className="w-3 h-3" /> 5km Population Reach
+              <MapPin className="w-3 h-3" /> 5km Reach
             </div>
-            <div className="font-sans text-[28px] font-bold text-gray-900">
+            <div className="font-sans text-[22px] sm:text-[26px] font-bold text-gray-900">
               {data.reach.radius5km.toLocaleString("en-IN")}
             </div>
           </div>
-          <div className="flex-1 bg-slate-50 p-4 rounded-xl border border-slate-100">
+          <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
             <div className="font-sans text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1">
-              <MapPin className="w-3 h-3" /> 10km Population Reach
+              <MapPin className="w-3 h-3" /> 10km Reach
             </div>
-            <div className="font-sans text-[28px] font-bold text-gray-900">
+            <div className="font-sans text-[22px] sm:text-[26px] font-bold text-gray-900">
               {data.reach.radius10km.toLocaleString("en-IN")}
             </div>
           </div>
+          {data.reach.radius20km ? (
+            <div className="col-span-2 sm:col-span-1 bg-slate-50 p-4 rounded-xl border border-slate-100">
+              <div className="font-sans text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1">
+                <MapPin className="w-3 h-3" /> 20km Reach
+              </div>
+              <div className="font-sans text-[22px] sm:text-[26px] font-bold text-gray-900">
+                {data.reach.radius20km.toLocaleString("en-IN")}
+              </div>
+            </div>
+          ) : null}
         </div>
 
         {/* Customer Segments */}

@@ -13,29 +13,43 @@ export const getLocationHierarchy = () => {
 };
 
 export const useLocationSearch = (query: string) => {
-  const [data, setData] = useState<any[]>(
-    DATA_SOURCE === "json" ? locationsData.searchResults : []
-  );
+  const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (DATA_SOURCE === "database" && query.trim().length > 0) {
-      setIsLoading(true);
-      locationApi.search(query)
+    const cleanQuery = query.trim();
+    if (cleanQuery.length === 0) {
+      setData([]);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      fetch(`/api/v1/locations/search?q=${encodeURIComponent(cleanQuery)}`)
         .then((res) => {
-          setData(res as any);
+          if (!res.ok) throw new Error(`Status ${res.status}`);
+          return res.json();
+        })
+        .then((json) => {
+          const locs = json?.data?.locations || json?.locations || [];
+          setData(locs);
           setIsLoading(false);
         })
         .catch((err) => {
+          console.warn("[useLocationSearch] Fetch failed, using fallback:", err);
           setError(err);
+          // Fallback to static results if network fails
+          const fallback = (locationsData.searchResults || []).filter((r: any) =>
+            r.label?.toLowerCase().includes(cleanQuery.toLowerCase())
+          );
+          setData(fallback);
           setIsLoading(false);
         });
-    } else if (DATA_SOURCE === "json") {
-      // In JSON mode, we could filter the mock results if we wanted, 
-      // but returning the static mock array matches the previous behavior.
-      setData(locationsData.searchResults);
-    }
+    }, 150); // 150ms debounce for snappy feel
+
+    return () => clearTimeout(timer);
   }, [query]);
 
   return { data, isLoading, error };

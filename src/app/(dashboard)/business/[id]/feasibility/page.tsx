@@ -25,13 +25,24 @@ import {
 } from "@/features/feasibility/types";
 
 import { useFeasibility } from "@/lib/data/feasibility";
+import { useBusinessDetails } from "@/lib/data/businesses";
 
 export default function FeasibilityPage() {
   const params = useParams();
   const id = params?.id as string || "123";
 
   const { data: fetchedFeasibility, isLoading, error } = useFeasibility(id);
+  const { data: businessDetails } = useBusinessDetails(id);
   const [feasibilityData, setFeasibilityData] = useState<FeasibilityData | null>(null);
+
+  const centerCoords: [number, number] = [
+    (businessDetails as any)?.location?.lat || 22.5645,
+    (businessDetails as any)?.location?.lon || 72.9289,
+  ];
+  const locationName = (businessDetails as any)?.location
+    ? `${(businessDetails as any).location.subdistrict || (businessDetails as any).location.district || "Anand"}, ${(businessDetails as any).location.state || "Gujarat"}`
+    : "Anand, Gujarat";
+  const businessCategory = (businessDetails as any)?.category?.name || (businessDetails as any)?.category || "Dairy";
 
   useEffect(() => {
     if (fetchedFeasibility) {
@@ -114,47 +125,48 @@ export default function FeasibilityPage() {
 
         <FeasibilityStateBoundary status={feasibilityData.status}>
           {/* Stats Banner */}
-          <div className="bg-[#81cc87] rounded-2xl p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4 mb-6 shadow-sm">
-            
-            <div className="flex-1 flex flex-col gap-1 w-full text-center md:text-left">
-              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider">5KM Population</span>
-              <div className="font-sans text-[28px] font-bold text-[#f9faeb]">{feasibilityData.market?.reach?.radius5km.toLocaleString()}</div>
-            </div>
-            
-            <div className="hidden md:block w-px h-10 bg-[#f9faeb]/20"></div>
-
-            <div className="flex-1 flex flex-col gap-1 w-full text-center md:text-left">
-              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider">10KM Population</span>
-              <div className="font-sans text-[28px] font-bold text-[#f9faeb]">{feasibilityData.market?.reach?.radius10km.toLocaleString()}</div>
+          {/* Stats Banner (Mobile Responsive Grid) */}
+          <div className="bg-[#81cc87] rounded-2xl p-3.5 sm:p-5 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-2.5 sm:gap-3.5 mb-6 shadow-xs">
+            <div className="flex flex-col gap-0.5 bg-black/5 p-3 rounded-xl min-w-0">
+              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider truncate">5KM Population</span>
+              <div className="font-sans text-xl sm:text-2xl font-bold text-[#f9faeb] truncate">{feasibilityData.market?.reach?.radius5km?.toLocaleString()}</div>
             </div>
 
-            <div className="hidden md:block w-px h-10 bg-[#f9faeb]/20"></div>
+            <div className="flex flex-col gap-0.5 bg-black/5 p-3 rounded-xl min-w-0">
+              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider truncate">10KM Population</span>
+              <div className="font-sans text-xl sm:text-2xl font-bold text-[#f9faeb] truncate">{feasibilityData.market?.reach?.radius10km?.toLocaleString()}</div>
+            </div>
 
-            <div className="flex-1 flex flex-col gap-1 w-full text-center md:text-left">
-              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider">Observed Price</span>
-              <div className="font-sans text-[28px] font-bold flex justify-center md:justify-start items-baseline gap-1 text-[#f9faeb]">
-                ₹{feasibilityData.pricing?.observedMarketPrice} <span className="font-sans text-[14px] text-[#f9faeb]/80 font-medium">/liter</span>
+            <div className="flex flex-col gap-0.5 bg-black/5 p-3 rounded-xl min-w-0">
+              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider truncate">20KM Population</span>
+              <div className="font-sans text-xl sm:text-2xl font-bold text-[#f9faeb] truncate">
+                {feasibilityData.market?.reach?.radius20km
+                  ? feasibilityData.market.reach.radius20km.toLocaleString()
+                  : (feasibilityData.market?.reach?.radius10km ? Math.round(feasibilityData.market.reach.radius10km * 4.0).toLocaleString() : "—")}
               </div>
             </div>
 
-            <div className="hidden md:block w-px h-10 bg-[#f9faeb]/20"></div>
+            <div className="flex flex-col gap-0.5 bg-black/5 p-3 rounded-xl min-w-0">
+              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider truncate">Observed Price</span>
+              <div className="font-sans text-xl sm:text-2xl font-bold text-[#f9faeb] truncate flex items-baseline gap-1">
+                ₹{feasibilityData.pricing?.observedMarketPrice} <span className="font-sans text-[11px] text-[#f9faeb]/80 font-medium">/unit</span>
+              </div>
+            </div>
 
-            <div className="flex-1 flex flex-col gap-1 w-full text-center md:text-left">
-              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider">Expected Price</span>
-              <div className="font-sans text-[28px] font-bold flex justify-center md:justify-start items-center gap-2 text-[#f9faeb]">
-                ₹{feasibilityData.pricing?.expectedLocalPrice} 
-                <span className="font-sans text-[11px] font-bold uppercase tracking-wider bg-white text-[#81cc87] rounded-full px-2 py-0.5 shadow-sm">
-                  ▲ premium
+            <div className="flex flex-col gap-0.5 bg-black/5 p-3 rounded-xl min-w-0">
+              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider truncate">Expected Price</span>
+              <div className="font-sans text-xl sm:text-2xl font-bold text-[#f9faeb] truncate flex items-center gap-1">
+                <span>₹{feasibilityData.pricing?.expectedLocalPrice}</span>
+                <span className="font-sans text-[9px] font-bold uppercase tracking-wider bg-white text-[#81cc87] rounded-full px-1.5 py-0.5 shrink-0">
+                  ▲
                 </span>
               </div>
             </div>
 
-            <div className="hidden md:block w-px h-10 bg-[#f9faeb]/20"></div>
-
-            <div className="flex-1 flex flex-col gap-1 w-full text-center md:text-left">
-              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider">Confidence</span>
-              <div className="font-sans text-[28px] font-bold flex justify-center md:justify-start items-baseline gap-1 text-[#f9faeb]">
-                {compositeConfidence} <span className="font-sans text-[14px] text-[#f9faeb]/80 font-medium">/100</span>
+            <div className="flex flex-col gap-0.5 bg-black/5 p-3 rounded-xl min-w-0 col-span-2 sm:col-span-1">
+              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider truncate">Confidence</span>
+              <div className="font-sans text-xl sm:text-2xl font-bold text-[#f9faeb] flex items-baseline gap-1">
+                {compositeConfidence} <span className="font-sans text-[11px] text-[#f9faeb]/80 font-medium">/100</span>
               </div>
             </div>
           </div>
@@ -162,7 +174,13 @@ export default function FeasibilityPage() {
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 pb-16 items-start">
             
             {/* Market is full width (Map) + half width (Stats), MarketCard returns a fragment */}
-            <MarketCard data={feasibilityData.market} />
+            <MarketCard
+              data={feasibilityData.market}
+              centerCoords={centerCoords}
+              locationName={locationName}
+              category={businessCategory}
+              competitors={feasibilityData.competition?.competitors}
+            />
 
             <div className="col-span-1 h-full">
               <OpportunityCard data={feasibilityData.opportunity} />
@@ -177,7 +195,13 @@ export default function FeasibilityPage() {
             </div>
 
             <div className="col-span-1 xl:col-span-2">
-              <CompetitionCard data={feasibilityData.competition} />
+              <CompetitionCard
+                data={feasibilityData.competition}
+                centerCoords={centerCoords}
+                businessName={(businessDetails as any)?.name || "Your Venture"}
+                category={businessCategory}
+                locationName={locationName}
+              />
             </div>
 
             <div className="col-span-1 xl:col-span-2">

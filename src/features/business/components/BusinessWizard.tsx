@@ -6,8 +6,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { businessFormSchema, BusinessFormValues } from "../schemas/businessSchema";
 import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 import { useRouter } from "next/navigation";
-import { AlertCircle, Check, Info, Bookmark, ArrowRight, Sprout, Leaf } from "lucide-react";
+import { AlertCircle, Check, Info, Bookmark, ArrowRight, Sprout, Leaf, MapPin, Sparkles } from "lucide-react";
 import { businessApi } from "../api/businessApi";
+import dynamic from "next/dynamic";
+import { LocationAutocompleteInput, SelectedLocation } from "@/components/ui/LocationAutocompleteInput";
+import { StateAutocompleteInput } from "@/components/ui/StateAutocompleteInput";
+
+const DynamicRadiusMap = dynamic(() => import("@/components/maps/RadiusMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-44 bg-slate-100 animate-pulse rounded-2xl flex items-center justify-center text-xs text-slate-400">
+      Loading OpenStreetMap Preview...
+    </div>
+  ),
+});
 
 const WIZARD_STEPS = [
   { id: 1, label: "Business Category", subtitle: "Choose your sector" },
@@ -45,6 +57,7 @@ export const BusinessWizard = () => {
     handleSubmit,
     trigger,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<BusinessFormValues>({
     resolver: zodResolver(businessFormSchema),
@@ -60,6 +73,20 @@ export const BusinessWizard = () => {
       expectedRevenue: 0,
     },
   });
+
+  const [mapCenter, setMapCenter] = useState<[number, number]>([18.5204, 73.8567]);
+  const [locationLabel, setLocationLabel] = useState<string>("Pune, Maharashtra");
+
+  const handleLocationSelect = (loc: SelectedLocation) => {
+    setValue("state", loc.state, { shouldValidate: true });
+    setValue("district", loc.district, { shouldValidate: true });
+    if (loc.block) setValue("block", loc.block, { shouldValidate: true });
+    if (loc.village) setValue("village", loc.village, { shouldValidate: true });
+    if (loc.lat && loc.lon) {
+      setMapCenter([loc.lat, loc.lon]);
+    }
+    setLocationLabel(loc.label);
+  };
 
   const formValues = watch();
 
@@ -82,6 +109,9 @@ export const BusinessWizard = () => {
     setGlobalError(null);
     try {
       const res: any = await businessApi.create(data);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("business-updated"));
+      }
       const createdBusiness = res?.data?.business || res?.data?.data?.business || res?.business || res?.data;
       const businessId = createdBusiness?.id;
       if (businessId) {
@@ -260,46 +290,98 @@ export const BusinessWizard = () => {
                 {/* STEP 2 */}
                 {currentStep === 2 && (
                   <div className="flex flex-col gap-6 animate-in fade-in duration-300">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">{t("business.wizard.state")}</label>
-                        <input
-                          {...register("state")}
-                          type="text"
-                          placeholder="e.g. Maharashtra"
-                          className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium"
-                        />
-                        {errors.state && <p className="text-red-500 font-sans text-[12px] mt-2 font-medium">{errors.state.message}</p>}
+                    
+                    {/* Instant Location Autocomplete Input */}
+                    <div className="bg-[#f0f9ed] border border-emerald-200/80 rounded-2xl p-5">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Sparkles className="w-4 h-4 text-[#1E6702]" />
+                        <h3 className="text-sm font-bold text-slate-800">
+                          Quick Location Search (Auto-Fill)
+                        </h3>
                       </div>
+                      <p className="text-xs text-slate-600 mb-3">
+                        Type the initial letters of your village, taluka, or district to search across all India census locations and OpenStreetMap.
+                      </p>
+                      <LocationAutocompleteInput
+                        placeholder="Search by location name (e.g. Pune, Anand, Khed, Wagholi)..."
+                        onSelect={handleLocationSelect}
+                      />
+                    </div>
+
+                    {/* Manual / Verified Location Fields */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div>
-                        <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">{t("business.wizard.district")}</label>
+                        <StateAutocompleteInput
+                          label={t("business.wizard.state") || "State"}
+                          required
+                          value={formValues.state}
+                          onChange={(val) => setValue("state", val, { shouldValidate: true })}
+                          error={errors.state?.message}
+                          placeholder="Type state name (e.g. Maharashtra, Gujarat, Punjab)..."
+                          inputClassName="p-3.5"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">
+                          {t("business.wizard.district")} <span className="text-red-500">*</span>
+                        </label>
                         <input
                           {...register("district")}
                           type="text"
                           placeholder="e.g. Pune"
-                          className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium"
+                          className="w-full rounded-xl border border-gray-200 p-3.5 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium"
                         />
-                        {errors.district && <p className="text-red-500 font-sans text-[12px] mt-2 font-medium">{errors.district.message}</p>}
+                        {errors.district && <p className="text-red-500 font-sans text-[12px] mt-1.5 font-medium">{errors.district.message}</p>}
                       </div>
+
                       <div>
-                        <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">{t("business.wizard.block")}</label>
+                        <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">
+                          {t("business.wizard.block")} / Taluka
+                        </label>
                         <input
                           {...register("block")}
                           type="text"
                           placeholder="e.g. Haveli"
-                          className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium"
+                          className="w-full rounded-xl border border-gray-200 p-3.5 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium"
                         />
-                        {errors.block && <p className="text-red-500 font-sans text-[12px] mt-2 font-medium">{errors.block.message}</p>}
+                        {errors.block && <p className="text-red-500 font-sans text-[12px] mt-1.5 font-medium">{errors.block.message}</p>}
                       </div>
+
                       <div>
-                        <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">{t("business.wizard.village")}</label>
+                        <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">
+                          {t("business.wizard.village")} / Town
+                        </label>
                         <input
                           {...register("village")}
                           type="text"
                           placeholder="e.g. Wagholi"
-                          className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium"
+                          className="w-full rounded-xl border border-gray-200 p-3.5 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium"
                         />
-                        {errors.village && <p className="text-red-500 font-sans text-[12px] mt-2 font-medium">{errors.village.message}</p>}
+                        {errors.village && <p className="text-red-500 font-sans text-[12px] mt-1.5 font-medium">{errors.village.message}</p>}
+                      </div>
+                    </div>
+
+                    {/* OpenStreetMap Interactive Preview Pin */}
+                    <div className="rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                      <div className="bg-slate-50 px-4 py-2.5 border-b border-slate-200 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-4 h-4 text-[#1E6702]" />
+                          <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                            OpenStreetMap Location Pin & 5km Catchment
+                          </span>
+                        </div>
+                        <span className="text-[11px] font-semibold text-emerald-800">
+                          {locationLabel}
+                        </span>
+                      </div>
+                      <div className="h-56 w-full relative">
+                        <DynamicRadiusMap
+                          center={mapCenter}
+                          radiusInKm={5}
+                          businessName="Proposed Business Location"
+                          locationLabel={locationLabel}
+                        />
                       </div>
                     </div>
                     

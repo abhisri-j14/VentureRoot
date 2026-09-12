@@ -43,7 +43,7 @@ export const locationSearchQuerySchema = z
     q: z
       .string()
       .trim()
-      .min(2, "Search query must contain at least 2 characters")
+      .min(1, "Search query must contain at least 1 character")
       .max(100, "Search query is too long"),
 
     limit: z.coerce

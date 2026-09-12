@@ -7,21 +7,38 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma skills sync || exit 0"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.10.0",
+    "@hookform/resolvers": "^5.9.1",
+    "@prisma/adapter-pg": "^6.19.3",
     "@prisma/client": "^6.19.3",
     "@supabase/supabase-js": "^2.115.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@tanstack/react-query": "^5.102.8",
+    "axios": "^1.20.0",
+    "clsx": "^2.1.1",
     "dotenv": "^17.4.2",
+    "framer-motion": "^13.2.0",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^1.45.0",
     "next": "16.3.4",
     "pg": "^8.23.0",
     "prisma": "^6.19.3",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "zod": "^4.5.4"
+    "react-hook-form": "^7.88.0",
+    "react-leaflet": "^5.0.0",
+    "recharts": "^3.10.1",
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.5.4",
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.22",
+    "@types/node": "22.20.2",
+    "@types/react": "19.3.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.4"
   }

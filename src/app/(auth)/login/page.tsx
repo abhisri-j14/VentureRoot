@@ -61,11 +61,19 @@ function LoginPageContent() {
       const backendUser = res?.data?.user || res?.data?.data?.user || res?.user;
       const token = session?.access_token || "mock-token-xyz-123";
       
+      const rawFullName = backendUser?.user_metadata?.full_name || backendUser?.user_metadata?.name || backendUser?.user_metadata?.username;
+      const formattedEmailName = (backendUser?.email || data.email || "").split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
+      const resolvedName = rawFullName || (typeof window !== "undefined" ? localStorage.getItem("ventureroot_user_name") : null) || formattedEmailName || "Entrepreneur";
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("ventureroot_user_name", resolvedName);
+      }
+
       const authUser = backendUser ? {
         id: backendUser.id,
-        name: backendUser.user_metadata?.full_name || backendUser.email?.split('@')[0] || "User",
+        name: resolvedName,
         email: backendUser.email || data.email,
-        roleLabel: backendUser.user_metadata?.role || "Business Owner",
+        roleLabel: backendUser.user_metadata?.role || "Entrepreneur",
       } : mockUser!;
 
       loginAction(token, authUser);
@@ -109,6 +117,9 @@ function LoginPageContent() {
     hidden: { opacity: 0, y: 15 },
     show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
   };
+
+  const isNotRegistered = globalError?.toLowerCase().includes("not registered");
+  const isIncorrectPassword = globalError?.toLowerCase().includes("incorrect password");
 
   return (
     <div className="flex flex-col md:flex-row w-full min-h-screen bg-[#FFFBE7]">
@@ -179,9 +190,48 @@ function LoginPageContent() {
             </motion.div>
 
             {globalError && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-                <p className="text-sm text-red-700">{globalError}</p>
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`mb-6 p-4 rounded-2xl border flex flex-col gap-2.5 ${
+                  isNotRegistered
+                    ? "bg-amber-50/90 border-amber-300 text-amber-950"
+                    : isIncorrectPassword
+                    ? "bg-red-50/90 border-red-300 text-red-950"
+                    : "bg-red-50 border-red-200 text-red-700"
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <AlertCircle className={`w-5 h-5 shrink-0 mt-0.5 ${
+                    isNotRegistered ? "text-amber-600" : "text-red-600"
+                  }`} />
+                  <div className="flex-1">
+                    <p className="font-sans font-bold text-[14px] leading-tight">
+                      {isNotRegistered
+                        ? "You are not registered"
+                        : isIncorrectPassword
+                        ? "Incorrect password"
+                        : "Login failed"}
+                    </p>
+                    <p className="font-sans text-[13px] mt-1 text-slate-700 leading-relaxed">
+                      {isNotRegistered
+                        ? "We couldn't find an existing account with this email address. Please create a new account to get started."
+                        : globalError}
+                    </p>
+                  </div>
+                </div>
+
+                {isNotRegistered && (
+                  <div className="pt-2 border-t border-amber-200/80 flex items-center justify-between">
+                    <span className="text-xs text-amber-900 font-medium">Ready to join?</span>
+                    <Link
+                      href="/register"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#1E6702] hover:bg-[#2b8a07] text-white font-sans text-xs font-bold transition-all shadow-sm"
+                    >
+                      Create Account &rarr;
+                    </Link>
+                  </div>
+                )}
               </motion.div>
             )}
 

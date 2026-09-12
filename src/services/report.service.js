@@ -125,6 +125,20 @@ export async function getReport({
       })
     : null;
 
+  if (!report && isUuid) {
+    try {
+      const { reports } = await findReportsByUserId({
+        userId,
+        businessId: reportId,
+        page: 1,
+        limit: 1,
+      });
+      if (reports && reports.length > 0) {
+        return mapReport(reports[0]);
+      }
+    } catch (_) {}
+  }
+
   if (!report) {
     const mockReport = reportsData.find((r) => r.id === reportId);
     if (mockReport) {

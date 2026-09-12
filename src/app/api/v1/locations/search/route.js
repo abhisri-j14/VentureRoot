@@ -21,8 +21,6 @@ import {
 
 export async function GET(request) {
   try {
-    await authenticate(request);
-
     const { searchParams } =
       new URL(request.url);
 

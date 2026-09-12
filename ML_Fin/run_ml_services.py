@@ -23,8 +23,8 @@ ROOT_DIR = BASE_DIR.parent
 
 SERVICES = [
     {
-        "name": "Data Service (Census)",
-        "dir": ROOT_DIR / "data-service",
+        "name": "Data Intelligence & Scraping Service",
+        "dir": ROOT_DIR / "web_scrapping",
         "cmd": [sys.executable, "-m", "uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"],
         "port": 8000,
     },

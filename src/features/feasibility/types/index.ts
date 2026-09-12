@@ -28,6 +28,7 @@ export interface MarketAnalysis extends IntelligenceData {
   reach: {
     radius5km: number;
     radius10km: number;
+    radius20km?: number;
   };
   demandIndicators: string[];
   localObservations: string[];
@@ -55,6 +56,13 @@ export interface Competitor {
   strengths: string[];
   weaknesses: string[];
   positioning: string;
+  distanceKm?: number;
+  position?: [number, number];
+  sectorType?: "Govt / Public Sector" | "Private Sector" | string;
+  ownership?: "Government" | "Private" | "Co-operative" | string;
+  facilityType?: string;
+  source?: string;
+  businessImpact?: string;
 }
 
 export interface CompetitionAnalysis extends IntelligenceData {

@@ -377,14 +377,14 @@ export const BusinessDetailsView = () => {
               </Link>
 
               {/* Reports */}
-              <Link href={`/reports`} className="group flex items-center justify-between p-4 rounded-2xl transition-all shadow-sm bg-[#301608] hover:bg-[#301608]/90 flex-1">
+              <Link href={business?.id ? `/reports/${business.id}` : `/reports`} className="group flex items-center justify-between p-4 rounded-2xl transition-all shadow-sm bg-[#301608] hover:bg-[#301608]/90 flex-1">
                 <div className="flex items-center gap-4">
                   <div className="p-2.5 bg-[#f9fadc]/10 rounded-xl group-hover:scale-110 transition-transform">
                     <FileText className="w-5 h-5 text-[#f9fadc]" />
                   </div>
                   <div className="flex flex-col text-left gap-0.5">
                     <span className="font-sans text-[16px] font-bold text-[#f9fadc]">Get Reports</span>
-                    <span className="font-sans text-[12px] text-[#f9fadc]/80 font-medium">Detailed Project Report ready</span>
+                    <span className="font-sans text-[12px] text-[#f9fadc]/80 font-medium">Detailed Project Report (DPR) ready</span>
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-[#f9fadc]/50 group-hover:translate-x-1 transition-transform" />

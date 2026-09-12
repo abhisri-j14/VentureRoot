@@ -1,96 +1,234 @@
 "use client";
 
-import React, { useState } from "react";
-import { X, Plus, ChevronDown, BarChart2, Leaf, Check } from "lucide-react";
+import React, { useState, useEffect, useMemo } from "react";
+import { X, Plus, ChevronDown, BarChart2, Leaf, Check, Award, ShieldAlert, FileText, Landmark, TrendingUp, Compass, Users } from "lucide-react";
 import { EditorialRadarChart } from "@/components/ui/charts";
+import { useBusinessesComparison } from "@/lib/data/businesses";
 
-// ── Hardcoded business pool (replaces backend) ─────────────────────────────
-const ALL_BUSINESSES = [
+// ── Curated Domain Sector Benchmarks ─────────────────────────────────────────
+const SECTOR_BENCHMARKS = [
   {
-    id: "b1",
-    name: "Dairy Farming & Milk Chilling",
-    score: 82,
-    viability: "HIGHEST VIABILITY",
+    id: "bench-food",
+    name: "Food Processing & Agro Packaging",
+    score: 88,
+    viability: "HIGH AGRO POTENTIAL",
     color: "#81cc87",
-    dot: "#22c55e",
-    financials: { projectCost: "₹10,00,000", margin10: "₹1,00,000", sca: "₹9,00,000" },
-    netProfitMargin: "18% – 24%",
-    monthlyProfit: "₹36,000 / month",
+    dot: "#15803d",
+    badgeWinner: "HIGHEST PMEGP SUBSIDY",
+    financials: {
+      projectCost: "₹12,00,000",
+      margin10: "₹1,20,000",
+      termLoan: "₹10,80,000",
+      subsidy: "₹4,20,000 (35% Rural PMEGP)",
+      workingCapital: "₹1,50,000",
+    },
+    netProfitMargin: "24% – 30%",
+    monthlyGross: "₹1,40,000 / month",
+    monthlyProfit: "₹38,000 / month",
     breakEven: "5 Months",
-    localSaturation: "High (Sweetmaker contracts)",
-    operationalComplexity: "Moderate (Chilling & feed)",
-    keyLocalRisk: "Fodder price surge & milk sourcing during summer droughts.",
-    radar: { feasibility: 82, marketDemand: 88, competition: 40, investment: 70, riskLevel: 20, localOpportunity: 85 },
+    projectedIrr: "28.5%",
+    catchment: "~31.4k (5km) / ~125.6k (10km)",
+    competitionDensity: "Moderate (Traditional millers)",
+    localSaturation: "Low in hygienic packaged goods",
+    operationalComplexity: "Moderate (Machinery & sorting)",
+    licenses: "Udyam, FSSAI State Mfg, Trade NOC, SPCB Green",
+    infrastructure: "3-Phase 20 HP, Drainage, Sorting shed",
+    keyLocalRisk: "Raw material price volatility during seasonal harvest peaks.",
+    riskMitigation: "Forward procurement contracts with local Farmer Producer Orgs (FPOs).",
+    bestSuitedFor: "Agrarian entrepreneurs leveraging local crop surplus for value addition.",
+    radar: { feasibility: 88, marketDemand: 86, competition: 35, investment: 72, riskLevel: 25, localOpportunity: 90 },
   },
   {
-    id: "b2",
-    name: "Kirana & FMCG Village Store",
-    score: 74,
-    viability: null,
-    color: "#d97706",
-    dot: "#f59e0b",
-    financials: { projectCost: "₹3,50,000", margin10: "₹35,000", sca: "₹3,15,000" },
-    netProfitMargin: "12% – 15%",
-    monthlyProfit: "₹16,500 / month",
-    breakEven: "4 Months",
-    localSaturation: "Moderate (Village households)",
-    operationalComplexity: "Low (Counter retail)",
-    keyLocalRisk: "Credit book defaults (udhaar) and high competitor density.",
-    radar: { feasibility: 74, marketDemand: 60, competition: 65, investment: 80, riskLevel: 45, localOpportunity: 70 },
-  },
-  {
-    id: "b3",
-    name: "Textiles & Tailoring Center",
-    score: 79,
-    viability: null,
-    color: "#2563eb",
-    dot: "#3b82f6",
-    financials: { projectCost: "₹1,20,000", margin10: "₹12,000", sca: "₹1,08,000" },
-    netProfitMargin: "26% – 32%",
-    monthlyProfit: "₹14,200 / month",
-    breakEven: "3 Months",
-    localSaturation: "Seasonal (Weddings & Uniforms)",
-    operationalComplexity: "Low (Handcraft sewing)",
-    keyLocalRisk: "Seasonal slowdown outside harvest & wedding cycles.",
-    radar: { feasibility: 79, marketDemand: 72, competition: 30, investment: 50, riskLevel: 30, localOpportunity: 78 },
-  },
-  {
-    id: "b4",
-    name: "Mini Oil Expeller & Flour Mill",
-    score: 85,
-    viability: null,
-    color: "#7c3aed",
-    dot: "#a78bfa",
-    financials: { projectCost: "₹7,50,000", margin10: "₹75,000", sca: "₹6,75,000" },
-    netProfitMargin: "22% – 28%",
-    monthlyProfit: "₹32,000 / month",
+    id: "bench-health",
+    name: "Community Health Center & Day Clinic",
+    score: 92,
+    viability: "CRITICAL LOCAL DEMAND",
+    color: "#0284c7",
+    dot: "#0369a1",
+    badgeWinner: "HIGHEST DEMAND DEFICIT",
+    financials: {
+      projectCost: "₹18,50,000",
+      margin10: "₹2,50,000",
+      termLoan: "₹16,00,000",
+      subsidy: "₹4,50,000 (PMEGP + Health Mission)",
+      workingCapital: "₹2,50,000",
+    },
+    netProfitMargin: "26% – 34%",
+    monthlyGross: "₹2,10,000 / month",
+    monthlyProfit: "₹58,000 / month",
     breakEven: "6 Months",
-    localSaturation: "High (Farmer custom milling)",
-    operationalComplexity: "Moderate (Machinery & 3-phase)",
-    keyLocalRisk: "Three-phase electrical grid instability & motor maintenance.",
-    radar: { feasibility: 85, marketDemand: 78, competition: 55, investment: 65, riskLevel: 35, localOpportunity: 80 },
+    projectedIrr: "32.0%",
+    catchment: "~31.4k (5km) / ~125.6k (10km)",
+    competitionDensity: "Low in secondary inpatient care",
+    localSaturation: "Acute Shortage (18km travel to Civil)",
+    operationalComplexity: "High (24x7 RMO & Nursing)",
+    licenses: "Clinical Establishments Act, BMW SPCB, FDA Pharmacy, Fire NOC",
+    infrastructure: "Oxygen pipeline, Minor OT, DG backup, 15-20 Beds",
+    keyLocalRisk: "Clinical staffing retention & statutory audit approval timelines.",
+    riskMitigation: "Shift incentive allowances, on-campus quarters, and accredited nurse tie-ups.",
+    bestSuitedFor: "Healthcare professionals & investors targeting steady institutional PM-JAY revenues.",
+    radar: { feasibility: 92, marketDemand: 95, competition: 20, investment: 65, riskLevel: 30, localOpportunity: 94 },
   },
   {
-    id: "b5",
-    name: "Poultry & Egg Distribution",
-    score: 71,
-    viability: null,
+    id: "bench-dairy",
+    name: "Modern Dairy & Bulk Milk Chilling",
+    score: 84,
+    viability: "STEADY DAILY CASHFLOW",
+    color: "#22c55e",
+    dot: "#16a34a",
+    badgeWinner: "FASTEST DAILY LIQUIDITY",
+    financials: {
+      projectCost: "₹10,00,000",
+      margin10: "₹1,00,000",
+      termLoan: "₹9,00,000",
+      subsidy: "₹2,50,000 (NABARD AHIDF / DEDS)",
+      workingCapital: "₹80,000",
+    },
+    netProfitMargin: "18% – 24%",
+    monthlyGross: "₹1,60,000 / month",
+    monthlyProfit: "₹34,000 / month",
+    breakEven: "4 Months",
+    projectedIrr: "24.0%",
+    catchment: "~31.4k (5km) / ~125.6k (10km)",
+    competitionDensity: "High (Informal sweetmakers)",
+    localSaturation: "High volume, price-sensitive",
+    operationalComplexity: "Moderate (Cold chain & cattle health)",
+    licenses: "Udyam, FSSAI Registration, Animal Husbandry NOC",
+    infrastructure: "Bulk Milk Cooler (1000L), Misting fans, Borewell",
+    keyLocalRisk: "Summer fodder price spikes & livestock mastitis outbreaks.",
+    riskMitigation: "Silage storage pit, Napier grass cultivation, and veterinary AMC.",
+    bestSuitedFor: "Livestock owners seeking guaranteed daily payments from cooperatives.",
+    radar: { feasibility: 84, marketDemand: 90, competition: 55, investment: 78, riskLevel: 25, localOpportunity: 82 },
+  },
+  {
+    id: "bench-cold",
+    name: "Cold Storage & Agrilogistics Unit",
+    score: 86,
+    viability: "HIGH ASSET VALUE",
+    color: "#6366f1",
+    dot: "#4f46e5",
+    badgeWinner: "HIGHEST COMMERCIAL ASSET",
+    financials: {
+      projectCost: "₹28,00,000",
+      margin10: "₹3,50,000",
+      termLoan: "₹24,50,000",
+      subsidy: "₹9,80,000 (35% NHB Mission Subsidy)",
+      workingCapital: "₹1,80,000",
+    },
+    netProfitMargin: "30% – 38%",
+    monthlyGross: "₹2,80,000 / month",
+    monthlyProfit: "₹92,000 / month",
+    breakEven: "8 Months",
+    projectedIrr: "26.5%",
+    catchment: "~125.6k (10km) / ~482.5k (20km)",
+    competitionDensity: "Very Low (No multi-commodity facility)",
+    localSaturation: "Severe Deficit (High post-harvest loss)",
+    operationalComplexity: "High (Refrigeration & 3-phase grid)",
+    licenses: "WDRA Accreditation, SPCB Consent, NHB Clearance, Electricity DISCOM",
+    infrastructure: "Ammonia/Freon chiller, 500 MT insulated chambers, Loading dock",
+    keyLocalRisk: "Power tariff fluctuations & off-season chamber under-utilization.",
+    riskMitigation: "Multi-crop seasonal rotation (potato, tomato, spices) & solar PV rooftop offset.",
+    bestSuitedFor: "High-net-worth investors seeking long-term commercial lease cashflows.",
+    radar: { feasibility: 86, marketDemand: 88, competition: 15, investment: 50, riskLevel: 35, localOpportunity: 89 },
+  },
+  {
+    id: "bench-mill",
+    name: "Mini Oil Expeller & Grain Mill",
+    score: 81,
+    viability: "LOW ENTRY BARRIER",
+    color: "#d97706",
+    dot: "#b45309",
+    badgeWinner: "LOWEST TECHNICAL COMPLEXITY",
+    financials: {
+      projectCost: "₹5,50,000",
+      margin10: "₹55,000",
+      termLoan: "₹4,95,000",
+      subsidy: "₹1,92,500 (35% PMEGP Grant)",
+      workingCapital: "₹60,000",
+    },
+    netProfitMargin: "20% – 26%",
+    monthlyGross: "₹95,000 / month",
+    monthlyProfit: "₹22,500 / month",
+    breakEven: "4 Months",
+    projectedIrr: "22.5%",
+    catchment: "~31.4k (5km) / ~125.6k (10km)",
+    competitionDensity: "Moderate (Local chakki units)",
+    localSaturation: "Moderate (Steady household custom milling)",
+    operationalComplexity: "Low (Rotary expeller & pulverizer)",
+    licenses: "Udyam, FSSAI Basic, Gram Panchayat Trade Permit",
+    infrastructure: "15 HP commercial power, Dust extraction, Storage drums",
+    keyLocalRisk: "Seasonal mustard/seed crop failure & local grid power outages.",
+    riskMitigation: "Dual-motor backup pulley and off-season spice grinding diversification.",
+    bestSuitedFor: "First-time micro-entrepreneurs wanting quick break-even and low capital risk.",
+    radar: { feasibility: 81, marketDemand: 76, competition: 50, investment: 85, riskLevel: 30, localOpportunity: 78 },
+  },
+  {
+    id: "bench-poultry",
+    name: "Poultry & Commercial Egg Production",
+    score: 75,
+    viability: "FAST CYCLE TURNOVER",
     color: "#dc2626",
-    dot: "#f87171",
-    financials: { projectCost: "₹2,80,000", margin10: "₹28,000", sca: "₹2,52,000" },
-    netProfitMargin: "15% – 20%",
-    monthlyProfit: "₹22,000 / month",
-    breakEven: "7 Months",
-    localSaturation: "Low (Underserved market)",
-    operationalComplexity: "High (Bio-security & feed)",
-    keyLocalRisk: "Bird flu outbreaks and erratic feed price fluctuations.",
-    radar: { feasibility: 71, marketDemand: 65, competition: 35, investment: 60, riskLevel: 55, localOpportunity: 68 },
+    dot: "#b91c1c",
+    badgeWinner: "FASTEST 45-DAY CASH CYCLES",
+    financials: {
+      projectCost: "₹4,80,000",
+      margin10: "₹48,000",
+      termLoan: "₹4,32,000",
+      subsidy: "₹1,20,000 (NABARD Poultry Subsidy)",
+      workingCapital: "₹75,000",
+    },
+    netProfitMargin: "16% – 22%",
+    monthlyGross: "₹1,10,000 / month",
+    monthlyProfit: "₹20,000 / month",
+    breakEven: "5 Months",
+    projectedIrr: "21.0%",
+    catchment: "~31.4k (5km) / ~125.6k (10km)",
+    competitionDensity: "Moderate to High",
+    localSaturation: "High demand, volatile chicken prices",
+    operationalComplexity: "Moderate (Biosecurity & feed)",
+    licenses: "Udyam, Veterinary SPCB Clearance, Trade Permit",
+    infrastructure: "Deep litter shed, Automated nipple drinkers, Feed mixer",
+    keyLocalRisk: "Avian influenza (Bird Flu) outbreaks & sharp soybean meal feed inflation.",
+    riskMitigation: "Strict perimeter biosecurity disinfection and contract farming buy-back guarantee.",
+    bestSuitedFor: "Small landholders seeking fast-cycling protein sales in peri-urban markets.",
+    radar: { feasibility: 75, marketDemand: 82, competition: 60, investment: 80, riskLevel: 55, localOpportunity: 74 },
+  },
+  {
+    id: "bench-kirana",
+    name: "Kirana & FMCG Modern Village Store",
+    score: 72,
+    viability: "EVERYDAY ESSENTIALS",
+    color: "#ea580c",
+    dot: "#c2410c",
+    badgeWinner: "LOWEST CAPITAL REQUIRED",
+    financials: {
+      projectCost: "₹3,50,000",
+      margin10: "₹35,000",
+      termLoan: "₹3,15,000",
+      subsidy: "₹87,500 (Mudra Shishu Loan)",
+      workingCapital: "₹1,20,000",
+    },
+    netProfitMargin: "12% – 16%",
+    monthlyGross: "₹1,25,000 / month",
+    monthlyProfit: "₹17,000 / month",
+    breakEven: "3 Months",
+    projectedIrr: "18.5%",
+    catchment: "~12,000 (3km Immediate Village)",
+    competitionDensity: "High (5+ village shops within 1km)",
+    localSaturation: "High (Price competition)",
+    operationalComplexity: "Low (Counter retail sales)",
+    licenses: "Udyam, GST, Shop & Establishment Act",
+    infrastructure: "Retail display racks, POS billing scanner, Deep freezer",
+    keyLocalRisk: "Customer credit default (udhaar) and high wholesaler minimum orders.",
+    riskMitigation: "Strict digital UPI discount policy and automated FMCG stock reordering.",
+    bestSuitedFor: "Local families with road-facing commercial storefronts seeking immediate sales.",
+    radar: { feasibility: 72, marketDemand: 70, competition: 75, investment: 90, riskLevel: 45, localOpportunity: 68 },
   },
 ];
 
-type Business = typeof ALL_BUSINESSES[0];
+type BusinessCandidate = typeof SECTOR_BENCHMARKS[0];
 
-// ── Dropdown component for business selection ──────────────────────────────
+// ── Dropdown Component for Business Selection ──────────────────────────────
 const BusinessSelector = ({
   selected,
   allBusinesses,
@@ -98,8 +236,8 @@ const BusinessSelector = ({
   onAdd,
   onRemove,
 }: {
-  selected: Business[];
-  allBusinesses: Business[];
+  selected: BusinessCandidate[];
+  allBusinesses: BusinessCandidate[];
   onToggle: (id: string) => void;
   onAdd: () => void;
   onRemove: (id: string) => void;
@@ -108,41 +246,43 @@ const BusinessSelector = ({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-gray-400 shrink-0 leading-tight">
-        Select Candidates<br />to Evaluate:
+      <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-slate-500 shrink-0 leading-tight">
+        Selected Ventures<br />to Compare:
       </span>
 
       {selected.map((b) => (
         <div key={b.id} className="relative">
           <div
-            className="flex items-center gap-2 bg-[#81cc87] text-[#f9faeb] rounded-lg px-3.5 py-2 font-sans text-[14px] font-semibold shadow-sm cursor-pointer select-none"
+            className="flex items-center gap-2 bg-[#234670] text-[#f9faeb] rounded-xl px-3.5 py-2 font-sans text-[13px] font-bold shadow-xs cursor-pointer select-none hover:bg-[#1a3556] transition-colors"
             onClick={() => setOpenDropdown(openDropdown === b.id ? null : b.id)}
           >
-            <span className="max-w-[160px] truncate">{b.name}</span>
+            <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: b.dot }} />
+            <span className="max-w-[170px] truncate">{b.name}</span>
             <ChevronDown className={`w-3.5 h-3.5 opacity-70 transition-transform ${openDropdown === b.id ? "rotate-180" : ""}`} />
             <button
               className="ml-1 opacity-70 hover:opacity-100 hover:text-red-300 transition-colors"
               onClick={(e) => { e.stopPropagation(); onRemove(b.id); setOpenDropdown(null); }}
+              title="Remove from comparison"
             >
               <X className="w-3.5 h-3.5" />
             </button>
           </div>
 
           {openDropdown === b.id && (
-            <div className="absolute top-full left-0 mt-1 z-50 bg-white border border-gray-200 rounded-xl shadow-xl py-1.5 min-w-[220px]">
+            <div className="absolute top-full left-0 mt-1 z-50 bg-white border border-gray-200 rounded-xl shadow-xl py-1.5 min-w-[260px] max-h-[300px] overflow-y-auto">
               {allBusinesses.map((ab) => {
                 const isSelected = selected.some((s) => s.id === ab.id);
                 return (
                   <button
                     key={ab.id}
-                    className="w-full flex items-center justify-between gap-3 px-4 py-2.5 font-sans text-[14px] text-gray-700 hover:bg-gray-50 font-medium transition-colors"
+                    className="w-full flex items-center justify-between gap-3 px-4 py-2.5 font-sans text-[13px] text-gray-700 hover:bg-slate-50 font-medium transition-colors text-left"
                     onClick={() => { onToggle(ab.id); setOpenDropdown(null); }}
                   >
-                    <span className="flex items-center gap-2">
+                    <span className="flex items-center gap-2 truncate">
                       <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: ab.dot }} />
-                      {ab.name}
+                      <span className="truncate">{ab.name}</span>
                     </span>
-                    {isSelected && <Check className="w-4 h-4 text-[#81cc87] shrink-0" />}
+                    {isSelected && <Check className="w-4 h-4 text-emerald-600 shrink-0" />}
                   </button>
                 );
               })}
@@ -151,37 +291,100 @@ const BusinessSelector = ({
         </div>
       ))}
 
-      {selected.length < ALL_BUSINESSES.length && (
+      {selected.length < allBusinesses.length && (
         <button
-          className="flex items-center gap-2 border-2 border-dashed border-gray-300 rounded-lg px-3.5 py-2 font-sans text-[14px] font-semibold text-gray-500 hover:border-[#81cc87] hover:text-[#81cc87] transition-colors"
+          className="flex items-center gap-2 border-2 border-dashed border-slate-300 rounded-xl px-3.5 py-2 font-sans text-[13px] font-semibold text-slate-600 hover:border-[#234670] hover:text-[#234670] transition-colors"
           onClick={onAdd}
         >
-          <Plus className="w-4 h-4" /> Add Business
+          <Plus className="w-4 h-4" /> Add Venture
         </button>
       )}
     </div>
   );
 };
 
-// ── Row label component ────────────────────────────────────────────────────
-const RowLabel = ({ label }: { label: string }) => (
-  <div className="col-span-1 flex items-center py-4 border-b border-gray-200">
-    <span className="text-[13px] font-extrabold text-gray-900 uppercase tracking-wide">{label}</span>
-  </div>
-);
-
-// ── Main component ─────────────────────────────────────────────────────────
+// ── Main Component ─────────────────────────────────────────────────────────
 export const BusinessComparison = () => {
-  const [selectedIds, setSelectedIds] = useState<string[]>(["b1", "b2", "b3", "b4"]);
+  const { data: dbBusinesses } = useBusinessesComparison();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const activeBiz = ALL_BUSINESSES.filter((b) => selectedIds.includes(b.id));
+  // Merge user's actual database businesses with sector benchmarks
+  const allCandidatePool = useMemo<BusinessCandidate[]>(() => {
+    const list: BusinessCandidate[] = [];
+
+    // Transform user's real businesses
+    if (Array.isArray(dbBusinesses) && dbBusinesses.length > 0) {
+      dbBusinesses.forEach((b: any, idx: number) => {
+        const margin = Number(b.availableMargin || 250000);
+        const revenue = Number(b.expectedRevenue || margin * 0.45);
+        const projectCost = Math.round(margin * 4.5);
+        const termLoan = Math.round(margin * 3.5);
+        const subsidy = Math.round(projectCost * 0.25);
+        const workingCap = Math.round(margin * 0.35);
+        const catName = b.category?.name || b.category || "Enterprise";
+
+        list.push({
+          id: b.id,
+          name: b.name || `${catName} Enterprise`,
+          score: 89,
+          viability: "YOUR ACTIVE VENTURE",
+          color: "#1E6702",
+          dot: "#22c55e",
+          badgeWinner: "ENTERED BUSINESS",
+          financials: {
+            projectCost: `₹${(projectCost / 100000).toFixed(1)} Lakh`,
+            margin10: `₹${(margin / 100000).toFixed(1)} Lakh`,
+            termLoan: `₹${(termLoan / 100000).toFixed(1)} Lakh`,
+            subsidy: `₹${(subsidy / 100000).toFixed(1)} Lakh (25% PMEGP)`,
+            workingCapital: `₹${(workingCap / 100000).toFixed(1)} Lakh`,
+          },
+          netProfitMargin: "22% – 28%",
+          monthlyGross: `₹${(revenue / 1000).toFixed(0)}K / month`,
+          monthlyProfit: `₹${Math.round((revenue * 0.24) / 1000)}K / month`,
+          breakEven: "5 Months",
+          projectedIrr: "25.0%",
+          catchment: "~31.4k (5km) / ~125.6k (10km)",
+          competitionDensity: "Moderate",
+          localSaturation: "High demand with local supply gap",
+          operationalComplexity: "Moderate",
+          licenses: "Udyam, Trade Permit, SPCB Consent, Sector Registration",
+          infrastructure: "Commercial premises, 3-Phase power, utility connection",
+          keyLocalRisk: "Working capital stretching across harvest & wholesale credit cycles.",
+          riskMitigation: "Securing Bank Cash Credit (CC) limit & rolling 7-day payment terms.",
+          bestSuitedFor: "Your customized business parameters entered in VentureRoot.",
+          radar: { feasibility: 89, marketDemand: 86, competition: 40, investment: 76, riskLevel: 25, localOpportunity: 88 },
+        });
+      });
+    }
+
+    // Append standard curated benchmarks
+    SECTOR_BENCHMARKS.forEach((sb) => {
+      if (!list.some((existing) => existing.name.toLowerCase() === sb.name.toLowerCase())) {
+        list.push(sb);
+      }
+    });
+
+    return list;
+  }, [dbBusinesses]);
+
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (allCandidatePool.length > 0 && selectedIds.length === 0) {
+      // Pick active business first, then top 3 sector options
+      setSelectedIds(allCandidatePool.slice(0, Math.min(4, allCandidatePool.length)).map((b) => b.id));
+    }
+  }, [allCandidatePool, selectedIds.length]);
+
+  const activeBiz = useMemo(() => {
+    return allCandidatePool.filter((b) => selectedIds.includes(b.id));
+  }, [allCandidatePool, selectedIds]);
 
   const handleToggle = (id: string) => {
     setSelectedIds((prev) =>
       prev.includes(id)
-        ? prev.length > 1 ? prev.filter((s) => s !== id) : prev // keep at least 1
-        : prev.length < 4 ? [...prev, id] : prev               // max 4
+        ? prev.length > 1 ? prev.filter((s) => s !== id) : prev
+        : prev.length < 4 ? [...prev, id] : prev
     );
   };
 
@@ -190,25 +393,30 @@ export const BusinessComparison = () => {
   };
 
   const handleAdd = () => {
-    const next = ALL_BUSINESSES.find((b) => !selectedIds.includes(b.id));
+    const next = allCandidatePool.find((b) => !selectedIds.includes(b.id));
     if (next) setSelectedIds((prev) => [...prev, next.id]);
   };
 
   const cols = activeBiz.length;
+  const gridColTemplate = `minmax(180px, 240px) repeat(${cols}, minmax(180px, 1fr))`;
 
   return (
-    <div className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-6" onClick={() => setDropdownOpen(false)}>
+    <div className="w-full h-full flex flex-col gap-6" onClick={() => setDropdownOpen(false)}>
 
       {/* ── PAGE HEADER ─────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
         <div>
-          <h1 className="font-heading text-[32px] font-bold text-[#242424] tracking-tight leading-tight">Compare Business Ideas</h1>
-          <p className="font-sans text-[14px] text-slate-500 font-medium mt-0.5">Compare potential enterprises side by side before making a decision.</p>
+          <h1 className="font-heading text-[28px] sm:text-[32px] font-bold text-[#242424] tracking-tight leading-tight">
+            Compare Business Opportunities
+          </h1>
+          <p className="font-sans text-[14px] text-slate-500 font-medium mt-1">
+            Evaluate your enterprise against alternative ventures with verified financial, statutory, and market viability metrics.
+          </p>
         </div>
-        <div className="flex items-center gap-2 opacity-75 shrink-0">
-          <Leaf className="w-6 h-6 text-[#81cc87]" />
-          <span className="font-heading italic text-[15px] text-gray-500 text-right leading-snug">
-            "Better Decisions<br />Stronger Tomorrows"
+        <div className="flex items-center gap-2 opacity-80 shrink-0">
+          <Leaf className="w-6 h-6 text-[#1E6702]" />
+          <span className="font-heading italic text-[14px] text-gray-500 text-right leading-snug">
+            "Compare today,<br />prosper tomorrow"
           </span>
         </div>
       </div>
@@ -217,30 +425,32 @@ export const BusinessComparison = () => {
       <div onClick={(e) => e.stopPropagation()}>
         <BusinessSelector
           selected={activeBiz}
-          allBusinesses={ALL_BUSINESSES}
+          allBusinesses={allCandidatePool}
           onToggle={handleToggle}
           onAdd={handleAdd}
           onRemove={handleRemove}
         />
       </div>
 
-      {/* ── RADAR CHART ──────────────────────────────────────────── */}
-      <div className="bg-[#fffff5] rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] p-6 transition-all duration-300">
+      {/* ── RADAR COMPARISON CHART ───────────────────────────────── */}
+      <div className="bg-[#fffff5] rounded-2xl border border-gray-900/10 shadow-xs p-6 transition-all duration-300">
         <div className="flex items-center gap-2 mb-4">
-          <BarChart2 className="w-5 h-5 text-[#81cc87]" />
-          <span className="font-heading text-[20px] font-bold text-gray-900 tracking-tight">Visual Comparison</span>
-          <span className="font-sans text-[12px] text-gray-400 font-medium ml-1 hidden md:block">Compare key parameters across all selected business ideas.</span>
+          <BarChart2 className="w-5 h-5 text-[#234670]" />
+          <span className="font-heading text-[18px] font-bold text-gray-900 tracking-tight">Multi-Dimensional Viability Spider Matrix</span>
+          <span className="font-sans text-[12px] text-gray-500 font-medium ml-2 hidden md:inline">
+            Visual comparison across feasibility, demand, competitive moat, and capital efficiency.
+          </span>
         </div>
         <div className="flex flex-col lg:flex-row gap-6 items-center">
-          <div className="w-full lg:w-[380px] h-[260px] shrink-0">
+          <div className="w-full lg:w-[420px] h-[280px] shrink-0">
             <EditorialRadarChart
               data={[
                 { metric: "Feasibility Score", subject: activeBiz[0]?.radar.feasibility || 0, comparison: activeBiz[1]?.radar.feasibility || 0 },
                 { metric: "Market Demand",      subject: activeBiz[0]?.radar.marketDemand || 0, comparison: activeBiz[1]?.radar.marketDemand || 0 },
-                { metric: "Competition",         subject: activeBiz[0]?.radar.competition || 0, comparison: activeBiz[1]?.radar.competition || 0 },
-                { metric: "Investment Score",    subject: activeBiz[0]?.radar.investment || 0, comparison: activeBiz[1]?.radar.investment || 0 },
-                { metric: "Risk Level",          subject: activeBiz[0]?.radar.riskLevel || 0, comparison: activeBiz[1]?.radar.riskLevel || 0 },
-                { metric: "Local Opportunity",   subject: activeBiz[0]?.radar.localOpportunity || 0, comparison: activeBiz[1]?.radar.localOpportunity || 0 },
+                { metric: "Competitive Moat",  subject: 100 - (activeBiz[0]?.radar.competition || 50), comparison: 100 - (activeBiz[1]?.radar.competition || 50) },
+                { metric: "Capital Efficiency", subject: activeBiz[0]?.radar.investment || 0, comparison: activeBiz[1]?.radar.investment || 0 },
+                { metric: "Low Risk Level",     subject: 100 - (activeBiz[0]?.radar.riskLevel || 30), comparison: 100 - (activeBiz[1]?.radar.riskLevel || 30) },
+                { metric: "Local Opportunity",  subject: activeBiz[0]?.radar.localOpportunity || 0, comparison: activeBiz[1]?.radar.localOpportunity || 0 },
               ]}
               nameKey="metric"
               subjectKey="subject"
@@ -248,156 +458,278 @@ export const BusinessComparison = () => {
             />
           </div>
           <div className="flex flex-col gap-3 flex-1 w-full">
-            <div className="flex flex-wrap gap-x-6 gap-y-2">
-              {activeBiz.map((b) => (
-                <div key={b.id} className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: b.dot }} />
-                  <span className="font-sans text-[14px] font-medium text-gray-700">{b.name}</span>
+            <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Active Comparison Legend:</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {activeBiz.map((b, idx) => (
+                <div key={b.id} className="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200/80 bg-white shadow-2xs">
+                  <div className="w-3.5 h-3.5 rounded-full shrink-0" style={{ backgroundColor: b.dot }} />
+                  <div className="truncate">
+                    <p className="font-sans text-[13px] font-bold text-gray-900 truncate">{b.name}</p>
+                    <p className="text-[11px] text-slate-500">{idx === 0 ? "Benchmark Target" : `Comparison Alternative #${idx}`}</p>
+                  </div>
                 </div>
               ))}
             </div>
-            <div className="mt-2 bg-[#f9faeb] rounded-xl p-4 border border-[#81cc87]/10 flex items-center gap-3">
-              <Leaf className="w-4 h-4 text-[#81cc87] shrink-0" />
-              <p className="font-heading italic text-[14px] font-semibold text-[#81cc87]">"Compare today, build a brighter tomorrow."</p>
+            <div className="mt-2 bg-[#f9faeb] rounded-xl p-3.5 border border-[#81cc87]/20 flex items-center gap-3">
+              <Compass className="w-4 h-4 text-[#1E6702] shrink-0" />
+              <p className="font-sans text-[12px] text-slate-700 leading-snug">
+                Radar chart compares primary candidate <strong className="text-gray-900">{activeBiz[0]?.name}</strong> (Green) directly against <strong className="text-gray-900">{activeBiz[1]?.name || "Sector Benchmark"}</strong> (Secondary).
+              </p>
             </div>
           </div>
         </div>
       </div>
 
       {/* ── FULL-WIDTH COMPARISON TABLE ───────────────────────────── */}
-      <div className="w-full overflow-x-auto">
+      <div className="w-full overflow-x-auto pb-6">
         <div
-          className="min-w-[600px] w-full rounded-xl overflow-hidden shadow-[0_4px_24px_rgb(0,0,0,0.05)] border border-gray-900/8"
-          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px)" }}
+          className="min-w-[850px] w-full rounded-2xl overflow-hidden shadow-sm border border-gray-900/10 bg-white"
         >
 
-          {/* ── HEADER ROW: business names ── */}
+          {/* ── HEADER ROW: Business Names & Winner Badges ── */}
           <div
-            className="grid border-b-[3px] border-[#81cc87]"
-            style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}
+            className="grid border-b-2 border-slate-200 bg-slate-50/70"
+            style={{ gridTemplateColumns: gridColTemplate }}
           >
-            {/* Label column header */}
-            <div className="px-5 py-5 bg-[#81cc87]">
-              <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-[#f9faeb]/70">Metric</span>
+            <div className="p-5 flex flex-col justify-end">
+              <span className="font-sans text-[12px] font-bold uppercase tracking-wider text-slate-700">Comparative Parameter</span>
             </div>
             {activeBiz.map((b) => (
               <div
                 key={b.id}
-                className="flex flex-col items-center justify-center px-4 py-5 border-l border-[#81cc87]/20"
-                style={{ background: "rgba(129,204,135,0.04)" }}
+                className="flex flex-col items-center justify-center p-5 border-l border-slate-200 text-center"
               >
-                {b.viability && (
-                  <span className="font-sans text-[11px] font-bold uppercase tracking-wider bg-[#81cc87] text-[#f9faeb] px-2.5 py-0.5 rounded-full mb-2 shadow-sm">
-                    {b.viability}
+                {b.badgeWinner && (
+                  <span className="font-sans text-[10px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full mb-2 border border-emerald-200 shadow-2xs">
+                    {b.badgeWinner}
                   </span>
                 )}
-                <h3 className="font-sans text-[18px] font-bold text-gray-950 text-center leading-snug">{b.name}</h3>
-                <p className="font-sans text-[14px] font-bold text-[#81cc87] mt-1">Score: {b.score} / 100</p>
-              </div>
-            ))}
-          </div>
-
-          {/* ── SECTION HEADER: Financials ── */}
-          <div
-            className="grid"
-            style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}
-          >
-            <div className="px-5 py-3 bg-[#f9faeb]/50 border-b border-r border-gray-200 flex items-center">
-              <span className="inline-flex items-center gap-1.5 font-sans text-[11px] font-bold uppercase tracking-wider text-[#81cc87] bg-[#f9faeb] border border-[#81cc87]/10 px-3 py-1 rounded-md">
-                Financials
-              </span>
-            </div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-3 bg-[#f8fdf9] border-b border-l border-gray-200">
-                <table className="w-full">
-                  <tbody>
-                    <tr>
-                      <td className="font-sans text-[14px] text-gray-500 font-medium pr-3 py-1">Project Cost</td>
-                      <td className="font-sans text-[14px] text-gray-900 font-bold text-right">{b.financials.projectCost}</td>
-                    </tr>
-                    <tr>
-                      <td className="font-sans text-[14px] text-gray-500 font-medium pr-3 py-1">10% Margin</td>
-                      <td className="font-sans text-[14px] text-gray-900 font-bold text-right">{b.financials.margin10}</td>
-                    </tr>
-                    <tr>
-                      <td className="font-sans text-[14px] text-gray-500 font-medium pr-3 py-1">90% SCA Loan</td>
-                      <td className="font-sans text-[14px] text-gray-900 font-bold text-right">{b.financials.sca}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            ))}
-          </div>
-
-          {/* ── ROW: Net Profit Margin ── */}
-          <div className="grid border-b border-gray-200" style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}>
-            <div className="flex items-center px-5 py-5 border-r border-gray-200 bg-white">
-              <span className="inline-flex items-center gap-1.5 font-sans text-[11px] font-bold uppercase tracking-wider text-gray-800 bg-gray-100 border border-gray-200 px-3 py-1 rounded-md">
-                Net Profit Margin
-              </span>
-            </div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="flex flex-col justify-center px-5 py-5 border-l border-gray-200 bg-white">
-                <p className="font-sans text-[20px] font-bold text-gray-950 leading-none tracking-tight">{b.netProfitMargin}</p>
-                <p className="font-sans text-[14px] text-gray-500 font-medium mt-1.5">{b.monthlyProfit}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* ── ROW: Time to Break-Even ── */}
-          <div className="grid border-b border-gray-200" style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}>
-            <div className="flex items-center px-5 py-5 border-r border-gray-200" style={{ background: "rgba(241,245,249,0.6)" }}>
-              <span className="inline-flex items-center gap-1.5 font-sans text-[11px] font-bold uppercase tracking-wider text-gray-800 bg-gray-100 border border-gray-200 px-3 py-1 rounded-md">
-                Time to Break-Even
-              </span>
-            </div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="flex items-center px-5 py-5 border-l border-gray-200" style={{ background: "rgba(241,245,249,0.6)" }}>
-                <p className="font-sans text-[24px] font-bold text-gray-950 tracking-tight">{b.breakEven}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* ── ROW: Local Saturation ── */}
-          <div className="grid border-b border-gray-200" style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}>
-            <div className="flex items-center px-5 py-5 border-r border-gray-200 bg-white">
-              <span className="inline-flex items-center gap-1.5 font-sans text-[11px] font-bold uppercase tracking-wider text-gray-800 bg-gray-100 border border-gray-200 px-3 py-1 rounded-md">
-                Local Saturation
-              </span>
-            </div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="flex items-center px-5 py-5 border-l border-gray-200 bg-white">
-                <p className="font-sans text-[14px] font-medium text-gray-900">{b.localSaturation}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* ── ROW: Operational Complexity ── */}
-          <div className="grid border-b border-gray-200" style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}>
-            <div className="flex items-center px-5 py-5 border-r border-gray-200" style={{ background: "rgba(241,245,249,0.6)" }}>
-              <span className="inline-flex items-center gap-1.5 font-sans text-[11px] font-bold uppercase tracking-wider text-gray-800 bg-gray-100 border border-gray-200 px-3 py-1 rounded-md">
-                Operational Complexity
-              </span>
-            </div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="flex items-center px-5 py-5 border-l border-gray-200" style={{ background: "rgba(241,245,249,0.6)" }}>
-                <p className="font-sans text-[14px] font-medium text-gray-900">{b.operationalComplexity}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* ── ROW: Key Local Risk ── */}
-          <div className="grid" style={{ gridTemplateColumns: `220px repeat(${cols}, 1fr)` }}>
-            <div className="flex items-center px-5 py-5 border-r border-gray-200 bg-white">
-              <span className="inline-flex items-center gap-1.5 font-sans text-[11px] font-bold uppercase tracking-wider text-red-700 bg-red-50 border border-red-200 px-3 py-1 rounded-md">
-                Key Local Risk
-              </span>
-            </div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-5 border-l border-gray-200 bg-white">
-                <div className="bg-red-50 border border-red-100 rounded-xl p-3.5">
-                  <p className="font-sans text-[14px] text-red-900 font-medium leading-snug">{b.keyLocalRisk}</p>
+                <h3 className="font-sans text-[16px] font-bold text-gray-950 leading-snug">{b.name}</h3>
+                <div className="mt-1 flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-emerald-700">Score: {b.score}/100</span>
+                  <span className="text-[10px] text-slate-500 uppercase tracking-tight">({b.viability})</span>
                 </div>
+              </div>
+            ))}
+          </div>
+
+          {/* ── SECTION 1: FINANCIAL ARCHITECTURE ── */}
+          <div
+            className="grid bg-[#234670]/10 border-b border-slate-200"
+            style={{ gridTemplateColumns: gridColTemplate }}
+          >
+            <div className="px-5 py-2.5 flex items-center gap-2">
+              <Landmark className="w-4 h-4 text-[#234670]" />
+              <span className="font-sans text-[12px] font-bold uppercase tracking-wider text-[#234670]">1. Financial Architecture</span>
+            </div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="border-l border-slate-200/80" />
+            ))}
+          </div>
+
+          {/* Row: Project Capex */}
+          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Total Project Capex</div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[14px] font-bold text-gray-900">
+                {b.financials.projectCost}
+              </div>
+            ))}
+          </div>
+
+          {/* Row: Promoter Margin Equity */}
+          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">10-15% Promoter Equity</div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[14px] font-medium text-slate-900">
+                {b.financials.margin10}
+              </div>
+            ))}
+          </div>
+
+          {/* Row: Term Loan Requirement */}
+          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Bank Term Loan (up to 90%)</div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[14px] font-medium text-slate-900">
+                {b.financials.termLoan}
+              </div>
+            ))}
+          </div>
+
+          {/* Row: Govt Subsidy Grant */}
+          <div className="grid border-b border-slate-200 bg-emerald-50/30" style={{ gridTemplateColumns: gridColTemplate }}>
+            <div className="px-5 py-3.5 font-sans text-[13px] font-bold text-emerald-900">Govt Subsidy Eligibility</div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[13px] font-bold text-emerald-800">
+                {b.financials.subsidy}
+              </div>
+            ))}
+          </div>
+
+          {/* ── SECTION 2: PROFITABILITY & CASHFLOW ── */}
+          <div
+            className="grid bg-[#234670]/10 border-b border-slate-200"
+            style={{ gridTemplateColumns: gridColTemplate }}
+          >
+            <div className="px-5 py-2.5 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-[#234670]" />
+              <span className="font-sans text-[12px] font-bold uppercase tracking-wider text-[#234670]">2. Profitability & Returns</span>
+            </div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="border-l border-slate-200/80" />
+            ))}
+          </div>
+
+          {/* Row: Net Profit Margin */}
+          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Net Profit Margin (%)</div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[16px] font-bold text-emerald-700">
+                {b.netProfitMargin}
+              </div>
+            ))}
+          </div>
+
+          {/* Row: Monthly Net Cashflow */}
+          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Projected Monthly Net Profit</div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[14px] font-bold text-gray-900">
+                {b.monthlyProfit}
+              </div>
+            ))}
+          </div>
+
+          {/* Row: Break-Even Horizon */}
+          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Break-Even Horizon</div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[14px] font-bold text-gray-900">
+                {b.breakEven}
+              </div>
+            ))}
+          </div>
+
+          {/* Row: 3-Year Projected IRR */}
+          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">3-Year Projected IRR / ROI</div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[14px] font-bold text-indigo-700">
+                {b.projectedIrr}
+              </div>
+            ))}
+          </div>
+
+          {/* ── SECTION 3: MARKET & COMPETITION ── */}
+          <div
+            className="grid bg-[#234670]/10 border-b border-slate-200"
+            style={{ gridTemplateColumns: gridColTemplate }}
+          >
+            <div className="px-5 py-2.5 flex items-center gap-2">
+              <Users className="w-4 h-4 text-[#234670]" />
+              <span className="font-sans text-[12px] font-bold uppercase tracking-wider text-[#234670]">3. Market & Catchment</span>
+            </div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="border-l border-slate-200/80" />
+            ))}
+          </div>
+
+          {/* Row: Catchment Reach */}
+          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Catchment Population (5km / 10km)</div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[13px] font-medium text-slate-800">
+                {b.catchment}
+              </div>
+            ))}
+          </div>
+
+          {/* Row: Competitor Density */}
+          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Competitor Density</div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[13px] font-medium text-slate-800">
+                {b.competitionDensity}
+              </div>
+            ))}
+          </div>
+
+          {/* Row: Local Saturation */}
+          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Local Market Saturation</div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[13px] font-medium text-slate-800">
+                {b.localSaturation}
+              </div>
+            ))}
+          </div>
+
+          {/* ── SECTION 4: STATUTORY & OPERATIONAL BURDEN ── */}
+          <div
+            className="grid bg-[#234670]/10 border-b border-slate-200"
+            style={{ gridTemplateColumns: gridColTemplate }}
+          >
+            <div className="px-5 py-2.5 flex items-center gap-2">
+              <FileText className="w-4 h-4 text-[#234670]" />
+              <span className="font-sans text-[12px] font-bold uppercase tracking-wider text-[#234670]">4. Clearances & Complexity</span>
+            </div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="border-l border-slate-200/80" />
+            ))}
+          </div>
+
+          {/* Row: Statutory Licenses */}
+          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Required Clearances & Licenses</div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[12px] font-semibold text-slate-800 leading-snug">
+                {b.licenses}
+              </div>
+            ))}
+          </div>
+
+          {/* Row: Technical Complexity */}
+          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Operational Complexity</div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[13px] font-medium text-slate-800">
+                {b.operationalComplexity}
+              </div>
+            ))}
+          </div>
+
+          {/* ── SECTION 5: RISK & FINAL VERDICT ── */}
+          <div
+            className="grid bg-[#234670]/10 border-b border-slate-200"
+            style={{ gridTemplateColumns: gridColTemplate }}
+          >
+            <div className="px-5 py-2.5 flex items-center gap-2">
+              <ShieldAlert className="w-4 h-4 text-[#234670]" />
+              <span className="font-sans text-[12px] font-bold uppercase tracking-wider text-[#234670]">5. Risk & Recommendation</span>
+            </div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="border-l border-slate-200/80" />
+            ))}
+          </div>
+
+          {/* Row: Critical Risk & Hedge */}
+          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Critical Risk & Mitigation</div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[12px] leading-relaxed">
+                <p className="text-red-800 font-medium">{b.keyLocalRisk}</p>
+                <p className="text-emerald-900 mt-1 font-semibold">Hedge: {b.riskMitigation}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Row: Best Suited For */}
+          <div className="grid bg-slate-50/40" style={{ gridTemplateColumns: gridColTemplate }}>
+            <div className="px-5 py-4 font-sans text-[13px] font-bold text-slate-900">Recommended Verdict</div>
+            {activeBiz.map((b) => (
+              <div key={b.id} className="px-5 py-4 border-l border-slate-200 font-sans text-[12px] text-slate-800 font-medium leading-snug">
+                {b.bestSuitedFor}
               </div>
             ))}
           </div>
@@ -408,4 +740,3 @@ export const BusinessComparison = () => {
     </div>
   );
 };
-

@@ -18,6 +18,9 @@ export interface Report {
   createdAt: string;
   type: string;
   
-  // To simulate the detail view using existing mock structures:
+  // Comprehensive intelligence data
   feasibilityData?: FeasibilityData;
+  financialData?: any;
+  roadmapData?: any;
+  business?: any;
 }

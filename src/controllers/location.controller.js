@@ -3,9 +3,9 @@ import {
   getDistricts,
   getBlocks,
   getVillages,
-  searchLocationData,
   getLocationById,
 } from "@/services/location.service";
+import { searchLocationsCombined } from "@/services/location-search.service";
 
 
 export async function getStatesController() {
@@ -84,9 +84,9 @@ export async function searchLocationsController(
   query
 ) {
   const locations =
-    await searchLocationData({
+    await searchLocationsCombined({
       query: query.q,
-      limit: query.limit,
+      limit: query.limit || 8,
     });
 
   return {

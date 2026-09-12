@@ -51,6 +51,7 @@ export const TopNav = () => {
 
   const NAV_ITEMS = [
     { id: "nav-dashboard",    href: "/dashboard",     tKey: "nav.dashboard",   icon: Home },
+    { id: "nav-analysis",     href: "/analysis",      tKey: "nav.analysis",    icon: BarChart2 },
     { id: "nav-my-business",  href: businessBase,     tKey: "nav.myBusiness",  icon: Briefcase },
     { id: "nav-finance",      href: financeBase,      tKey: "nav.finance",     icon: TrendingUp },
     { id: "nav-feasibility",  href: feasibilityBase,  tKey: "nav.feasibility", icon: ShieldAlert },
@@ -58,7 +59,26 @@ export const TopNav = () => {
     { id: "nav-advisor",      href: "/advisor",       tKey: "nav.advisor",     icon: MessageSquare },
   ];
 
-  const displayName = profileData?.fullName || user?.name || "Entrepreneur";
+  const displayName = React.useMemo(() => {
+    if (profileData?.fullName && profileData.fullName.trim() !== "") {
+      return profileData.fullName;
+    }
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("ventureroot_user_name");
+      if (stored && stored.trim() !== "") return stored;
+    }
+    if (user?.name && user.name.trim() !== "" && !user.name.includes("@")) {
+      return user.name;
+    }
+    if (user?.email) {
+      return user.email
+        .split("@")[0]
+        .replace(/[._-]/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+    }
+    return "Entrepreneur";
+  }, [profileData?.fullName, user?.name, user?.email]);
+
   const activeRoleLabel = "Entrepreneur";
 
   return (
@@ -144,8 +164,8 @@ export const TopNav = () => {
               <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-[#1E6702] flex items-center justify-center text-white shadow-inner transition-transform duration-300 group-hover:scale-[1.04]">
                 <User className="w-3.5 h-3.5" />
               </div>
-              <div className="hidden md:flex items-center gap-1">
-                <span className="text-[13px] font-bold text-[#200813] truncate max-w-[100px] group-hover:text-[#1E6702] transition-colors duration-300">
+              <div className="hidden md:flex items-center gap-1.5">
+                <span className="text-[13px] font-bold text-[#200813] truncate max-w-[130px] md:max-w-[180px] group-hover:text-[#1E6702] transition-colors duration-300">
                   {displayName}
                 </span>
                 <motion.div animate={{ rotate: isProfileOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
@@ -172,9 +192,9 @@ export const TopNav = () => {
                     <Link href="/profile" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-2.5 w-full text-left px-3 py-2.5 text-[13px] font-semibold text-[#200813]/70 hover:bg-[#FFFBE7] hover:text-[#1E6702] rounded-xl transition-all duration-200">
                       <User className="w-[15px] h-[15px]" /> {t("nav.profile" as any) || "My Profile"}
                     </Link>
-                    <button onClick={() => setIsProfileOpen(false)} className="flex items-center gap-2.5 w-full text-left px-3 py-2.5 text-[13px] font-semibold text-[#200813]/70 hover:bg-[#FFFBE7] hover:text-[#1E6702] rounded-xl transition-all duration-200">
-                      <Settings className="w-[15px] h-[15px]" /> Settings
-                    </button>
+                    <Link href="/settings" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-2.5 w-full text-left px-3 py-2.5 text-[13px] font-semibold text-[#200813]/70 hover:bg-[#FFFBE7] hover:text-[#1E6702] rounded-xl transition-all duration-200">
+                      <Settings className="w-[15px] h-[15px]" /> {t("nav.settings" as any) || "Settings"}
+                    </Link>
                     <button onClick={() => setIsProfileOpen(false)} className="md:hidden flex items-center gap-2.5 w-full text-left px-3 py-2.5 text-[13px] font-semibold text-[#200813]/70 hover:bg-[#FFFBE7] hover:text-[#1E6702] rounded-xl transition-all duration-200">
                       <Globe className="w-[15px] h-[15px]" /> Language
                     </button>

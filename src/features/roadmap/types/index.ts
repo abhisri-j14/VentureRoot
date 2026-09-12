@@ -22,10 +22,22 @@ export interface ActionItem {
   evidence?: Evidence[];
 }
 
+export interface RoadmapPhase {
+  phase: string;
+  title: string;
+  badge: string;
+  summary: string;
+  actions: string[];
+  financialTarget: string;
+  riskMitigation: string;
+  milestoneKpi: string;
+}
+
 export interface Roadmap {
   id: string;
   businessId: string;
   businessName: string;
   location?: string;
   actions: ActionItem[];
+  phases?: RoadmapPhase[];
 }

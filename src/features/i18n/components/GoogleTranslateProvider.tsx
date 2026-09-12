@@ -39,6 +39,29 @@ if (typeof window !== "undefined" && !window.__dom_patch_applied && typeof Node 
   };
 }
 
+// Guard against external 3rd-party scripts (e.g. Google Translate) calling window.location.reload in loops
+if (typeof window !== "undefined" && !(window as any).__vr_reload_guarded) {
+  (window as any).__vr_reload_guarded = true;
+  try {
+    const originalReload = window.location.reload.bind(window.location);
+    let lastReloadAttempt = 0;
+    window.location.reload = function () {
+      const now = Date.now();
+      // Block rapid or repeated reloads within 15 seconds
+      if (now - lastReloadAttempt < 15000) {
+        console.warn("[VentureRoot] Suppressed automated periodic window.location.reload");
+        return;
+      }
+      lastReloadAttempt = now;
+      try {
+        originalReload();
+      } catch (_) {}
+    };
+  } catch (_) {
+    // Non-fatal if browser protects window.location.reload
+  }
+}
+
 /**
  * Headless Google Translate Provider for whole-site automated translation.
  * Translates all pages, cards, paragraphs, and dynamic content automatically
@@ -48,57 +71,39 @@ export const GoogleTranslateProvider = () => {
   const language = useUIStore((s) => s.language);
   const pathname = usePathname();
   const isInitialized = useRef(false);
+  const lastAppliedLang = useRef<string | null>(null);
 
   /**
-   * Try to apply the language to the Google Translate combo.
-   * Polls every 150ms for up to 5 seconds until the combo element is ready.
+   * Try to apply the language to the Google Translate combo safely.
    */
   const applyLanguage = (lang: Language) => {
     if (typeof window === "undefined") return;
 
-    // Set / clear the googtrans cookie
+    // Synchronize HTML document language attribute
+    document.documentElement.lang = lang;
+
+    // Set / clear the googtrans cookie without duplicate host/domain clashes
     if (lang === "en") {
       document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=${window.location.hostname}; path=/;`;
     } else {
-      const cookieValue = `/en/${lang}`;
-      document.cookie = `googtrans=${cookieValue}; path=/;`;
-      document.cookie = `googtrans=${cookieValue}; domain=${window.location.hostname}; path=/;`;
+      document.cookie = `googtrans=/en/${lang}; path=/;`;
     }
 
-    // Poll for the combo element — it appears asynchronously after the Google script loads
-    let attempts = 0;
-    const maxAttempts = 33; // ~5 seconds at 150ms intervals
-    const interval = setInterval(() => {
-      attempts++;
-      const combo = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
-
-      if (combo) {
-        clearInterval(interval);
-        // Set the value only if it's a valid option in the combo
-        const validOption = Array.from(combo.options).some((o) => o.value === lang);
-        if (validOption && combo.value !== lang) {
-          combo.value = lang;
-          combo.dispatchEvent(new Event("change"));
-        } else if (!validOption && lang !== "en") {
-          // Language not in widget options — fall back to page reload with cookie
-          window.location.reload();
-        }
-      } else if (attempts >= maxAttempts) {
-        clearInterval(interval);
-        // Combo never appeared — reload to let Google Translate init from cookie
-        if (lang !== "en") {
-          window.location.reload();
-        }
-      }
-    }, 150);
+    // Check if the combo element is available in the DOM
+    const combo = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
+    if (combo && combo.value !== lang) {
+      combo.value = lang;
+      try {
+        combo.dispatchEvent(new Event("change"));
+      } catch (_) {}
+      lastAppliedLang.current = lang;
+    }
   };
 
-  // Re-apply translation when language or route changes
+  // Re-apply translation when language changes (do NOT reload on pathname changes)
   useEffect(() => {
     applyLanguage(language);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [language, pathname]);
+  }, [language]);
 
   return (
     <>

@@ -17,6 +17,7 @@ export const registerSchema = z
     termsAccepted: z.literal(true, {
       message: "You must accept the terms and conditions"
     }),
+    location: z.any().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

@@ -5,13 +5,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, AlertCircle, MapPin, Search, Check } from "lucide-react";
 import { registerSchema, RegisterFormValues } from "@/features/auth/schemas/authSchema";
 import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 import { LanguageSwitcher } from "@/features/i18n/components/LanguageSwitcher";
 import { motion, Variants } from "framer-motion";
 import { TextEffect } from "@/components/ui/text-effect";
 import { authApi } from "@/features/auth/api/authApi";
+import { LocationAutocompleteInput, SelectedLocation } from "@/components/ui/LocationAutocompleteInput";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -20,6 +21,10 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [globalError, setGlobalError] = useState<string | null>(null);
+
+  // Base Location Autocomplete State
+  const [baseLocationQuery, setBaseLocationQuery] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState<{ label: string; state: string; district: string; block?: string; village?: string; lat?: number; lon?: number } | null>(null);
 
   const {
     register,
@@ -39,8 +44,13 @@ export default function RegisterPage() {
     setGlobalError(null);
     setIsSubmitting(true);
     try {
-      await authApi.register(data);
-      // RegisterResponse is unknown, but we don't need to consume it for navigation.
+      if (typeof window !== "undefined" && data.fullName) {
+        localStorage.setItem("ventureroot_user_name", data.fullName.trim());
+      }
+      await authApi.register({
+        ...data,
+        location: selectedLocation || undefined,
+      });
       setIsSubmitting(false);
       router.push("/onboarding");
     } catch (error: any) {
@@ -136,9 +146,44 @@ export default function RegisterPage() {
             </motion.div>
 
             {globalError && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-                <p className="text-sm text-red-700">{globalError}</p>
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`mb-6 p-4 rounded-2xl border flex flex-col gap-2.5 ${
+                  globalError.toLowerCase().includes("already registered")
+                    ? "bg-amber-50/90 border-amber-300 text-amber-950"
+                    : "bg-red-50 border-red-200 text-red-700"
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <AlertCircle className={`w-5 h-5 shrink-0 mt-0.5 ${
+                    globalError.toLowerCase().includes("already registered") ? "text-amber-600" : "text-red-600"
+                  }`} />
+                  <div className="flex-1">
+                    <p className="font-sans font-bold text-[14px] leading-tight">
+                      {globalError.toLowerCase().includes("already registered")
+                        ? "You are already registered"
+                        : "Registration failed"}
+                    </p>
+                    <p className="font-sans text-[13px] mt-1 text-slate-700 leading-relaxed">
+                      {globalError.toLowerCase().includes("already registered")
+                        ? "An account with this email already exists in VentureRoot. Please log in directly."
+                        : globalError}
+                    </p>
+                  </div>
+                </div>
+
+                {globalError.toLowerCase().includes("already registered") && (
+                  <div className="pt-2 border-t border-amber-200/80 flex items-center justify-between">
+                    <span className="text-xs text-amber-900 font-medium">Have an account?</span>
+                    <Link
+                      href="/login"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#1E6702] hover:bg-[#2b8a07] text-white font-sans text-xs font-bold transition-all shadow-sm"
+                    >
+                      Log In &rarr;
+                    </Link>
+                  </div>
+                )}
               </motion.div>
             )}
 
@@ -237,6 +282,27 @@ export default function RegisterPage() {
                     <p className="text-red-500 font-sans text-[12px] mt-1.5 font-medium">{errors.confirmPassword.message}</p>
                   )}
                 </div>
+              </motion.div>
+
+              {/* Your Base Location Autocomplete */}
+              <motion.div variants={itemVariants} className="relative z-20">
+                <LocationAutocompleteInput
+                  label="Your Base Location"
+                  placeholder="Type initials (e.g. Ana, Pun, Khed, Mumb, Coimb)..."
+                  onSelect={(loc) => {
+                    setBaseLocationQuery(loc.label);
+                    setSelectedLocation(loc);
+                    if (typeof window !== "undefined") {
+                      localStorage.setItem("ventureroot_base_location", JSON.stringify(loc));
+                    }
+                  }}
+                />
+                {selectedLocation && (
+                  <div className="mt-1.5 flex items-center gap-1.5 text-[11px] text-[#1E6702] font-semibold">
+                    <Check className="w-3.5 h-3.5" />
+                    <span>Location set: {selectedLocation.district}, {selectedLocation.state} (OpenStreetMap)</span>
+                  </div>
+                )}
               </motion.div>
 
               <motion.div variants={itemVariants} className="mt-1 flex items-start gap-3 cursor-pointer group">

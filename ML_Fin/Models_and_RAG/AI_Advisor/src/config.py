@@ -13,16 +13,18 @@ ROOT_DIR = ADVISOR_DIR.parent.parent
 ENV_FILE = ROOT_DIR / ".env"
 
 def load_root_env():
-    if ENV_FILE.exists():
-        with open(ENV_FILE, "r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line or line.startswith("#") or "=" not in line:
-                    continue
-                k, v = line.split("=", 1)
-                k, v = k.strip(), v.strip().strip("'").strip('"')
-                if k and k not in os.environ:
-                    os.environ[k] = v
+    candidate_envs = [ROOT_DIR / ".env", ROOT_DIR.parent / ".env"]
+    for env_path in candidate_envs:
+        if env_path.exists():
+            with open(env_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith("#") or "=" not in line:
+                        continue
+                    k, v = line.split("=", 1)
+                    k, v = k.strip(), v.strip().strip("'").strip('"')
+                    if k and k not in os.environ:
+                        os.environ[k] = v
 
 load_root_env()
 

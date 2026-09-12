@@ -28,9 +28,10 @@ export function CleanNavbar() {
         {/* Center/Right: Nav Links (Desktop) */}
         <div className="hidden md:flex items-center gap-2" onMouseLeave={() => setHoveredIndex(null)}>
           {[
-            { name: t("nav.home"), href: "/" },
-            { name: t("nav.howItWorks"), href: "#how-it-works" },
-            { name: t("nav.contactUs"), href: "#footer" },
+            { name: t("nav.home") || "Home", href: "/" },
+            { name: "Instant Analysis", href: "/analysis" },
+            { name: t("nav.howItWorks") || "How It Works", href: "/#how-it-works" },
+            { name: t("nav.contactUs") || "Contact Us", href: "/#footer" },
           ].map((link, idx) => (
             <Link 
               key={link.name}
@@ -57,10 +58,10 @@ export function CleanNavbar() {
             {t("auth.loginButton")}
           </Link>
           <Link
-            href="/register"
-            className="text-[13px] font-bold bg-secondary text-white px-5 py-2 rounded-lg hover:bg-secondary/90 transition-all shadow-sm"
+            href="/analysis"
+            className="text-sm font-bold bg-[#1E6702] text-white px-5 py-2.5 rounded-full shadow-sm hover:bg-[#185502] transition-colors active:scale-[0.97]"
           >
-            {t("auth.registerTitle")}
+            Instant Check
           </Link>
         </div>
 
@@ -73,25 +74,32 @@ export function CleanNavbar() {
         </button>
       </nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Drawer */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-background pt-24 px-6 md:hidden flex flex-col gap-6">
-          <Link
-            href="/"
+        <div className="fixed inset-0 bg-background/95 backdrop-blur-md z-40 flex flex-col p-6 pt-24 gap-6 md:hidden">
+          <Link 
+            href="/" 
             onClick={() => setIsMobileMenuOpen(false)}
             className="text-xl font-semibold text-secondary"
           >
             {t("nav.home")}
           </Link>
-          <Link
-            href="#how-it-works"
+          <Link 
+            href="/analysis" 
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="text-xl font-bold text-[#1E6702]"
+          >
+            Instant Analysis
+          </Link>
+          <Link 
+            href="/#how-it-works" 
             onClick={() => setIsMobileMenuOpen(false)}
             className="text-xl font-semibold text-secondary"
           >
             {t("nav.howItWorks")}
           </Link>
-          <Link
-            href="#footer"
+          <Link 
+            href="/#footer" 
             onClick={() => setIsMobileMenuOpen(false)}
             className="text-xl font-semibold text-secondary"
           >

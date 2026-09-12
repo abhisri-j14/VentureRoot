@@ -19,6 +19,8 @@ import {
   NotFoundError,
 } from "@/errors/http-error";
 
+import * as financeClient from "@/integrations/finance.client";
+
 
 async function getOwnedBusiness({
   userId,
@@ -64,22 +66,57 @@ export async function calculateBusinessRepayment({
       businessId: data.businessId,
     });
 
+  let repayment = null;
+  let repaymentSchedule = null;
 
-  const repayment =
-    calculateRepaymentSummary({
-      loanAmount: data.loanAmount,
-      interestRate: data.interestRate,
-      tenure: data.tenure,
+  try {
+    const rateDecimal = data.interestRate > 1 ? data.interestRate / 100 : data.interestRate;
+    const pySchedule = await financeClient.generateRepaymentSchedule({
+      disbursedLoan: data.loanAmount,
+      annualInterestRate: rateDecimal,
+      tenureMonths: data.tenure,
+      moratoriumMonths: data.moratorium || 0,
     });
 
+    if (pySchedule && pySchedule.monthly_emi) {
+      repayment = {
+        monthlyEmi: Math.round(pySchedule.monthly_emi * 100) / 100,
+        totalInterest: Math.round(pySchedule.total_interest * 100) / 100,
+        totalRepayment: Math.round(pySchedule.total_repayment * 100) / 100,
+        effectivePrincipal: Math.round(pySchedule.effective_principal_after_moratorium * 100) / 100,
+      };
+      repaymentSchedule = (pySchedule.monthly_schedule || []).map((item) => ({
+        month: item.month,
+        period: item.period,
+        openingBalance: item.opening_balance,
+        interest: item.interest,
+        principal: item.principal,
+        payment: item.payment,
+        closingBalance: item.closing_balance,
+        moratoriumFlag: item.moratorium_flag,
+      }));
+    }
+  } catch (err) {
+    console.warn("[finance.service] Remote Python Finance Engine repayment unavailable, using local calculation:", err.message);
+  }
 
-  const repaymentSchedule =
-    generateRepaymentSchedule({
-      loanAmount: data.loanAmount,
-      interestRate: data.interestRate,
-      tenure: data.tenure,
-    });
+  if (!repayment) {
+    repayment =
+      calculateRepaymentSummary({
+        loanAmount: data.loanAmount,
+        interestRate: data.interestRate,
+        tenure: data.tenure,
+      });
+  }
 
+  if (!repaymentSchedule) {
+    repaymentSchedule =
+      generateRepaymentSchedule({
+        loanAmount: data.loanAmount,
+        interestRate: data.interestRate,
+        tenure: data.tenure,
+      });
+  }
 
   return {
     business: {
@@ -102,7 +139,7 @@ export async function calculateBusinessRepayment({
         data.moratorium,
 
       moratoriumApplied:
-        false,
+        Boolean(data.moratorium && data.moratorium > 0),
     },
 
     repayment,
@@ -112,7 +149,7 @@ export async function calculateBusinessRepayment({
 }
 
 
-function evaluateSchemeAndRecommendation({ projectCost, revenue, expenses, monthlyEmi }) {
+function evaluateSchemeAndRecommendation({ projectCost, revenue, expenses, monthlyEmi, pyScheme }) {
   const operatingProfit = Math.max(0, Number(revenue || 0) - Number(expenses || 0));
   const emi = Number(monthlyEmi || 0);
   const netCashFlow = operatingProfit - emi;
@@ -123,6 +160,24 @@ function evaluateSchemeAndRecommendation({ projectCost, revenue, expenses, month
     recommendationStatus = "HIGH_RISK";
   } else if (dscr < 1.5) {
     recommendationStatus = "MODERATE_RISK";
+  }
+
+  if (pyScheme) {
+    return {
+      recommendationStatus,
+      dscr: Math.round(dscr * 100) / 100,
+      scheme: {
+        schemeId: pyScheme.scheme_id || "term_loan",
+        name: pyScheme.name || "Government Credit Linkage Scheme",
+        maxProjectCost: pyScheme.max_project_cost || 5000000,
+        maxLoan: pyScheme.max_loan || 4500000,
+        standardInterestRate: pyScheme.interest_rate || 0.08,
+        standardTenureMonths: pyScheme.tenure_months || 84,
+        moratoriumMonths: pyScheme.moratorium_months || 6,
+        beneficiaryContributionPct: (pyScheme.beneficiary_contribution_pct || 0.1) * 100,
+        statusMessage: `Project cost qualified under ${pyScheme.name} with ${(pyScheme.interest_rate * 100).toFixed(1)}% p.a. interest.`,
+      },
+    };
   }
 
   let scheme = null;
@@ -181,6 +236,18 @@ export async function buildFinanceStructure({
       businessId: data.businessId,
     });
 
+  const margin = Number(business.availableMargin || 0);
+  const projectCost = Number(data.loanAmount) + margin;
+
+  let pyFinance = null;
+  try {
+    const routeRes = await financeClient.routeScheme({ projectCost });
+    if (routeRes && routeRes.scheme) {
+      pyFinance = routeRes;
+    }
+  } catch (err) {
+    console.warn("[finance.service] Remote Python Finance Engine route scheme unavailable, falling back:", err.message);
+  }
 
   const repayment =
     calculateRepaymentSummary({
@@ -188,7 +255,6 @@ export async function buildFinanceStructure({
       interestRate: data.interestRate,
       tenure: data.tenure,
     });
-
 
   const cashFlow =
     calculateCashFlow({
@@ -198,13 +264,12 @@ export async function buildFinanceStructure({
         repayment.monthlyEmi,
     });
 
-  const margin = Number(business.availableMargin || 0);
-  const projectCost = Number(data.loanAmount) + margin;
   const evaluation = evaluateSchemeAndRecommendation({
     projectCost,
     revenue: data.revenue,
     expenses: data.expenses,
     monthlyEmi: repayment.monthlyEmi,
+    pyScheme: pyFinance?.scheme,
   });
 
   return {
@@ -257,3 +322,4 @@ export async function buildFinanceStructure({
       evaluation.recommendationStatus,
   };
 }
+

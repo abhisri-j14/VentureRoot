@@ -127,39 +127,80 @@
     "competitors": [
       {
         "id": "comp-1",
-        "name": "Raju Dairy Farms",
+        "name": "District Co-operative Milk Producers Union Center",
         "type": "Direct",
-        "location": "2km North",
-        "pricing": "₹50/liter",
+        "location": "1.8 km North (Anand)",
+        "distanceKm": 1.8,
+        "position": [22.5785, 72.9409],
+        "pricing": "₹52 – ₹56 / Litre",
         "strengths": [
-          "Established customer base",
-          "Low overhead"
+          "Established village milk collection network",
+          "Bulk chilling tank & testing infrastructure"
         ],
         "weaknesses": [
-          "Inconsistent quality",
-          "No delivery network"
+          "Fixed 15-day payment cycle causing small farmer dissatisfaction",
+          "Strict SNF/Fat deductions"
         ],
-        "positioning": "Budget local supplier"
+        "positioning": "Bulk Procurement Leader — Differentiate via doorstep spot payment and direct pure consumer delivery."
       },
       {
         "id": "comp-2",
-        "name": "Gokul Packaged Milk",
-        "type": "Indirect",
-        "location": "Available in all grocery stores",
-        "pricing": "₹54/liter",
+        "name": "Raju Dairy Farm & Fresh Paneer Enterprise",
+        "type": "Direct",
+        "location": "2.6 km East (Anand)",
+        "distanceKm": 2.6,
+        "position": [22.5485, 72.9469],
+        "pricing": "₹58 – ₹64 / Litre",
         "strengths": [
-          "Standardized quality",
-          "High availability"
+          "High margin on value-added dairy items (paneer, curd, khoya)",
+          "Own dairy herd of 30+ crossbred cattle"
         ],
         "weaknesses": [
-          "Lacks farm-fresh appeal",
-          "Packaged taste"
+          "Limited cold-chain delivery radius (under 8 km)",
+          "Seasonal fodder cost inflation"
         ],
-        "positioning": "Mass-market convenience"
+        "positioning": "Value-Added Peer — Opportunity to capture fresh milk market with automated hygienic packaging."
+      },
+      {
+        "id": "comp-3",
+        "name": "Anand APMC Wholesale Mandi Dairy Yard",
+        "type": "Indirect",
+        "location": "3.7 km West (Anand)",
+        "distanceKm": 3.7,
+        "position": [22.5865, 72.9099],
+        "pricing": "₹48 – ₹52 / Litre (Wholesale)",
+        "strengths": [
+          "Large volume throughput capacity",
+          "Established institutional transport links to cities"
+        ],
+        "weaknesses": [
+          "2–4% commission agent fee",
+          "No consumer brand recognition in local village panchayats"
+        ],
+        "positioning": "Wholesale Intermediary — Capture higher retail margins by bypassing Mandi brokers."
+      },
+      {
+        "id": "comp-4",
+        "name": "Local Village Cattle Owners & Milk Vendors",
+        "type": "Indirect",
+        "location": "1.3 km South (Anand)",
+        "distanceKm": 1.3,
+        "position": [22.5435, 72.9149],
+        "pricing": "₹46 – ₹50 / Litre (Unorganized)",
+        "strengths": [
+          "Hyper-local neighbor relationships",
+          "Minimal capital overhead"
+        ],
+        "weaknesses": [
+          "Lack of cold storage causing afternoon souring",
+          "No FSSAI or food hygiene accreditation"
+        ],
+        "positioning": "Informal Producers — Build trust through certified purity, tamper-proof pouches, and lactometer transparency."
       }
     ],
     "observations": [
-      "No competitor currently offers a subscription-based home delivery in this block."
+      "No competitor currently offers a certified A2 subscription-based home delivery in this block.",
+      "High willingness among local families to pay an 8–12% premium for direct-from-farm unadulterated milk."
     ]
   },
   "swot": {

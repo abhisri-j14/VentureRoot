@@ -1,0 +1,880 @@
+{
+  "timestamp": "2026-09-12T19:08:59.877609",
+  "total_tests": 38,
+  "passed": 38,
+  "failed": 0,
+  "results": [
+    {
+      "test": "Health: data_service",
+      "status": "PASS",
+      "elapsed_s": 0.21,
+      "result_summary": {
+        "status": "HEALTHY",
+        "service": "VentureRoot Hyper-Local Data & Knowledge Graph Microservice",
+        "version": "4.0.0",
+        "kg_nodes": 19,
+        "kg_edges": 10,
+        "indexed_subdistricts": 8
+      }
+    },
+    {
+      "test": "Health: model_1",
+      "status": "PASS",
+      "elapsed_s": 0.02,
+      "result_summary": {
+        "status": "ok",
+        "service": "grambiz-model1",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "test": "Health: model_2",
+      "status": "PASS",
+      "elapsed_s": 0.02,
+      "result_summary": {
+        "status": "ONLINE",
+        "service": "GramBiz Model 2 -- Business Viability & Opportunity Analysis Engine",
+        "model_version": "1.0.0",
+        "methodology_version": "1.0.0"
+      }
+    },
+    {
+      "test": "Health: model_3",
+      "status": "PASS",
+      "elapsed_s": 0.03,
+      "result_summary": {
+        "status": "ok",
+        "service": "GramBiz Model 3 \u2014 Local Market Price Prediction Engine",
+        "model_version": "1.0.0",
+        "methodology_version": "1.0.0",
+        "model_loaded": true
+      }
+    },
+    {
+      "test": "Health: finance_engine",
+      "status": "PASS",
+      "elapsed_s": 0.03,
+      "result_summary": {
+        "status": "ok",
+        "service": "finance-engine",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "test": "Health: ai_advisor",
+      "status": "PASS",
+      "elapsed_s": 0.02,
+      "result_summary": {
+        "status": "HEALTHY",
+        "service": "GramBiz Gemini AI Advisory Agent",
+        "version": "1.0.0",
+        "advisor_port": 8005,
+        "dependencies": {
+          "model_1": "local",
+          "model_2": "local",
+          "model_3": "local",
+          "finance_engine": "local",
+          "rag": "local",
+          "gemini": "local_fallback"
+        }
+      }
+    },
+    {
+      "test": "M1: Normal Gujarat/Anand/Dairy",
+      "status": "PASS",
+      "elapsed_s": 0.03,
+      "result_summary": {
+        "MODEL_VERSION": "1.0.0",
+        "METHODOLOGY_VERSION": "1.0.0",
+        "model_version": "1.0.0",
+        "methodology_version": "1.0.0",
+        "market_potential_score": 51.15,
+        "opportunity_level": "Moderate",
+        "demand_score": 46.69,
+        "purchasing_power_score": 40.01,
+        "workforce_opportunity_score": 30.1,
+        "infrastructure_score": 64.73,
+        "market_gap_score": 89.92,
+        "confidence_score": 100.0,
+        "estimated_consumer_base": null,
+        "geospatial_radius_available": false,
+        "competitor_density_available": false,
+        "top_positive_factors": [
+          {
+            "factor": "market_gap",
+            "score": 89.92
+          },
+          {
+            "factor": "infrastructure",
+            "score": 64.73
+          }
+        ],
+        "top_negative_factors": [
+          {
+            "factor": "workforce",
+            "score": 30.1
+          }
+        ],
+        "data_coverage": {
+          "features_available": 30,
+          "features_total": 30,
+          "coverage_pct": 100.0
+        },
+        "geographic_level": "sub-district",
+        "match_info": {
+          "status": "found",
+          "matched_name": "Anand",
+          "matched_state": "Gujarat",
+          "match_type": "exact"
+        },
+        "ood_checks": {
+          "location_found": true,
+          "category_in_distribution": false,
+          "geospatial_coordinates_provided": false,
+          "missing_feature_count": 0,
+          "is_out_of_distribution": true
+        },
+        "data_freshness": {
+          "census": "2011",
+          "hces_mpce": "2023-24",
+          "cpi": "July 2026"
+        },
+        "data_sources": [
+          "Census 2011 Primary Census Abstract",
+          "Census 2011 A-1 (Villages, Households, Area)",
+          "HCES 2023-24 (State-level MPCE)",
+          "CPI July 2026 (State-level)"
+        ],
+        "model_type": "Ridge",
+        "limitations": "[list len=7]",
+        "warnings": [
+          "True 5-10 km geospatial radius calculation not available. Estimated consumer base is set to None to prevent data fabrication.",
+          "Business category 'Dairy' is out-of-distribution. Using default baseline weights."
+        ],
+        "business_category": "Dairy",
+        "location": {
+          "state": "Gujarat",
+          "district": "Anand",
+          "subdistrict": "Anand",
+          "village": null
+        }
+      }
+    },
+    {
+      "test": "M1: Maharashtra/Pune/Retail",
+      "status": "PASS",
+      "elapsed_s": 0.03,
+      "result_summary": {
+        "MODEL_VERSION": "1.0.0",
+        "METHODOLOGY_VERSION": "1.0.0",
+        "model_version": "1.0.0",
+        "methodology_version": "1.0.0",
+        "market_potential_score": 57.09,
+        "opportunity_level": "Moderate",
+        "demand_score": 46.22,
+        "purchasing_power_score": 50.81,
+        "workforce_opportunity_score": 49.68,
+        "infrastructure_score": 65.83,
+        "market_gap_score": 87.2,
+        "confidence_score": 100.0,
+        "estimated_consumer_base": null,
+        "geospatial_radius_available": false,
+        "competitor_density_available": false,
+        "top_positive_factors": [
+          {
+            "factor": "market_gap",
+            "score": 87.2
+          },
+          {
+            "factor": "infrastructure",
+            "score": 65.83
+          }
+        ],
+        "top_negative_factors": [],
+        "data_coverage": {
+          "features_available": 30,
+          "features_total": 30,
+          "coverage_pct": 100.0
+        },
+        "geographic_level": "sub-district",
+        "match_info": {
+          "status": "found",
+          "matched_name": "Khed",
+          "matched_state": "Maharashtra",
+          "match_type": "best_of_2"
+        },
+        "ood_checks": {
+          "location_found": true,
+          "category_in_distribution": false,
+          "geospatial_coordinates_provided": false,
+          "missing_feature_count": 0,
+          "is_out_of_distribution": true
+        },
+        "data_freshness": {
+          "census": "2011",
+          "hces_mpce": "2023-24",
+          "cpi": "July 2026"
+        },
+        "data_sources": [
+          "Census 2011 Primary Census Abstract",
+          "Census 2011 A-1 (Villages, Households, Area)",
+          "HCES 2023-24 (State-level MPCE)",
+          "CPI July 2026 (State-level)"
+        ],
+        "model_type": "Ridge",
+        "limitations": "[list len=7]",
+        "warnings": [
+          "True 5-10 km geospatial radius calculation not available. Estimated consumer base is set to None to prevent data fabrication.",
+          "Business category 'Retail' is out-of-distribution. Using default baseline weights."
+        ],
+        "business_category": "Retail",
+        "location": {
+          "state": "Maharashtra",
+          "district": "Pune",
+          "subdistrict": "Khed",
+          "village": null
+        }
+      }
+    },
+    {
+      "test": "M1: Remote tribal Chhattisgarh",
+      "status": "PASS",
+      "elapsed_s": 0.02,
+      "result_summary": {
+        "status_code": 200,
+        "data": "[dict len=28]"
+      }
+    },
+    {
+      "test": "M1: Edge unknown location",
+      "status": "PASS",
+      "elapsed_s": 0.04,
+      "result_summary": {
+        "status_code": 200,
+        "data": "[dict len=17]"
+      }
+    },
+    {
+      "test": "M1: Harsh empty fields",
+      "status": "PASS",
+      "elapsed_s": 0.05,
+      "result_summary": {
+        "status_code": 200,
+        "data": "[dict len=28]"
+      }
+    },
+    {
+      "test": "M1: Worst all null",
+      "status": "PASS",
+      "elapsed_s": 0.03,
+      "result_summary": {
+        "status_code": 200,
+        "data": "[dict len=28]"
+      }
+    },
+    {
+      "test": "M2: Normal Gujarat/Anand/Dairy",
+      "status": "PASS",
+      "elapsed_s": 0.03,
+      "result_summary": {
+        "status": "SUCCESS",
+        "model_version": "1.0.0",
+        "methodology_version": "1.0.0",
+        "location": {
+          "state_name": "Gujarat",
+          "district_name": "Anand",
+          "subdistrict_name": "Anand"
+        },
+        "data_resolution": "subdistrict",
+        "overall_viability_score": 52.47,
+        "score_band": "Moderate Opportunity",
+        "confidence": "Low",
+        "data_completeness": 0.43,
+        "ood": false,
+        "selected_category": "Dairy",
+        "selected_category_analysis": "[dict len=11]",
+        "category_rankings": "[list len=15]",
+        "geospatial_radius_available": false,
+        "competitor_density_available": false,
+        "data_sources": [
+          "Census PCA 2011",
+          "Udyam MSME Registrations",
+          "ASI Factory Statistics"
+        ],
+        "warnings": [],
+        "limitations": "[list len=4]"
+      }
+    },
+    {
+      "test": "M2: Categories list",
+      "status": "PASS",
+      "elapsed_s": 0.02,
+      "result_summary": {
+        "total_categories": 15,
+        "categories": [
+          "Dairy",
+          "Retail",
+          "Textiles",
+          "Food Processing",
+          "Agriculture",
+          "Fisheries",
+          "Poultry",
+          "Handicrafts",
+          "Manufacturing",
+          "Services",
+          "Repair/Maintenance",
+          "Transport",
+          "Hospitality",
+          "Personal Services",
+          "Other"
+        ]
+      }
+    },
+    {
+      "test": "M2: Edge no subdistrict",
+      "status": "PASS",
+      "elapsed_s": 0.03,
+      "result_summary": {
+        "status_code": 200,
+        "data": "[dict len=18]"
+      }
+    },
+    {
+      "test": "M2: Harsh misspelled",
+      "status": "PASS",
+      "elapsed_s": 0.03,
+      "result_summary": {
+        "status_code": 200,
+        "data": "[dict len=18]"
+      }
+    },
+    {
+      "test": "M3: Normal TN/Coimbatore/Tomato",
+      "status": "PASS",
+      "elapsed_s": 0.05,
+      "result_summary": {
+        "model_version": "1.0.0",
+        "methodology_version": "1.0.0",
+        "feature_version": "1.0.0",
+        "price_prediction_available": true,
+        "status": "SUCCESS",
+        "product": {
+          "commodity": "Tomato",
+          "variety": "Standard / Local",
+          "grade": "FAQ"
+        },
+        "location": {
+          "state": "Tamil Nadu",
+          "district": "Coimbatore",
+          "market": "Coimbatore APMC"
+        },
+        "prediction_date": "2026-09-12",
+        "expected_market_price": 2760.89,
+        "display_expected_market_price": "\u20b92760/quintal",
+        "price_unit": "\u20b9/quintal",
+        "prediction_interval": {
+          "coverage": 0.9,
+          "lower": 817.65,
+          "upper": 4704.13,
+          "display_range": "\u20b9820\u2013\u20b94700/quintal",
+          "width": 3886.48
+        },
+        "reference_selling_price": 2955.21,
+        "display_reference_selling_price": "\u20b92960/quintal",
+        "pricing_method": "forecast_plus_volatility_buffer",
+        "model_confidence": "Medium",
+        "prediction_reliability": "MEDIUM",
+        "data_completeness": 0.8,
+        "data_as_of": "2026-09-05",
+        "latest_observation_date": "2026-09-05",
+        "days_since_latest_observation": 7,
+        "recent_observed_price": 2600.0,
+        "data_resolution": "district",
+        "ood_checks": {
+          "is_out_of_distribution": true,
+          "severity": "MEDIUM",
+          "reasons": [
+            "Unseen APMC market: Coimbatore APMC"
+          ],
+          "warnings": [
+            "Market 'Coimbatore APMC' unseen in historical APMC records. Falling back to district/state averages."
+          ],
+          "data_completeness": 0.8,
+          "location_found": true,
+          "market_found": false,
+          "commodity_found": true,
+          "historical_data_available": false,
+          "extreme_input_detected": false
+        },
+        "positive_price_drivers": [
+          "Feature 'rolling_median_30' is associated with higher predicted market price.",
+          "Feature 'rolling_mean_7' is associated with higher predicted market price.",
+          "Feature 'lag_14_price' is associated with higher predicted market price."
+        ],
+        "negative_price_drivers": [
+          "Market supply volatility buffers moderate peak price expectations."
+        ],
+        "warnings": [
+          "Market 'Coimbatore APMC' unseen in historical APMC records. Falling back to district/state averages.",
+          "Prediction reliability is MEDIUM due to regional variance or partial market coverage.",
+          "Mandi-level observations for 'Coimbatore APMC' unavailable; using district-level APMC records."
+        ],
+        "limitations": [
+          "This model provides an indicative market-price reference estimate based on historical observations. It is not a guarantee of the actual transaction price, profit, revenue, or future market outcome.",
+          "Estimates observed market prices from available historical AGMARKNET market observations.",
+          "Historical price lag features require previous market observations for maximum confidence.",
+          "Unseen APMC markets fallback to district/state level category baselines."
+        ],
+        "disclaimer": "This reference price is an analytical estimate and is not a guaranteed optimal selling price.",
+        "target_unit": "\u20b9/quintal",
+        "predicted_price": 2760.89
+      }
+    },
+    {
+      "test": "M3: Conformal bounds Gujarat/Onion",
+      "status": "PASS",
+      "elapsed_s": 0.04,
+      "result_summary": {
+        "model_version": "1.0.0",
+        "methodology_version": "1.0.0",
+        "feature_version": "1.0.0",
+        "price_prediction_available": true,
+        "status": "SUCCESS",
+        "product": {
+          "commodity": "Onion",
+          "variety": "Standard / Local",
+          "grade": "FAQ"
+        },
+        "location": {
+          "state": "Gujarat",
+          "district": "Amreli",
+          "market": "Amreli APMC"
+        },
+        "prediction_date": "2026-09-12",
+        "expected_market_price": 5783.27,
+        "display_expected_market_price": "\u20b95780/quintal",
+        "price_unit": "\u20b9/quintal",
+        "prediction_interval": {
+          "coverage": 0.9,
+          "lower": 3840.02,
+          "upper": 7726.51,
+          "display_range": "\u20b93840\u2013\u20b97730/quintal",
+          "width": 3886.49
+        },
+        "reference_selling_price": 5977.59,
+        "display_reference_selling_price": "\u20b95980/quintal",
+        "pricing_method": "forecast_plus_volatility_buffer",
+        "model_confidence": "Medium",
+        "prediction_reliability": "MEDIUM",
+        "data_completeness": 0.8,
+        "data_as_of": "2026-09-05",
+        "latest_observation_date": "2026-09-05",
+        "days_since_latest_observation": 7,
+        "recent_observed_price": 5650.0,
+        "data_resolution": "state",
+        "ood_checks": {
+          "is_out_of_distribution": true,
+          "severity": "MEDIUM",
+          "reasons": [
+            "Unseen APMC market: Amreli APMC"
+          ],
+          "warnings": [
+            "Market 'Amreli APMC' unseen in historical APMC records. Falling back to district/state averages."
+          ],
+          "data_completeness": 0.8,
+          "location_found": true,
+          "market_found": false,
+          "commodity_found": true,
+          "historical_data_available": false,
+          "extreme_input_detected": false
+        },
+        "positive_price_drivers": [
+          "Feature 'rolling_median_30' is associated with higher predicted market price.",
+          "Feature 'rolling_mean_7' is associated with higher predicted market price.",
+          "Feature 'lag_14_price' is associated with higher predicted market price."
+        ],
+        "negative_price_drivers": [
+          "Market supply volatility buffers moderate peak price expectations."
+        ],
+        "warnings": [
+          "Market 'Amreli APMC' unseen in historical APMC records. Falling back to district/state averages.",
+          "Prediction reliability is MEDIUM due to regional variance or partial market coverage.",
+          "Mandi-level observations for 'Amreli APMC' unavailable; using state-level APMC records."
+        ],
+        "limitations": [
+          "This model provides an indicative market-price reference estimate based on historical observations. It is not a guarantee of the actual transaction price, profit, revenue, or future market outcome.",
+          "Estimates observed market prices from available historical AGMARKNET market observations.",
+          "Historical price lag features require previous market observations for maximum confidence.",
+          "Unseen APMC markets fallback to district/state level category baselines."
+        ],
+        "disclaimer": "This reference price is an analytical estimate and is not a guaranteed optimal selling price.",
+        "target_unit": "\u20b9/quintal",
+        "predicted_price": 5783.27
+      }
+    },
+    {
+      "test": "M3: Known UP/Rice",
+      "status": "PASS",
+      "elapsed_s": 0.05,
+      "result_summary": {
+        "status_code": 200,
+        "data": "[dict len=31]"
+      }
+    },
+    {
+      "test": "M3: Edge exotic commodity",
+      "status": "PASS",
+      "elapsed_s": 0.03,
+      "result_summary": {
+        "status_code": 200,
+        "data": "[dict len=29]"
+      }
+    },
+    {
+      "test": "FIN: Calculate normal",
+      "status": "PASS",
+      "elapsed_s": 0.03,
+      "result_summary": {
+        "available_margin": 150000.0,
+        "calculated_project_cost": 1500000.0,
+        "beneficiary_contribution": 150000.0,
+        "calculated_loan": 1350000.0,
+        "eligible_loan": 1350000.0,
+        "is_within_scheme_limit": true,
+        "scheme": {
+          "scheme_id": "term_loan",
+          "name": "Term Loan Scheme",
+          "min_project_cost": 140000.0,
+          "max_project_cost": 5000000.0,
+          "beneficiary_contribution_pct": 0.1,
+          "loan_percentage": 0.9,
+          "max_loan": 4500000.0,
+          "interest_rate": 0.08,
+          "tenure_years": 7,
+          "tenure_months": 84,
+          "moratorium_months": 6
+        },
+        "interest_rate": 0.08,
+        "tenure_years": 7,
+        "tenure_months": 84,
+        "moratorium_months": 6,
+        "monthly_emi": 23157.36,
+        "effective_principal_after_moratorium": 1404908.04,
+        "total_interest": 456273.71,
+        "total_repayment": 1806273.71,
+        "monthly_repayment_schedule": "[list len=84]",
+        "quarterly_repayment_schedule": "[list len=28]",
+        "working_capital": null,
+        "proposed_project_cost": null,
+        "margin_shortfall": 0.0,
+        "required_margin_for_proposed": 0.0,
+        "warnings": [],
+        "explanatory_notes": [
+          "Your available margin of \u20b91,50,000 represents 10% beneficiary contribution.",
+          "This margin supports a maximum project cost of \u20b915,00,000.",
+          "90% financing agency loan eligibility is \u20b913,50,000 under the Term Loan Scheme.",
+          "Interest rate is 8.0% p.a. over 7 years (84 months).",
+          "Moratorium duration is 6 months (Interest accrued during moratorium is capitalized into principal before EMI begins)."
+        ],
+        "repayment_assumption_note": "Repayment assumption: The stated tenure includes the moratorium period. Interest accrued during the moratorium is capitalized before EMI repayment begins. Actual lender terms may vary.",
+        "financial_disclaimer": "This tool provides an indicative financial calculation based on the scheme parameters configured in GramBiz. Actual sanction, interest calculation, moratorium treatment, repayment schedule and eligibility are subject to the financing agency's applicable rules and final approval."
+      }
+    },
+    {
+      "test": "FIN: EMI normal 5L/8%/84mo",
+      "status": "PASS",
+      "elapsed_s": 0.02,
+      "result_summary": {
+        "principal": 500000.0,
+        "annual_interest_rate": 0.08,
+        "tenure_months": 84,
+        "monthly_emi": 7793.11,
+        "total_repayment": 654621.24,
+        "total_interest": 154621.24
+      }
+    },
+    {
+      "test": "FIN: EMI tiny loan",
+      "status": "PASS",
+      "elapsed_s": 0.04,
+      "result_summary": {
+        "status_code": 200,
+        "data": {
+          "principal": 1000.0,
+          "annual_interest_rate": 0.01,
+          "tenure_months": 1,
+          "monthly_emi": 1000.83,
+          "total_repayment": 1000.83,
+          "total_interest": 0.83
+        }
+      }
+    },
+    {
+      "test": "FIN: EMI max tenure 360mo",
+      "status": "PASS",
+      "elapsed_s": 0.01,
+      "result_summary": {
+        "status_code": 200,
+        "data": {
+          "principal": 4500000.0,
+          "annual_interest_rate": 0.1,
+          "tenure_months": 360,
+          "monthly_emi": 39490.72,
+          "total_repayment": 14216659.2,
+          "total_interest": 9716659.2
+        }
+      }
+    },
+    {
+      "test": "FIN: Repayment with moratorium",
+      "status": "PASS",
+      "elapsed_s": 0.02,
+      "result_summary": {
+        "disbursed_loan": 500000.0,
+        "effective_principal_after_moratorium": 520336.33,
+        "monthly_emi": 8576.8,
+        "total_interest": 168990.36,
+        "total_repayment": 668990.36,
+        "repayment_assumption_note": "Repayment assumption: The stated tenure includes the moratorium period. Interest accrued during the moratorium is capitalized before EMI repayment begins. Actual lender terms may vary.",
+        "financial_disclaimer": "This tool provides an indicative financial calculation based on the scheme parameters configured in GramBiz. Actual sanction, interest calculation, moratorium treatment, repayment schedule and eligibility are subject to the financing agency's applicable rules and final approval."
+      }
+    },
+    {
+      "test": "FIN: Scheme Micro Finance",
+      "status": "PASS",
+      "elapsed_s": 0.03,
+      "result_summary": {
+        "project_cost": 100000.0,
+        "scheme": {
+          "scheme_id": "micro_finance",
+          "name": "Micro Finance Scheme",
+          "min_project_cost": 0.0,
+          "max_project_cost": 140000.0,
+          "beneficiary_contribution_pct": 0.1,
+          "loan_percentage": 0.9,
+          "max_loan": 125000.0,
+          "interest_rate": 0.065,
+          "tenure_years": 3,
+          "tenure_months": 36,
+          "moratorium_months": 3
+        },
+        "eligible_loan": 90000.0,
+        "is_within_scheme_limit": true,
+        "status_message": "Your project cost of \u20b91,00,000 qualifies for the Micro Finance Scheme."
+      }
+    },
+    {
+      "test": "FIN: Scheme Term Loan",
+      "status": "PASS",
+      "elapsed_s": 0.02,
+      "result_summary": {
+        "project_cost": 3000000.0,
+        "scheme": {
+          "scheme_id": "term_loan",
+          "name": "Term Loan Scheme",
+          "min_project_cost": 140000.0,
+          "max_project_cost": 5000000.0,
+          "beneficiary_contribution_pct": 0.1,
+          "loan_percentage": 0.9,
+          "max_loan": 4500000.0,
+          "interest_rate": 0.08,
+          "tenure_years": 7,
+          "tenure_months": 84,
+          "moratorium_months": 6
+        },
+        "eligible_loan": 2700000.0,
+        "is_within_scheme_limit": true,
+        "status_message": "Your project cost of \u20b930,00,000 qualifies for the Term Loan Scheme."
+      }
+    },
+    {
+      "test": "FIN: Scheme Outside Range",
+      "status": "PASS",
+      "elapsed_s": 0.02,
+      "result_summary": {
+        "project_cost": 10000000.0,
+        "scheme": {
+          "scheme_id": "term_loan",
+          "name": "Outside Scheme Range",
+          "min_project_cost": 140000.0,
+          "max_project_cost": 5000000.0,
+          "beneficiary_contribution_pct": 0.1,
+          "loan_percentage": 0.9,
+          "max_loan": 4500000.0,
+          "interest_rate": 0.08,
+          "tenure_years": 7,
+          "tenure_months": 84,
+          "moratorium_months": 6
+        },
+        "eligible_loan": 4500000.0,
+        "is_within_scheme_limit": false,
+        "status_message": "Project cost (\u20b91,00,00,000) exceeds the maximum \u20b950,00,000 scheme limit."
+      }
+    },
+    {
+      "test": "FIN: Working capital",
+      "status": "PASS",
+      "elapsed_s": 0.02,
+      "result_summary": {
+        "monthly_operating_cost": 100000.0,
+        "working_capital_requirement": 300000.0,
+        "contingency_amount": 27500.0,
+        "total_project_requirement": 577500.0,
+        "cost_breakdown": {
+          "Raw Material": 40000.0,
+          "Wages & Labour": 25000.0,
+          "Rent": 15000.0,
+          "Utilities": 8000.0,
+          "Transportation": 5000.0,
+          "Marketing": 3000.0,
+          "Maintenance": 2000.0,
+          "Other Expenses": 2000.0
+        }
+      }
+    },
+    {
+      "test": "FIN: Schemes list",
+      "status": "PASS",
+      "elapsed_s": 0.02,
+      "result_summary": {
+        "schemes": "[list len=2]",
+        "repayment_assumption_note": "Repayment assumption: The stated tenure includes the moratorium period. Interest accrued during the moratorium is capitalized before EMI repayment begins. Actual lender terms may vary.",
+        "financial_disclaimer": "This tool provides an indicative financial calculation based on the scheme parameters configured in GramBiz. Actual sanction, interest calculation, moratorium treatment, repayment schedule and eligibility are subject to the financing agency's applicable rules and final approval."
+      }
+    },
+    {
+      "test": "FIN: Worst zero principal",
+      "status": "PASS",
+      "elapsed_s": 0.02,
+      "result_summary": {
+        "status_code": 422,
+        "data": {
+          "detail": [
+            {
+              "type": "greater_than",
+              "loc": [
+                "body",
+                "principal"
+              ],
+              "msg": "Input should be greater than 0",
+              "input": 0,
+              "ctx": {
+                "gt": 0.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "test": "FIN: Worst extreme rate",
+      "status": "PASS",
+      "elapsed_s": 0.01,
+      "result_summary": {
+        "status_code": 200,
+        "data": {
+          "principal": 100000.0,
+          "annual_interest_rate": 1.0,
+          "tenure_months": 12,
+          "monthly_emi": 13499.58,
+          "total_repayment": 161994.96,
+          "total_interest": 61994.96
+        }
+      }
+    },
+    {
+      "test": "DS: Location stats Gujarat",
+      "status": "PASS",
+      "elapsed_s": 0.03,
+      "result_summary": {
+        "reach": {
+          "radius5km": 31416,
+          "radius10km": 125664
+        },
+        "demandIndicators": [
+          "60,439,692 administrative population baseline",
+          "31,416 estimated consumer reach in 5km hyper-local catchment"
+        ],
+        "localObservations": [
+          "Catchment density: ~400 persons/sq.km",
+          "Household base: 12,248,428"
+        ],
+        "customerSegments": [
+          "Rural Households",
+          "Local Market Traders"
+        ],
+        "marketSizeValue": 125664,
+        "marketTrends": [
+          "Demographic density catchment analysis",
+          "Hyper-local rural consumption patterns"
+        ],
+        "evidenceSources": [
+          "Census of India 2011 Primary Census Abstract (Sub-district PCA)",
+          "VentureRoot Geospatial Density Model"
+        ]
+      }
+    },
+    {
+      "test": "DS: KG stats",
+      "status": "PASS",
+      "elapsed_s": 0.02,
+      "result_summary": {
+        "status_code": 200,
+        "data": {
+          "status": "SUCCESS",
+          "total_nodes": 19,
+          "total_edges": 10,
+          "categories_indexed": 4
+        }
+      }
+    },
+    {
+      "test": "AI: Health check",
+      "status": "PASS",
+      "elapsed_s": 0.01,
+      "result_summary": {
+        "status": "HEALTHY",
+        "service": "GramBiz Gemini AI Advisory Agent",
+        "version": "1.0.0",
+        "advisor_port": 8005,
+        "dependencies": {
+          "model_1": "local",
+          "model_2": "local",
+          "model_3": "local",
+          "finance_engine": "local",
+          "rag": "local",
+          "gemini": "local_fallback"
+        }
+      }
+    },
+    {
+      "test": "AI: Advisory request",
+      "status": "PASS",
+      "elapsed_s": 0.39,
+      "result_summary": {
+        "status_code": 200,
+        "data": "[dict len=8]"
+      }
+    },
+    {
+      "test": "CROSS: M1+M2 consistency",
+      "status": "PASS",
+      "elapsed_s": 0.06,
+      "result_summary": {
+        "m1_market_potential": 51.15,
+        "m2_viability_score": 52.47,
+        "both_ok": true
+      }
+    },
+    {
+      "test": "CROSS: Finance consistency",
+      "status": "PASS",
+      "elapsed_s": 0.06,
+      "result_summary": {
+        "calc_status": 200,
+        "scheme_status": 200,
+        "scheme_name": "Term Loan Scheme"
+      }
+    }
+  ]
+}

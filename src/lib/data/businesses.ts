@@ -1,40 +1,53 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { DATA_SOURCE } from "./source";
 import businessesData from "@/data/businesses.json";
 import { businessApi } from "@/features/business/api/businessApi";
 import { BusinessDetails } from "@/features/business/components/BusinessDetailsView";
 
 export const useBusinessesComparison = () => {
-  const [data, setData] = useState<any[]>(
-    DATA_SOURCE === "json" ? businessesData.comparison : []
-  );
-  const [isLoading, setIsLoading] = useState(DATA_SOURCE === "database");
+  const [data, setData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    if (DATA_SOURCE === "database") {
-      businessApi
-        .list()
-        .then((res: any) => {
-          const list =
-            res?.data?.businesses ||
-            res?.data?.data?.businesses ||
-            res?.data?.items ||
-            res?.items ||
-            [];
-          setData(list);
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          setError(err);
-          setData([]);
-          setIsLoading(false);
-        });
+  const fetchBusinesses = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const res: any = await businessApi.list();
+      const list =
+        res?.data?.businesses ||
+        res?.data?.data?.businesses ||
+        res?.data?.items ||
+        res?.items ||
+        [];
+      setData(Array.isArray(list) ? list : []);
+      setError(null);
+    } catch (err: any) {
+      console.warn("[useBusinessesComparison] Database fetch failed:", err);
+      setError(err);
+      // Only fallback to json if DATA_SOURCE is strictly explicitly set to json
+      if (DATA_SOURCE === "json") {
+        setData(businessesData.comparison);
+      } else {
+        setData([]);
+      }
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
-  return { data, isLoading, error };
+  useEffect(() => {
+    fetchBusinesses();
+
+    // Listen for custom event when business is created or updated
+    const handleBusinessUpdate = () => {
+      fetchBusinesses();
+    };
+    window.addEventListener("business-updated", handleBusinessUpdate);
+    return () => window.removeEventListener("business-updated", handleBusinessUpdate);
+  }, [fetchBusinesses]);
+
+  return { data, isLoading, error, refetch: fetchBusinesses };
 };
 
 export const useBusinessDetails = (id: string) => {

@@ -44,21 +44,21 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     setIsOpen(false);
 
     if (typeof window !== "undefined") {
-      const cookieVal = `/en/${code}`;
-      document.cookie = `googtrans=${cookieVal}; path=/;`;
-      document.cookie = `googtrans=${cookieVal}; domain=${window.location.hostname}; path=/;`;
+      // Store user preference in clean, standards-compliant cookie
+      document.cookie = `ventureroot_locale=${code}; path=/; max-age=31536000; SameSite=Lax`;
+      document.documentElement.lang = code;
 
+      // Keep single, consistent googtrans cookie without duplicate host/domain entries
       if (code === "en") {
         document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=${window.location.hostname}; path=/;`;
+      } else {
+        document.cookie = `googtrans=/en/${code}; path=/;`;
       }
 
+      // If Google Translate combo is loaded in DOM, synchronize it quietly
       const combo = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
-      if (combo) {
+      if (combo && combo.value !== code) {
         combo.value = code;
-        combo.dispatchEvent(new Event("change"));
-      } else {
-        window.location.reload();
       }
     }
   };
