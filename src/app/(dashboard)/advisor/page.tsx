@@ -12,17 +12,17 @@ export default function AdvisorPage() {
         </p>
       </div>
 
-      <div className="hidden md:flex gap-3 overflow-x-auto pb-2">
-        <button className="whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white font-sans text-[14px] font-medium text-secondary-muted hover:border-[#1E6702] hover:text-[#1E6702] hover:bg-[#1E6702]/10 transition-colors">
+      <div className="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
+        <button className="whitespace-nowrap px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-slate-200 bg-white font-sans text-[13px] sm:text-[14px] font-medium text-secondary-muted hover:border-[#1E6702] hover:text-[#1E6702] hover:bg-[#1E6702]/10 transition-colors shrink-0">
           Should I start this business here?
         </button>
-        <button className="whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white font-sans text-[14px] font-medium text-secondary-muted hover:border-[#1E6702] hover:text-[#1E6702] hover:bg-[#1E6702]/10 transition-colors">
+        <button className="whitespace-nowrap px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-slate-200 bg-white font-sans text-[13px] sm:text-[14px] font-medium text-secondary-muted hover:border-[#1E6702] hover:text-[#1E6702] hover:bg-[#1E6702]/10 transition-colors shrink-0">
           What are my biggest local risks?
         </button>
-        <button className="whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white font-sans text-[14px] font-medium text-secondary-muted hover:border-[#1E6702] hover:text-[#1E6702] hover:bg-[#1E6702]/10 transition-colors">
+        <button className="whitespace-nowrap px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-slate-200 bg-white font-sans text-[13px] sm:text-[14px] font-medium text-secondary-muted hover:border-[#1E6702] hover:text-[#1E6702] hover:bg-[#1E6702]/10 transition-colors shrink-0">
           How can I improve my market reach?
         </button>
-        <button className="whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white font-sans text-[14px] font-medium text-secondary-muted hover:border-[#1E6702] hover:text-[#1E6702] hover:bg-[#1E6702]/10 transition-colors">
+        <button className="whitespace-nowrap px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-slate-200 bg-white font-sans text-[13px] sm:text-[14px] font-medium text-secondary-muted hover:border-[#1E6702] hover:text-[#1E6702] hover:bg-[#1E6702]/10 transition-colors shrink-0">
           Which financing option suits me?
         </button>
       </div>

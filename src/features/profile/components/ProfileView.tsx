@@ -221,7 +221,7 @@ export const ProfileView = () => {
 
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible"
-      className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-6">
+      className="w-full h-full p-3.5 sm:p-6 lg:p-8 flex flex-col gap-5 sm:gap-6">
 
       {/* Header Card */}
       <motion.div variants={itemVariants}
@@ -230,8 +230,8 @@ export const ProfileView = () => {
         <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-[#80638a]/8 blur-3xl pointer-events-none" />
         <div className="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-[#80638a]/6 blur-2xl pointer-events-none" />
 
-        <div className="relative px-6 md:px-8 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
-          <div className="flex items-center gap-5">
+        <div className="relative px-4 sm:px-8 py-5 sm:py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          <div className="flex items-center gap-3.5 sm:gap-5">
             <Avatar name={profile.fullName || "User"} isEditing={isEditing} />
             <div>
               <h1 className={classes.pageTitle}>{profile.fullName || "Entrepreneur Profile"}</h1>
@@ -242,7 +242,7 @@ export const ProfileView = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-5">
+          <div className="flex flex-wrap items-center justify-between w-full md:w-auto gap-4 pt-2 md:pt-0 border-t md:border-t-0 border-black/5">
             <CompletionRing pct={100} />
             <AnimatePresence mode="wait">
               {isEditing ? (

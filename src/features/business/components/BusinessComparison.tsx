@@ -197,17 +197,17 @@ export const BusinessComparison = () => {
   const cols = activeBiz.length;
 
   return (
-    <div className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-6" onClick={() => setDropdownOpen(false)}>
+    <div className="w-full h-full p-3.5 sm:p-6 lg:p-8 flex flex-col gap-5 sm:gap-6" onClick={() => setDropdownOpen(false)}>
 
       {/* ── PAGE HEADER ─────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
         <div>
-          <h1 className="font-heading text-[32px] font-bold text-[#242424] tracking-tight leading-tight">Compare Business Ideas</h1>
-          <p className="font-sans text-[14px] text-slate-500 font-medium mt-0.5">Compare potential enterprises side by side before making a decision.</p>
+          <h1 className="font-heading text-[24px] sm:text-[32px] font-bold text-[#242424] tracking-tight leading-tight">Compare Business Ideas</h1>
+          <p className="font-sans text-[13px] sm:text-[14px] text-slate-500 font-medium mt-0.5">Compare potential enterprises side by side before making a decision.</p>
         </div>
         <div className="flex items-center gap-2 opacity-75 shrink-0">
-          <Leaf className="w-6 h-6 text-[#81cc87]" />
-          <span className="font-heading italic text-[15px] text-gray-500 text-right leading-snug">
+          <Leaf className="w-5 sm:w-6 h-5 sm:h-6 text-[#81cc87]" />
+          <span className="font-heading italic text-[13px] sm:text-[15px] text-gray-500 text-right leading-snug">
             "Better Decisions<br />Stronger Tomorrows"
           </span>
         </div>
@@ -225,14 +225,14 @@ export const BusinessComparison = () => {
       </div>
 
       {/* ── RADAR CHART ──────────────────────────────────────────── */}
-      <div className="bg-[#fffff5] rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] p-6 transition-all duration-300">
+      <div className="bg-[#fffff5] rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] p-4 sm:p-6 transition-all duration-300">
         <div className="flex items-center gap-2 mb-4">
           <BarChart2 className="w-5 h-5 text-[#81cc87]" />
-          <span className="font-heading text-[20px] font-bold text-gray-900 tracking-tight">Visual Comparison</span>
+          <span className="font-heading text-[18px] sm:text-[20px] font-bold text-gray-900 tracking-tight">Visual Comparison</span>
           <span className="font-sans text-[12px] text-gray-400 font-medium ml-1 hidden md:block">Compare key parameters across all selected business ideas.</span>
         </div>
         <div className="flex flex-col lg:flex-row gap-6 items-center">
-          <div className="w-full lg:w-[380px] h-[260px] shrink-0">
+          <div className="w-full lg:w-[380px] h-[220px] sm:h-[260px] shrink-0">
             <EditorialRadarChart
               data={[
                 { metric: "Feasibility Score", subject: activeBiz[0]?.radar.feasibility || 0, comparison: activeBiz[1]?.radar.feasibility || 0 },
@@ -252,20 +252,24 @@ export const BusinessComparison = () => {
               {activeBiz.map((b) => (
                 <div key={b.id} className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: b.dot }} />
-                  <span className="font-sans text-[14px] font-medium text-gray-700">{b.name}</span>
+                  <span className="font-sans text-[13px] sm:text-[14px] font-medium text-gray-700">{b.name}</span>
                 </div>
               ))}
             </div>
-            <div className="mt-2 bg-[#f9faeb] rounded-xl p-4 border border-[#81cc87]/10 flex items-center gap-3">
+            <div className="mt-2 bg-[#f9faeb] rounded-xl p-3.5 sm:p-4 border border-[#81cc87]/10 flex items-center gap-3">
               <Leaf className="w-4 h-4 text-[#81cc87] shrink-0" />
-              <p className="font-heading italic text-[14px] font-semibold text-[#81cc87]">"Compare today, build a brighter tomorrow."</p>
+              <p className="font-heading italic text-[13px] sm:text-[14px] font-semibold text-[#81cc87]">"Compare today, build a brighter tomorrow."</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* ── FULL-WIDTH COMPARISON TABLE ───────────────────────────── */}
-      <div className="w-full overflow-x-auto">
+      <div className="flex items-center justify-between lg:hidden mb-1 px-1 text-[11px] font-semibold text-slate-500">
+        <span>Detailed Comparison</span>
+        <span className="text-[#1E6702]">Swipe table horizontally →</span>
+      </div>
+      <div className="w-full overflow-x-auto no-scrollbar -mx-3.5 px-3.5 sm:mx-0 sm:px-0">
         <div
           className="min-w-[600px] w-full rounded-xl overflow-hidden shadow-[0_4px_24px_rgb(0,0,0,0.05)] border border-gray-900/8"
           style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px)" }}

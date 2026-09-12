@@ -143,7 +143,7 @@ export default function DashboardPage() {
   const cardBase = "bg-[#fffff5] rounded-xl border border-gray-900/8 shadow-[0_4px_24px_rgb(0,0,0,0.05)] transition-all duration-300 card-hover-lift";
 
   return (
-    <div className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-6">
+    <div className="w-full h-full p-3.5 sm:p-6 lg:p-8 flex flex-col gap-5 sm:gap-6">
 
       {/* ═══ HEADER with staggered entrance ═══ */}
       <motion.div
@@ -153,10 +153,10 @@ export default function DashboardPage() {
         className="flex flex-col md:flex-row md:items-center justify-between gap-2"
       >
         <div>
-          <h1 className="font-heading text-[32px] font-bold text-[#242424] tracking-tight leading-tight">
+          <h1 className="font-heading text-[24px] sm:text-[32px] font-bold text-[#242424] tracking-tight leading-tight">
             Welcome back, {firstName}
           </h1>
-          <p className={classes.supportingText + " mt-0.5"}>
+          <p className={classes.supportingText + " mt-0.5 text-xs sm:text-sm"}>
             {businessCategory} • {locationStr}
           </p>
         </div>
