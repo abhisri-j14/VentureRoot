@@ -137,7 +137,7 @@ function USPCarousel() {
     <div className="w-full max-w-5xl mx-auto flex flex-col items-center px-4 lg:px-8">
       
       {/* Card Stack Container */}
-      <div className="relative w-full z-10" style={{ height: "480px" }}>
+      <div className="relative w-full z-10 h-[520px] sm:h-[480px] lg:h-[440px]">
         <AnimatePresence mode="popLayout" custom={direction}>
           {USP_ITEMS.map((item, index) => {
              // Calculate relative position (0 is active top card, 1 is behind it, 2 is behind that)
@@ -158,10 +158,10 @@ function USPCarousel() {
                  }
                  animate={{
                    x: 0,
-                   y: offset * 24, // Push down
-                   scale: 1 - offset * 0.05, // Shrink
+                   y: offset * 14, // Push down
+                   scale: 1 - offset * 0.04, // Shrink
                    opacity: 1 - offset * 0.1, // Fade slightly
-                   rotate: offset === 0 ? 0 : offset === 1 ? -2.5 : 2.5, // Fan out
+                   rotate: offset === 0 ? 0 : offset === 1 ? -2 : 2, // Fan out
                    zIndex: total - offset
                  }}
                  exit={
@@ -177,25 +177,25 @@ function USPCarousel() {
                  }}
                  className="absolute top-0 left-0 w-full bg-white rounded-3xl border border-[#1E6702]/20 shadow-[0_8px_30px_rgba(30,103,2,0.12)] overflow-hidden"
                >
-                  <div className="grid grid-cols-1 lg:grid-cols-[55fr_45fr]" style={{ minHeight: "360px" }}>
+                  <div className="grid grid-cols-1 lg:grid-cols-[55fr_45fr]">
                     {/* Left: text */}
-                    <div className="px-8 py-10 flex flex-col justify-center lg:border-r border-b lg:border-b-0 border-black/5 bg-white">
-                      <div className="inline-flex items-center gap-2 mb-5 self-start">
+                    <div className="px-5 py-5 sm:px-8 sm:py-8 lg:py-10 flex flex-col justify-center lg:border-r border-b lg:border-b-0 border-black/5 bg-white">
+                      <div className="inline-flex items-center gap-2 mb-2 sm:mb-4 self-start">
                         <div className="w-5 h-5 rounded-md bg-[#f4fce8] border border-[#1E6702]/20 flex items-center justify-center">
                           {React.createElement(item.icon, { className: "w-3 h-3 text-[#1E6702]" })}
                         </div>
                         <span className="text-[10px] font-bold text-[#1E6702] uppercase tracking-widest">{item.category}</span>
                       </div>
-                      <h3 className="text-2xl md:text-3xl font-sans font-bold text-[#200813] leading-tight mb-3">
+                      <h3 className="text-lg sm:text-2xl md:text-3xl font-sans font-bold text-[#200813] leading-tight mb-2 sm:mb-3">
                         {item.title}
                       </h3>
-                      <p className="text-sm md:text-[15px] text-[#200813]/65 leading-relaxed mb-6 max-w-md">
+                      <p className="text-xs sm:text-sm md:text-[15px] text-[#200813]/65 leading-relaxed mb-3 sm:mb-5 max-w-md">
                         {item.description}
                       </p>
-                      <ul className="flex flex-col gap-2">
+                      <ul className="flex flex-col gap-1.5 sm:gap-2">
                         {item.points.map(pt => (
-                          <li key={pt} className="flex items-center gap-2.5 text-sm text-[#200813]/75 font-medium">
-                            <CheckCircle2 className="w-4 h-4 text-[#1E6702] shrink-0" />
+                          <li key={pt} className="flex items-center gap-2 text-xs sm:text-sm text-[#200813]/75 font-medium">
+                            <CheckCircle2 className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-[#1E6702] shrink-0" />
                             {pt}
                           </li>
                         ))}
@@ -203,11 +203,11 @@ function USPCarousel() {
                     </div>
 
                     {/* Right: image */}
-                    <div className="bg-[#fafdf6] flex items-center justify-center overflow-hidden" style={{ height: "100%", minHeight: "360px" }}>
+                    <div className="bg-[#fafdf6] flex items-center justify-center overflow-hidden h-[150px] sm:h-[190px] lg:h-full min-h-[140px] sm:min-h-[190px] lg:min-h-[360px]">
                       <img
                         src={item.image!}
                         alt={item.title}
-                        className="w-full h-full object-contain p-6 pointer-events-none select-none"
+                        className="w-full h-full object-contain p-3 sm:p-5 pointer-events-none select-none"
                       />
                     </div>
                   </div>
@@ -218,12 +218,12 @@ function USPCarousel() {
       </div>
 
       {/* Carousel Controls */}
-      <div className="flex flex-col items-center mt-8 relative z-20">
+      <div className="flex flex-col items-center mt-6 sm:mt-8 relative z-20">
         <div className="flex items-center gap-4">
           <button
             onClick={prev}
             aria-label="Previous feature"
-            className="w-10 h-10 shrink-0 rounded-full border border-[#1E6702]/25 bg-white hover:bg-[#f4fce8] hover:border-[#1E6702]/50 flex items-center justify-center transition-all focus-visible:ring-2 focus-visible:ring-[#1E6702] shadow-sm hover:shadow"
+            className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-full border border-[#1E6702]/25 bg-white hover:bg-[#f4fce8] hover:border-[#1E6702]/50 flex items-center justify-center transition-all focus-visible:ring-2 focus-visible:ring-[#1E6702] shadow-sm hover:shadow"
           >
             <ChevronRight className="w-4 h-4 text-[#1E6702] rotate-180" />
           </button>
@@ -246,14 +246,14 @@ function USPCarousel() {
           <button
             onClick={next}
             aria-label="Next feature"
-            className="w-10 h-10 shrink-0 rounded-full border border-[#1E6702]/25 bg-white hover:bg-[#f4fce8] hover:border-[#1E6702]/50 flex items-center justify-center transition-all focus-visible:ring-2 focus-visible:ring-[#1E6702] shadow-sm hover:shadow"
+            className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-full border border-[#1E6702]/25 bg-white hover:bg-[#f4fce8] hover:border-[#1E6702]/50 flex items-center justify-center transition-all focus-visible:ring-2 focus-visible:ring-[#1E6702] shadow-sm hover:shadow"
           >
             <ChevronRight className="w-4 h-4 text-[#1E6702]" />
           </button>
         </div>
 
         {/* Counter */}
-        <p className="text-center text-[11px] text-[#200813]/50 font-bold uppercase tracking-widest mt-4">
+        <p className="text-center text-[11px] text-[#200813]/50 font-bold uppercase tracking-widest mt-3 sm:mt-4">
           {active + 1} / {total}
         </p>
       </div>
@@ -789,23 +789,23 @@ export default function LandingPage() {
           </section>
 
           {/* ── 2. What We Offer — USP Carousel ── */}
-          <section className="w-full bg-[#FFFBE7] pt-24 pb-0 border-y border-black/5 overflow-hidden">
-            <div className="max-w-7xl mx-auto px-6">
+          <section className="w-full bg-[#FFFBE7] pt-16 sm:pt-24 pb-0 border-y border-black/5 overflow-hidden">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
               {/* Section Header */}
-              <div className="flex flex-col items-center text-center mb-12">
-                <div className="flex items-center gap-2 mb-4">
+              <div className="flex flex-col items-center text-center mb-8 sm:mb-12">
+                <div className="flex items-center gap-2 mb-3 sm:mb-4">
                   <Leaf className="w-4 h-4 text-[#1E6702]" />
                   <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#5A1832]">
                     WHAT VENTUREROOT OFFERS
                   </span>
                 </div>
-                <h2 className="text-3xl md:text-4xl lg:text-[2.5rem] font-sans font-bold text-[#200813] tracking-tight mb-4">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] font-sans font-bold text-[#200813] tracking-tight mb-3 sm:mb-4 px-2">
                   <TextEffect per='char' preset='fade' trigger={!isPreloading}>
                     Smart tools for your next local venture.
                   </TextEffect>
                 </h2>
-                <p className="text-base md:text-lg text-[#200813]/70 max-w-2xl font-normal">
+                <p className="text-sm sm:text-base md:text-lg text-[#200813]/70 max-w-2xl font-normal px-2">
                   Understand your opportunity, plan your money, and take the next step with confidence.
                 </p>
               </div>
@@ -816,7 +816,7 @@ export default function LandingPage() {
             </div>
 
             {/* Trust/Value Strip */}
-            <div className="w-full bg-[#1E6702] py-12 border-t border-black/10 mt-16">
+            <div className="w-full bg-[#1E6702] py-10 sm:py-12 border-t border-black/10 mt-12 sm:mt-16">
               <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center gap-8 md:gap-12 lg:gap-16 justify-center text-left">
                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C8F89B] shrink-0 text-center md:text-left">
                   BUILT FOR<br className="hidden md:block" />REAL-WORLD<br className="hidden md:block" />DECISIONS
