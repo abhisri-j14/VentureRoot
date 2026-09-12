@@ -44,10 +44,14 @@ export const TopNav = () => {
     };
   }, []);
 
+  const businessMatch = pathname.match(/^\/business\/([^/?#]+)/);
+  const routeBusinessId = businessMatch && businessMatch[1] !== "create" && businessMatch[1] !== "compare" ? businessMatch[1] : null;
   const activeBusiness = businesses?.[0];
-  const businessBase = activeBusiness?.id ? `/business/${activeBusiness.id}` : "/business/create";
-  const financeBase = activeBusiness?.id ? `/business/${activeBusiness.id}/finance` : "/business/create";
-  const feasibilityBase = activeBusiness?.id ? `/business/${activeBusiness.id}/feasibility` : "/business/create";
+  const selectedBusinessId = routeBusinessId || activeBusiness?.id;
+
+  const businessBase = selectedBusinessId ? `/business/${selectedBusinessId}` : "/business/create";
+  const financeBase = selectedBusinessId ? `/business/${selectedBusinessId}/finance` : "/business/create";
+  const feasibilityBase = selectedBusinessId ? `/business/${selectedBusinessId}/feasibility` : "/business/create";
 
   const NAV_ITEMS = [
     { id: "nav-dashboard",    href: "/dashboard",     tKey: "nav.dashboard",   icon: Home },
@@ -57,6 +61,31 @@ export const TopNav = () => {
     { id: "nav-new-business", href: "/business/create", tKey: "nav.newBusiness", icon: PlusCircle },
     { id: "nav-advisor",      href: "/advisor",       tKey: "nav.advisor",     icon: MessageSquare },
   ];
+
+  const isNavItemActive = (id: string, href: string) => {
+    switch (id) {
+      case "nav-dashboard":
+        return pathname === "/dashboard";
+      case "nav-my-business":
+        return (
+          pathname.startsWith("/business") &&
+          !pathname.startsWith("/business/create") &&
+          !pathname.startsWith("/business/compare") &&
+          !pathname.includes("/finance") &&
+          !pathname.includes("/feasibility")
+        );
+      case "nav-finance":
+        return pathname.includes("/finance");
+      case "nav-feasibility":
+        return pathname.includes("/feasibility");
+      case "nav-new-business":
+        return pathname === "/business/create";
+      case "nav-advisor":
+        return pathname === "/advisor" || pathname.startsWith("/advisor/");
+      default:
+        return pathname === href;
+    }
+  };
 
   const displayName = profileData?.fullName || user?.name || "Entrepreneur";
   const activeRoleLabel = "Entrepreneur";
@@ -88,11 +117,7 @@ export const TopNav = () => {
         {/* Center: Nav Links (Desktop) */}
         <div className="hidden lg:flex items-center gap-1.5 relative z-10" onMouseLeave={() => setHoveredIndex(null)}>
           {NAV_ITEMS.map((link, idx) => {
-            const basePath = link.href.split("?")[0];
-            const isActive =
-              (basePath === "/dashboard" && pathname === "/dashboard") ||
-              (basePath === "/profile" && pathname === "/profile") ||
-              (basePath !== "/dashboard" && basePath !== "/profile" && pathname.startsWith(basePath));
+            const isActive = isNavItemActive(link.id, link.href);
 
             return (
               <Link 
@@ -221,11 +246,7 @@ export const TopNav = () => {
           >
             <div className="px-3 py-4 flex flex-col gap-1.5">
               {NAV_ITEMS.map((link, idx) => {
-                const basePath = link.href.split("?")[0];
-                const isActive =
-                  (basePath === "/dashboard" && pathname === "/dashboard") ||
-                  (basePath === "/profile" && pathname === "/profile") ||
-                  (basePath !== "/dashboard" && basePath !== "/profile" && pathname.startsWith(basePath));
+                const isActive = isNavItemActive(link.id, link.href);
 
                 return (
                   <motion.div

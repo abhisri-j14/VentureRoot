@@ -12,9 +12,13 @@ export const MobileBottomNav = () => {
   const { data: businesses } = useBusinessesComparison();
   const { t } = useTranslation();
 
+  const businessMatch = pathname.match(/^\/business\/([^/?#]+)/);
+  const routeBusinessId = businessMatch && businessMatch[1] !== "create" && businessMatch[1] !== "compare" ? businessMatch[1] : null;
   const activeBusiness = businesses?.[0];
-  const businessBase = activeBusiness?.id ? `/business/${activeBusiness.id}` : "/business/create";
-  const financeBase = activeBusiness?.id ? `/business/${activeBusiness.id}/finance` : "/business/create";
+  const selectedBusinessId = routeBusinessId || activeBusiness?.id;
+
+  const businessBase = selectedBusinessId ? `/business/${selectedBusinessId}` : "/business/create";
+  const financeBase = selectedBusinessId ? `/business/${selectedBusinessId}/finance` : "/business/create";
 
   const NAV_ITEMS = [
     {
@@ -29,7 +33,11 @@ export const MobileBottomNav = () => {
       href: businessBase,
       label: t("nav.myBusiness" as any) || "Venture",
       icon: Briefcase,
-      isActive: pathname.startsWith("/business") && !pathname.includes("/finance"),
+      isActive:
+        pathname.startsWith("/business") &&
+        !pathname.startsWith("/business/create") &&
+        !pathname.startsWith("/business/compare") &&
+        !pathname.includes("/finance"),
     },
     {
       id: "mob-finance",
@@ -43,7 +51,7 @@ export const MobileBottomNav = () => {
       href: "/advisor",
       label: t("nav.advisor" as any) || "Advisor",
       icon: MessageSquare,
-      isActive: pathname === "/advisor",
+      isActive: pathname === "/advisor" || pathname.startsWith("/advisor/"),
     },
     {
       id: "mob-profile",
