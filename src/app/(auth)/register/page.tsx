@@ -77,7 +77,7 @@ export default function RegisterPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
-        className="w-full md:w-[40%] lg:w-[45%] h-[240px] md:h-screen md:sticky md:top-0 relative flex flex-col overflow-hidden"
+        className="w-full md:w-[40%] lg:w-[45%] h-[170px] sm:h-[240px] md:h-screen md:sticky md:top-0 relative flex flex-col overflow-hidden"
       >
         <img
           src="/register-bg.jpg"
@@ -105,20 +105,20 @@ export default function RegisterPage() {
         </div>
 
         {/* Mobile simple brand overlay */}
-        <div className="relative z-10 p-6 flex flex-col justify-end h-full md:hidden">
-          <Link href="/" className="bg-[#FFFBE7] w-max h-12 px-5 rounded-xl flex items-center justify-center shadow-lg border border-black/5 mb-3 active:scale-[0.98] transition-transform block">
-            <img src="/logo-wordmark.png" alt="VentureRoot" className="h-6 w-auto object-contain mix-blend-multiply" />
+        <div className="relative z-10 p-4 sm:p-6 flex flex-col justify-end h-full md:hidden">
+          <Link href="/" className="bg-[#FFFBE7] w-max h-10 sm:h-12 px-4 sm:px-5 rounded-xl flex items-center justify-center shadow-lg border border-black/5 mb-2 active:scale-[0.98] transition-transform block">
+            <img src="/logo-wordmark.png" alt="VentureRoot" className="h-5 sm:h-6 w-auto object-contain mix-blend-multiply" />
           </Link>
         </div>
       </motion.div>
 
       {/* ── RIGHT PANEL ── */}
       <div className="w-full md:w-[60%] lg:w-[55%] flex flex-col min-h-screen">
-        <div className="p-6 md:p-8 flex justify-end">
+        <div className="p-4 sm:p-6 md:p-8 flex justify-end">
           <LanguageSwitcher />
         </div>
 
-        <div className="flex-1 flex items-center justify-center p-6 md:p-12">
+        <div className="flex-1 flex items-center justify-center p-4 sm:p-6 md:p-12">
           <div className="w-full max-w-md">
 
             <motion.div

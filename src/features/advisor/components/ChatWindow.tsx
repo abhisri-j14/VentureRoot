@@ -79,7 +79,7 @@ export const ChatWindow = () => {
   };
 
   return (
-    <div className="flex flex-col h-[75vh] min-h-[600px] bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+    <div className="flex flex-col h-[calc(100vh-220px)] min-h-[420px] md:h-[75vh] md:min-h-[550px] bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
       {/* Header */}
       <div className="flex justify-between items-center p-4 border-b border-slate-200 bg-slate-50">
         <div className="flex items-center gap-3">

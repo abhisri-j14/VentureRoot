@@ -68,7 +68,7 @@ export const TopNav = () => {
       transition={{ duration: 0.4, ease: "easeOut" }}
       className="sticky top-0 w-full z-50"
     >
-      <nav className="w-full bg-[#1E6702] rounded-none py-3 px-6 md:px-10 flex items-center justify-between shadow-md border-b border-[#144a01]/60 relative z-50">
+      <nav className="w-full bg-[#1E6702] rounded-none py-2.5 px-3 sm:px-6 md:px-10 flex items-center justify-between shadow-md border-b border-[#144a01]/60 relative z-50">
         
         {/* Ambient Hover Light (Soft Localized Highlight) */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -79,7 +79,7 @@ export const TopNav = () => {
         <div className="flex items-center relative z-10">
           <Link 
             href="/" 
-            className="group bg-[#FFFBE7] px-3 py-1.5 rounded-[12px] flex items-center justify-center shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05),0_2px_5px_rgba(0,0,0,0.1)] border border-black/5 hover:-translate-y-[1px] hover:scale-[1.02] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-300 active:scale-[0.98]"
+            className="group bg-[#FFFBE7] px-2.5 py-1.5 md:px-3 md:py-1.5 rounded-[12px] flex items-center justify-center shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05),0_2px_5px_rgba(0,0,0,0.1)] border border-black/5 hover:-translate-y-[1px] hover:scale-[1.02] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-300 active:scale-[0.98]"
           >
             <img src="/logo-wordmark.png" alt="VentureRoot Logo" className="h-4 md:h-[18px] w-auto object-contain mix-blend-multiply group-hover:brightness-95 transition-all duration-300" />
           </Link>
@@ -129,8 +129,8 @@ export const TopNav = () => {
         </div>
 
         {/* Right: Actions (Desktop & Mobile trigger) */}
-        <div className="flex items-center gap-3 relative z-10">
-          <div className="hidden md:block transition-all duration-300 hover:-translate-y-[1px] hover:scale-[1.01] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] rounded-lg">
+        <div className="flex items-center gap-1.5 sm:gap-3 relative z-10">
+          <div className="block transition-all duration-300 hover:-translate-y-[1px] hover:scale-[1.01] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] rounded-lg">
             <LanguageSwitcher />
           </div>
           

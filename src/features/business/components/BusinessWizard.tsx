@@ -109,13 +109,13 @@ export const BusinessWizard = () => {
       <div className="w-full bg-[#FEFEF4] rounded-xl shadow-[0_4px_24px_rgb(0,0,0,0.05)] border border-gray-900/8 overflow-hidden flex flex-col mb-20 transition-all duration-300">
         
         {/* Dark Header */}
-        <div className="w-full bg-[#81cc87] px-10 py-12 relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center text-[#f9faeb]">
-          <div className="z-10 mb-6 md:mb-0">
-            <h1 className="font-heading text-[32px] font-bold text-[#f9faeb] tracking-tight leading-tight">Start a New Enterprise</h1>
-            <p className="font-sans text-[14px] text-[#f9faeb]/70 font-medium mt-0.5">Complete the 6 steps to get started</p>
+        <div className="w-full bg-[#81cc87] px-5 py-6 sm:px-10 sm:py-12 relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center text-[#f9faeb]">
+          <div className="z-10 mb-4 md:mb-0">
+            <h1 className="font-heading text-[24px] sm:text-[32px] font-bold text-[#f9faeb] tracking-tight leading-tight">Start a New Enterprise</h1>
+            <p className="font-sans text-[13px] sm:text-[14px] text-[#f9faeb]/70 font-medium mt-0.5">Complete the 6 steps to get started</p>
           </div>
           
-          <div className="z-10 flex flex-col md:items-end opacity-90 border-l-2 border-[#f9faeb]/10 pl-6">
+          <div className="z-10 hidden md:flex flex-col md:items-end opacity-90 border-l-2 border-[#f9faeb]/10 pl-6">
             <div className="flex items-center gap-3 mb-2">
               <Leaf className="w-7 h-7 text-[#f9faeb]" />
               <span className="font-heading italic text-[25px] text-[#f9faeb]">Ideas grow brighter here</span>
@@ -125,16 +125,34 @@ export const BusinessWizard = () => {
         </div>
 
         {globalError && (
-          <div className="mx-10 mt-8 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3">
+          <div className="mx-4 sm:mx-10 mt-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
             <p className="font-sans text-[14px] font-medium text-red-700">{globalError}</p>
           </div>
         )}
 
-        <div className="flex flex-col lg:flex-row p-6 lg:p-10 gap-10">
+        <div className="flex flex-col lg:flex-row p-4 sm:p-6 lg:p-10 gap-6 lg:gap-10">
+
+          {/* MOBILE COMPACT STEPPER (Hidden on Desktop) */}
+          <div className="lg:hidden w-full bg-[#fcfbf7] rounded-2xl p-4 border border-gray-200/60 shadow-xs">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-bold text-[#81cc87] uppercase tracking-wider">
+                Step {currentStep} of 6
+              </span>
+              <span className="text-xs font-semibold text-gray-800">
+                {WIZARD_STEPS[currentStep - 1].label}
+              </span>
+            </div>
+            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-[#81cc87] rounded-full transition-all duration-300"
+                style={{ width: `${progressPercentage}%` }}
+              />
+            </div>
+          </div>
           
-          {/* LEFT SIDEBAR: Stepper */}
-          <div className="w-full lg:w-[300px] shrink-0">
+          {/* DESKTOP SIDEBAR: Stepper (Hidden on Mobile) */}
+          <div className="hidden lg:block w-[300px] shrink-0">
             <div className="bg-[#fcfbf7] rounded-3xl p-6 md:p-8 flex flex-col relative h-full">
               
               {/* Vertical connecting line */}
