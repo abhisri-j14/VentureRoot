@@ -1414,12 +1414,12 @@ function mapPricing(m1, m2, m3, business) {
  * @returns {import("@/features/feasibility/types").FeasibilityData}
  */
 export function mapMlPredictionToFeasibility(mlResult, business) {
-  const { model1: m1, model2: m2, model3: m3, census } = mlResult;
-  const businessCategory = mlResult.businessCategory || business?.category?.name || business?.category || "Retail";
+  const { model1: m1, model2: m2, model3: m3, census } = mlResult || {};
+  const businessCategory = mlResult?.businessCategory || business?.category?.name || business?.category || "Retail";
 
   return {
     status: "SUCCESS",
-    market: mapMarket(m1, census, businessCategory, mlResult.location || business?.location, business),
+    market: mapMarket(m1, census, businessCategory, mlResult?.location || business?.location, business),
     opportunity: mapOpportunity(m1, m2, businessCategory),
     competition: mapCompetition(m2, businessCategory, business),
     swot: mapSWOT(m1, m2, businessCategory),

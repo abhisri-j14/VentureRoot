@@ -97,6 +97,7 @@ export interface PricingAnalysis extends IntelligenceData {
     max: number;
   };
   marketValue: string;
+  unit?: string;
   observations: string[];
   pricingFactors: string[];
 }
