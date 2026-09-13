@@ -112,7 +112,7 @@ export const LocationAutocompleteInput: React.FC<LocationAutocompleteInputProps>
   return (
     <div ref={wrapperRef} className={`relative w-full ${className}`}>
       {label && (
-        <label className="block text-sm font-semibold text-slate-800 mb-1.5">
+        <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5 leading-normal break-words whitespace-normal">
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
@@ -129,7 +129,7 @@ export const LocationAutocompleteInput: React.FC<LocationAutocompleteInputProps>
           }}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className={`w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm font-medium placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all shadow-sm ${
+          className={`w-full pl-9 sm:pl-10 pr-10 py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs sm:text-sm font-medium placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all shadow-sm ${
             error ? "border-red-300 focus:border-red-500 focus:ring-red-500/20" : ""
           } ${inputClassName}`}
         />

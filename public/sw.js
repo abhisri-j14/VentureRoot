@@ -1,5 +1,5 @@
 // VentureRoot Progressive Web App (PWA) Service Worker
-const CACHE_VERSION = "ventureroot-pwa-v2";
+const CACHE_VERSION = "ventureroot-pwa-v3";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const DYNAMIC_CACHE = `${CACHE_VERSION}-dynamic`;
 const OFFLINE_URL = "/offline";
@@ -17,6 +17,7 @@ const PRECACHE_ASSETS = [
 
 // Install: pre-cache critical shell assets
 self.addEventListener("install", (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches
       .open(STATIC_CACHE)
@@ -30,7 +31,6 @@ self.addEventListener("install", (event) => {
           }
         }
       })
-      .then(() => self.skipWaiting())
   );
 });
 
@@ -62,6 +62,17 @@ self.addEventListener("fetch", (event) => {
 
   // Skip browser extensions and third-party origins
   if (!url.protocol.startsWith("http")) return;
+
+  // In local development / local network, always bypass cache to reflect changes instantly
+  if (
+    url.hostname === "localhost" ||
+    url.hostname === "127.0.0.1" ||
+    url.hostname.startsWith("192.168.") ||
+    url.hostname.startsWith("10.") ||
+    url.port === "3000"
+  ) {
+    return;
+  }
 
   // 1. API routes: Network-only to ensure fresh financial/business data & proper auth
   if (url.pathname.startsWith("/api/")) {

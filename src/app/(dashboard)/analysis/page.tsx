@@ -905,36 +905,36 @@ export default function AnalysisPage() {
   }, [reportData, isHealthcare, district]);
 
   return (
-    <div className="w-full h-full p-4 md:p-6 lg:p-8 flex flex-col gap-8 max-w-7xl mx-auto">
+    <div className="w-full h-full p-3 sm:p-5 md:p-6 lg:p-8 flex flex-col gap-6 sm:gap-8 max-w-7xl mx-auto">
       {/* Top Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1E6702]/10 text-[#1E6702] text-xs font-bold mb-2">
             <Sparkles className="w-3.5 h-3.5" /> Comprehensive Enterprise Feasibility
           </div>
-          <h1 className="font-heading text-[30px] md:text-[36px] font-bold text-[#242424] tracking-tight leading-tight">
+          <h1 className="font-heading text-2xl sm:text-3xl md:text-[36px] font-bold text-[#242424] tracking-tight leading-tight break-words">
             Venture Intelligence & Business Analysis
           </h1>
-          <p className="text-slate-600 text-sm font-medium mt-1">
+          <p className="text-slate-600 text-xs sm:text-sm font-medium mt-1 leading-relaxed break-words whitespace-normal">
             Input your project specifications below to calculate real-world ML market potential, competitor density maps, conformal Mandi pricing, and government subsidy modeling.
           </p>
         </div>
       </div>
 
       {/* Main Configuration Card */}
-      <div className="bg-[#fffff5] border border-gray-900/8 rounded-3xl p-6 md:p-8 shadow-[0_4px_24px_rgb(0,0,0,0.05)]">
-        <form onSubmit={handleGenerateAnalysis} className="space-y-8">
+      <div className="bg-[#fffff5] border border-gray-900/8 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-[0_4px_24px_rgb(0,0,0,0.05)]">
+        <form onSubmit={handleGenerateAnalysis} className="space-y-6 sm:space-y-8">
           
           {/* SECTION 1: Target Project & Identity */}
           <div>
             <div className="flex items-center gap-2.5 mb-4 pb-2.5 border-b border-slate-100">
               <Briefcase className="w-5 h-5 text-[#1E6702]" />
-              <h2 className="text-base font-bold text-slate-900 uppercase tracking-wide">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900 uppercase tracking-wide">
                 1. Target Project & Business Identity
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                   Target Project Name <span className="text-red-500">*</span>
@@ -946,10 +946,13 @@ export default function AnalysisPage() {
                     required
                     value={businessName}
                     onChange={(e) => setBusinessName(e.target.value)}
-                    placeholder="e.g. Sahyadri Agro Processing / Annapurna Dairy"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-sm font-medium outline-hidden transition-all bg-white"
+                    placeholder="Enter project name..."
+                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-xs sm:text-sm font-medium outline-hidden transition-all bg-white"
                   />
                 </div>
+                <p className="text-[11px] text-slate-500 mt-1 leading-normal break-words whitespace-normal">
+                  e.g. Sahyadri Agro Processing / Annapurna Dairy
+                </p>
               </div>
 
               <div>
@@ -962,14 +965,17 @@ export default function AnalysisPage() {
                     required
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-sm font-medium outline-hidden transition-all bg-white"
+                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-xs sm:text-sm font-medium outline-hidden transition-all bg-white text-ellipsis"
                   >
-                    <option value="" disabled>-- Select Sector / Business Category --</option>
+                    <option value="" disabled>-- Select Sector / Category --</option>
                     {CATEGORIES.map((c) => (
                       <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
                 </div>
+                <p className="text-[11px] text-slate-500 mt-1 leading-normal break-words whitespace-normal">
+                  Primary sector: Food Processing, Dairy, Retail, Healthcare, etc.
+                </p>
               </div>
 
               <div>
@@ -979,19 +985,22 @@ export default function AnalysisPage() {
                 <select
                   value={businessModel}
                   onChange={(e) => setBusinessModel(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-sm font-medium outline-hidden transition-all bg-white"
+                  className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-xs sm:text-sm font-medium outline-hidden transition-all bg-white text-ellipsis"
                 >
-                  <option value="">-- Select Business Operating Model (Optional) --</option>
+                  <option value="">-- Select Business Model (Optional) --</option>
                   {(isHealthcare ? HEALTHCARE_MODELS : BUSINESS_MODELS).map((bm) => (
                     <option key={bm} value={bm}>{bm}</option>
                   ))}
                 </select>
+                <p className="text-[11px] text-slate-500 mt-1 leading-normal break-words whitespace-normal">
+                  Select production, retail, B2B wholesale, or service model
+                </p>
               </div>
             </div>
 
             {/* Hospital & Clinical Setup Specific Parameters (Adaptive) */}
             {isHealthcare && (
-              <div className="mt-5 p-5 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 space-y-3.5 animate-in fade-in duration-200">
+              <div className="mt-5 p-4 sm:p-5 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 space-y-3.5 animate-in fade-in duration-200">
                 <div className="flex items-center gap-2">
                   <Building2 className="w-4 h-4 text-[#1E6702]" />
                   <span className="text-xs font-bold uppercase tracking-wider text-emerald-950">
@@ -1008,9 +1017,12 @@ export default function AnalysisPage() {
                       type="text"
                       value={bedCapacity}
                       onChange={(e) => setBedCapacity(e.target.value)}
-                      placeholder="e.g. 15-20 Beds (10 Gen Ward, 3 ICU, 2 Private)"
+                      placeholder="e.g. 15-20 Beds (General/ICU)..."
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800 focus:border-[#1E6702] outline-hidden"
                     />
+                    <p className="text-[11px] text-emerald-800/80 mt-1 leading-normal break-words whitespace-normal">
+                      e.g. 15-20 Beds (10 General Ward, 3 ICU, 2 Private)
+                    </p>
                   </div>
 
                   <div>
@@ -1020,14 +1032,17 @@ export default function AnalysisPage() {
                     <select
                       value={facilityType}
                       onChange={(e) => setFacilityType(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800 focus:border-[#1E6702] outline-hidden"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800 focus:border-[#1E6702] outline-hidden text-ellipsis"
                     >
-                      <option value="">-- Select Hospital Classification --</option>
+                      <option value="">-- Select Classification --</option>
                       <option value="15-25 Bed Community Hospital">15-25 Bed Community Hospital (Secondary Care)</option>
                       <option value="Daycare Surgery & Maternity Nursing Home">Daycare Surgery & Maternity Nursing Home</option>
                       <option value="Primary Care Polyclinic & Diagnostic Hub">Primary Care Polyclinic & Diagnostic Hub</option>
                       <option value="24x7 Emergency Trauma & Resuscitation Center">24x7 Emergency Trauma & Resuscitation Center</option>
                     </select>
+                    <p className="text-[11px] text-emerald-800/80 mt-1 leading-normal break-words whitespace-normal">
+                      Select hospital tier or clinical specialization
+                    </p>
                   </div>
 
                   <div>
@@ -1038,9 +1053,12 @@ export default function AnalysisPage() {
                       type="text"
                       value={medicalSpecialties}
                       onChange={(e) => setMedicalSpecialties(e.target.value)}
-                      placeholder="e.g. General Medicine, Obs/Gyn, Minor OT, 24x7 Pharmacy"
+                      placeholder="e.g. Gen Medicine, Obs/Gyn, OT..."
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800 focus:border-[#1E6702] outline-hidden"
                     />
+                    <p className="text-[11px] text-emerald-800/80 mt-1 leading-normal break-words whitespace-normal">
+                      e.g. General Medicine, Obs/Gyn, Minor OT, 24x7 Pharmacy
+                    </p>
                   </div>
                 </div>
               </div>
@@ -1051,7 +1069,7 @@ export default function AnalysisPage() {
           <div>
             <div className="flex items-center gap-2.5 mb-4 pb-2.5 border-b border-slate-100">
               <MapPin className="w-5 h-5 text-[#1E6702]" />
-              <h2 className="text-base font-bold text-slate-900 uppercase tracking-wide">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900 uppercase tracking-wide">
                 2. Base Location & Geographical Catchment
               </h2>
             </div>
@@ -1061,53 +1079,74 @@ export default function AnalysisPage() {
                 <LocationAutocompleteInput
                   label="Search Location by Initial Letters (OpenStreetMap & India Census)"
                   value={locationLabel}
-                  placeholder="Type initials (e.g. Pune, Anand, Khed, Coimbatore, Jaipur)..."
+                  placeholder="Type city, district or village initials..."
                   onSelect={handleLocationSelect}
                 />
+                <p className="text-[11px] text-slate-500 mt-1.5 leading-normal break-words whitespace-normal">
+                  Search by initials to auto-fill location (e.g. Pune, Anand, Khed, Coimbatore, Jaipur)
+                </p>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 bg-slate-50/80 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80">
                 <div>
                   <StateAutocompleteInput
                     label="State"
                     required
                     value={state}
                     onChange={(val) => setState(val)}
-                    placeholder="Type state initials or name (e.g. Maharashtra, Gujarat)..."
+                    placeholder="Type state..."
                     inputClassName="py-2 text-xs"
                   />
+                  <p className="text-[11px] text-slate-500 mt-1 leading-normal break-words whitespace-normal">
+                    e.g. Maharashtra, Gujarat, Tamil Nadu
+                  </p>
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">District <span className="text-red-500">*</span></label>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                    District <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     required
                     value={district}
                     onChange={(e) => setDistrict(e.target.value)}
-                    placeholder="e.g. Pune, Anand, Varanasi"
+                    placeholder="e.g. Pune, Anand..."
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-800"
                   />
+                  <p className="text-[11px] text-slate-500 mt-1 leading-normal break-words whitespace-normal">
+                    e.g. Pune, Anand, Varanasi, Satara
+                  </p>
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Sub-district / Taluka</label>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                    Sub-district / Taluka
+                  </label>
                   <input
                     type="text"
                     required
                     value={subdistrict}
                     onChange={(e) => setSubdistrict(e.target.value)}
-                    placeholder="e.g. Haveli, Anand, Khed"
+                    placeholder="e.g. Haveli, Khed..."
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-800"
                   />
+                  <p className="text-[11px] text-slate-500 mt-1 leading-normal break-words whitespace-normal">
+                    e.g. Haveli, Anand, Khed, Baramati
+                  </p>
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Village / Ward</label>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                    Village / Ward
+                  </label>
                   <input
                     type="text"
                     value={village}
                     onChange={(e) => setVillage(e.target.value)}
-                    placeholder="Optional (e.g. Wagholi, Kasba)"
+                    placeholder="Optional (e.g. Wagholi)"
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-800"
                   />
+                  <p className="text-[11px] text-slate-500 mt-1 leading-normal break-words whitespace-normal">
+                    Optional: e.g. Wagholi, Kasba, Shirur
+                  </p>
                 </div>
               </div>
             </div>
@@ -1117,18 +1156,18 @@ export default function AnalysisPage() {
           <div>
             <div className="flex items-center gap-2.5 mb-4 pb-2.5 border-b border-slate-100">
               <IndianRupee className="w-5 h-5 text-[#1E6702]" />
-              <h2 className="text-base font-bold text-slate-900 uppercase tracking-wide">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900 uppercase tracking-wide">
                 3. Capital Margin, Total Project Cost & Operations
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                   Available Own Capital / Margin (₹) <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3.5 top-3.5 text-slate-400 font-bold text-sm">₹</span>
+                  <span className="absolute left-3.5 top-3 sm:top-3.5 text-slate-400 font-bold text-sm">₹</span>
                   <input
                     type="number"
                     required
@@ -1137,10 +1176,10 @@ export default function AnalysisPage() {
                     value={availableMargin}
                     onChange={(e) => setAvailableMargin(e.target.value === "" ? "" : Number(e.target.value))}
                     placeholder="e.g. 250000"
-                    className="w-full pl-8 pr-4 py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-sm font-semibold outline-hidden transition-all bg-white"
+                    className="w-full pl-8 pr-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-xs sm:text-sm font-semibold outline-hidden transition-all bg-white"
                   />
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1">
+                <p className="text-[11px] text-slate-500 mt-1 leading-normal break-words whitespace-normal">
                   Own equity contribution (e.g. ₹2,50,000)
                 </p>
               </div>
@@ -1150,7 +1189,7 @@ export default function AnalysisPage() {
                   Total Proposed Project Cost / Capex (₹) <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3.5 top-3.5 text-slate-400 font-bold text-sm">₹</span>
+                  <span className="absolute left-3.5 top-3 sm:top-3.5 text-slate-400 font-bold text-sm">₹</span>
                   <input
                     type="number"
                     required
@@ -1159,11 +1198,11 @@ export default function AnalysisPage() {
                     value={projectCost}
                     onChange={(e) => setProjectCost(e.target.value === "" ? "" : Number(e.target.value))}
                     placeholder="e.g. 2000000"
-                    className="w-full pl-8 pr-4 py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-sm font-semibold outline-hidden transition-all bg-white"
+                    className="w-full pl-8 pr-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-xs sm:text-sm font-semibold outline-hidden transition-all bg-white"
                   />
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1">
-                  Plant, Machinery, Civil & Setup Cost
+                <p className="text-[11px] text-slate-500 mt-1 leading-normal break-words whitespace-normal">
+                  Plant, Machinery, Civil & Setup Cost (e.g. ₹20,00,000)
                 </p>
               </div>
 
@@ -1171,13 +1210,13 @@ export default function AnalysisPage() {
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                   Calculated Debt Financing Required (₹)
                 </label>
-                <div className="w-full px-4 py-3 rounded-xl bg-emerald-50/70 border border-emerald-200/80 text-emerald-900 font-bold text-sm flex items-center justify-between">
+                <div className="w-full px-4 py-2.5 sm:py-3 rounded-xl bg-emerald-50/70 border border-emerald-200/80 text-emerald-900 font-bold text-xs sm:text-sm flex flex-wrap items-center justify-between gap-1">
                   <span>₹{calculatedLoan.toLocaleString('en-IN')}</span>
                   <span className="text-[11px] uppercase font-bold text-emerald-700">
                     {numCost > 0 ? `${((calculatedLoan / numCost) * 100).toFixed(0)}% Loan` : "Calculated on submit"}
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1">
+                <p className="text-[11px] text-slate-500 mt-1 leading-normal break-words whitespace-normal">
                   Evaluated against PMEGP / MUDRA caps
                 </p>
               </div>
@@ -1189,12 +1228,15 @@ export default function AnalysisPage() {
                 <select
                   value={landType}
                   onChange={(e) => setLandType(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-sm font-medium outline-hidden transition-all bg-white"
+                  className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-xs sm:text-sm font-medium outline-hidden transition-all bg-white text-ellipsis"
                 >
                   {LAND_TYPES.map((lt) => (
                     <option key={lt} value={lt}>{lt}</option>
                   ))}
                 </select>
+                <p className="text-[11px] text-slate-500 mt-1 leading-normal break-words whitespace-normal">
+                  Current property tenure status (Owned, Rented, Leased)
+                </p>
               </div>
 
               <div>
@@ -1207,11 +1249,16 @@ export default function AnalysisPage() {
                   onChange={(e) => setTargetScale(e.target.value)}
                   placeholder={
                     isHealthcare
-                      ? "e.g. 15-20 Beds, 50-75 OPD Patients/day, 24x7 Emergency & Minor OT"
-                      : "e.g. 500 liters/day, 10 tons/month, or 50 customers/day"
+                      ? "e.g. 15-20 Beds, 50 OPD..."
+                      : "e.g. 500 L/day, 10 tons/mo..."
                   }
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-sm font-medium outline-hidden transition-all bg-white"
+                  className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-xs sm:text-sm font-medium outline-hidden transition-all bg-white"
                 />
+                <p className="text-[11px] text-slate-500 mt-1 leading-normal break-words whitespace-normal">
+                  {isHealthcare
+                    ? "Examples: 15-20 Beds, 50-75 OPD Patients/day, 24x7 Emergency & Minor OT"
+                    : "Examples: 500 liters/day, 10 tons/month, or 50 customers/day"}
+                </p>
               </div>
 
               <div>
@@ -1219,7 +1266,7 @@ export default function AnalysisPage() {
                   Working Capital Requirement (₹)
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3.5 top-3.5 text-slate-400 font-bold text-sm">₹</span>
+                  <span className="absolute left-3.5 top-3 sm:top-3.5 text-slate-400 font-bold text-sm">₹</span>
                   <input
                     type="number"
                     min={10000}
@@ -1228,16 +1275,16 @@ export default function AnalysisPage() {
                     onChange={(e) => setWorkingCapital(e.target.value === "" ? "" : Number(e.target.value))}
                     placeholder={
                       isHealthcare
-                        ? "e.g. 350000 (Pharmacy inventory, surgical consumables & nurses)"
-                        : "e.g. 200000 (Defaults to ~15% of Capex)"
+                        ? "350000"
+                        : "200000"
                     }
-                    className="w-full pl-8 pr-4 py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-sm font-semibold outline-hidden transition-all bg-white"
+                    className="w-full pl-8 pr-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-xs sm:text-sm font-semibold outline-hidden transition-all bg-white"
                   />
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1">
+                <p className="text-[11px] text-slate-500 mt-1 leading-normal break-words whitespace-normal">
                   {isHealthcare
-                    ? "Operating liquidity (pharmacy inventory, emergency drugs & nursing staff)"
-                    : "Operating liquidity (raw materials, inventory & wages)"}
+                    ? "Operating liquidity: pharmacy inventory, surgical consumables & nurses (e.g. ₹3,50,000)"
+                    : "Operating liquidity: raw materials, inventory & wages (~15% of Capex, e.g. ₹2,00,000)"}
                 </p>
               </div>
 
@@ -1248,17 +1295,22 @@ export default function AnalysisPage() {
                 <select
                   value={salesChannel}
                   onChange={(e) => setSalesChannel(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-sm font-medium outline-hidden transition-all bg-white"
+                  className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:border-[#1E6702] focus:ring-2 focus:ring-[#1E6702]/20 text-xs sm:text-sm font-medium outline-hidden transition-all bg-white text-ellipsis"
                 >
                   <option value="">
                     {isHealthcare
-                      ? "-- Select Primary Patient Acquisition Channel (Optional) --"
-                      : "-- Select Primary Sales Channel (Optional) --"}
+                      ? "-- Select Patient Channel (Optional) --"
+                      : "-- Select Sales Channel (Optional) --"}
                   </option>
                   {(isHealthcare ? HEALTHCARE_SALES_CHANNELS : SALES_CHANNELS).map((sc) => (
                     <option key={sc} value={sc}>{sc}</option>
                   ))}
                 </select>
+                <p className="text-[11px] text-slate-500 mt-1 leading-normal break-words whitespace-normal">
+                  {isHealthcare
+                    ? "Primary referral, walk-in or institutional patient channel"
+                    : "Primary wholesale, retail or direct distribution route"}
+                </p>
               </div>
             </div>
           </div>
@@ -1266,16 +1318,16 @@ export default function AnalysisPage() {
           {errorMsg && (
             <div className="p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-              <div className="text-xs text-red-700 leading-relaxed font-medium">
+              <div className="text-xs text-red-700 leading-relaxed font-medium break-words whitespace-normal">
                 {errorMsg}
               </div>
             </div>
           )}
 
           {/* Submit Action */}
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-xs text-slate-500 flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+            <div className="text-xs text-slate-500 flex items-start gap-2 leading-relaxed break-words whitespace-normal">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
               <span>Uses Trained ML Models 1, 2, 3, OpenStreetMap & Government Scheme Engine</span>
             </div>
 
@@ -1291,9 +1343,9 @@ export default function AnalysisPage() {
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4" />
-                  <span>Run Complete Feasibility & ML Analysis</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <Sparkles className="w-4 h-4 shrink-0" />
+                  <span className="text-center">Run Complete Feasibility & ML Analysis</span>
+                  <ArrowRight className="w-4 h-4 shrink-0" />
                 </>
               )}
             </button>

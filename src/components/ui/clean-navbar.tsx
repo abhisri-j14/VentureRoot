@@ -58,10 +58,10 @@ export function CleanNavbar() {
             {t("auth.loginButton")}
           </Link>
           <Link
-            href="/analysis"
+            href="/register"
             className="text-sm font-bold bg-[#1E6702] text-white px-5 py-2.5 rounded-full shadow-sm hover:bg-[#185502] transition-colors active:scale-[0.97]"
           >
-            Instant Check
+            {t("auth.registerButton") || "Create Account"}
           </Link>
         </div>
 

@@ -8,18 +8,70 @@ export default function PwaRegister() {
   );
 
   useEffect(() => {
-    // 1. Service Worker Registration
+    // Check if running on local development or local IP
+    const isDev =
+      process.env.NODE_ENV === "development" ||
+      (typeof window !== "undefined" &&
+        (window.location.hostname === "localhost" ||
+          window.location.hostname === "127.0.0.1" ||
+          window.location.hostname.startsWith("192.168.") ||
+          window.location.hostname.startsWith("10.") ||
+          window.location.port === "3000"));
+
+    if (isDev) {
+      // In development / local testing, purge all service worker caches so changes always appear instantly
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.getRegistrations().then(async (registrations) => {
+          let hadWorker = false;
+          for (const reg of registrations) {
+            hadWorker = true;
+            await reg.unregister();
+          }
+          if (hadWorker) {
+            const hasReloaded = sessionStorage.getItem("pwa_dev_unregistered");
+            if (!hasReloaded) {
+              sessionStorage.setItem("pwa_dev_unregistered", "true");
+              window.location.reload();
+            }
+          }
+        });
+      }
+
+      if ("caches" in window) {
+        caches.keys().then((keys) => {
+          for (const key of keys) {
+            caches.delete(key);
+          }
+        });
+      }
+      return;
+    }
+
+    // 1. Production Service Worker Registration
     if ("serviceWorker" in navigator) {
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      });
+
       const registerSW = async () => {
         try {
           const registration = await navigator.serviceWorker.register("/sw.js", {
             scope: "/",
           });
 
-          // Check for service worker updates periodically (every 1 hour)
+          // Check for service worker updates immediately
+          try {
+            await registration.update();
+          } catch (_) {}
+
+          // Check for service worker updates periodically (every 10 minutes)
           const interval = setInterval(() => {
             registration.update();
-          }, 60 * 60 * 1000);
+          }, 10 * 60 * 1000);
 
           return () => clearInterval(interval);
         } catch (error) {

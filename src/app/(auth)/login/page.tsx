@@ -63,7 +63,10 @@ function LoginPageContent() {
       
       const rawFullName = backendUser?.user_metadata?.full_name || backendUser?.user_metadata?.name || backendUser?.user_metadata?.username;
       const formattedEmailName = (backendUser?.email || data.email || "").split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
-      const resolvedName = rawFullName || (typeof window !== "undefined" ? localStorage.getItem("ventureroot_user_name") : null) || formattedEmailName || "Entrepreneur";
+      let resolvedName = rawFullName || (typeof window !== "undefined" ? localStorage.getItem("ventureroot_user_name") : null) || formattedEmailName || "Entrepreneur";
+      if (/abhisri/i.test(resolvedName)) {
+        resolvedName = "Abhisri";
+      }
 
       if (typeof window !== "undefined") {
         localStorage.setItem("ventureroot_user_name", resolvedName);
