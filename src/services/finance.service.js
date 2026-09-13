@@ -18,8 +18,9 @@ import {
 import {
   NotFoundError,
 } from "@/errors/http-error";
-
 import * as financeClient from "@/integrations/finance.client";
+import { findLocationWithParents } from "@/repositories/location.repository";
+import { buildLocationResponse } from "@/utils/location.mapper";
 
 
 async function getOwnedBusiness({
@@ -239,11 +240,29 @@ export async function buildFinanceStructure({
   const margin = Number(business.availableMargin || 0);
   const projectCost = Number(data.loanAmount) + margin;
 
+  let fullLocation = null;
+  if (business.locationId) {
+    try {
+      fullLocation = await findLocationWithParents(business.locationId);
+    } catch (_) {}
+  }
+  const locResponse = buildLocationResponse(fullLocation);
+  const state = locResponse?.state || "West Bengal";
+  const category = business.category?.name || "Retail";
+
   let pyFinance = null;
   try {
-    const routeRes = await financeClient.routeScheme({ projectCost });
-    if (routeRes && routeRes.scheme) {
-      pyFinance = routeRes;
+    const [routeRes, calcRes] = await Promise.allSettled([
+      financeClient.routeScheme({ projectCost }),
+      financeClient.calculateFinance({
+        availableMargin: margin,
+        businessCategory: category,
+        state,
+        proposedProjectCost: projectCost,
+      }),
+    ]);
+    if (routeRes.status === "fulfilled" && routeRes.value?.scheme) {
+      pyFinance = routeRes.value;
     }
   } catch (err) {
     console.warn("[finance.service] Remote Python Finance Engine route scheme unavailable, falling back:", err.message);

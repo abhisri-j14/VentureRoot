@@ -329,10 +329,10 @@ const RadiusBand = ({
 
 export const CompetitionCard = ({
   data,
-  centerCoords = [22.5645, 72.9289],
+  centerCoords = [20.5937, 78.9629],
   businessName = "Your Venture",
-  category = "Agro-Enterprise",
-  locationName = "Anand, Gujarat",
+  category = "Enterprise",
+  locationName = "Target Location",
   competitorRadar = null,
 }: {
   data?: CompetitionAnalysis;

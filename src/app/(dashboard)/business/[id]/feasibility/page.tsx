@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -27,6 +27,7 @@ import {
 import { useFeasibility } from "@/lib/data/feasibility";
 import { useBusinessDetails } from "@/lib/data/businesses";
 import { getAuthoritativeCensusDensity } from "@/utils/feasibility.mapper";
+import { resolveCoordinatesForLocation } from "@/services/location-search.service";
 
 export default function FeasibilityPage() {
   const params = useParams();
@@ -36,14 +37,27 @@ export default function FeasibilityPage() {
   const { data: businessDetails } = useBusinessDetails(id);
   const [feasibilityData, setFeasibilityData] = useState<FeasibilityData | null>(null);
 
-  const centerCoords: [number, number] = [
-    (businessDetails as any)?.location?.lat || 22.5645,
-    (businessDetails as any)?.location?.lon || 72.9289,
-  ];
-  const locationName = (businessDetails as any)?.location
-    ? `${(businessDetails as any).location.subdistrict || (businessDetails as any).location.district || "Anand"}, ${(businessDetails as any).location.state || "Gujarat"}`
-    : "Anand, Gujarat";
-  const businessCategory = (businessDetails as any)?.category?.name || (businessDetails as any)?.category || "Dairy";
+  const rawLocation = (businessDetails as any)?.location;
+  const resolvedLoc = useMemo(() => resolveCoordinatesForLocation(rawLocation), [rawLocation]);
+
+  const centerCoords: [number, number] = useMemo(
+    () => [resolvedLoc.lat, resolvedLoc.lon],
+    [resolvedLoc]
+  );
+
+  const locationName = useMemo(() => {
+    if (!rawLocation) return resolvedLoc.label || "Target Location";
+    const parts = [
+      rawLocation.village,
+      rawLocation.block || rawLocation.subdistrict,
+      rawLocation.district,
+      rawLocation.state,
+    ].filter(Boolean);
+    const unique = parts.filter((v, idx, arr) => arr.indexOf(v) === idx);
+    return unique.join(", ") || resolvedLoc.label || "Target Location";
+  }, [rawLocation, resolvedLoc]);
+
+  const businessCategory = (businessDetails as any)?.category?.name || (businessDetails as any)?.category || "Enterprise";
 
   useEffect(() => {
     if (fetchedFeasibility) {

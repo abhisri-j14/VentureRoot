@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { 
   Sparkles, 
@@ -501,6 +501,36 @@ export default function AnalysisPage() {
     }
   };
 
+  // Debounced auto-resolution when user manually types District / Taluka / Village
+  useEffect(() => {
+    if (!district && !subdistrict) return;
+    const isDefault =
+      Math.abs(centerCoords[0] - 20.5937) < 0.005 && Math.abs(centerCoords[1] - 78.9629) < 0.005;
+
+    const timer = setTimeout(async () => {
+      const parts = [village, subdistrict, district, state].filter(Boolean);
+      if (parts.length < 2) return;
+      try {
+        const res = await fetch(`/api/v1/locations/search?q=${encodeURIComponent(parts.join(", "))}`);
+        if (res.ok) {
+          const json = await res.json();
+          const items = json?.data?.locations || [];
+          if (items.length > 0) {
+            const first = items[0];
+            const rawLat = first.data?.latitude ?? first.latitude;
+            const rawLon = first.data?.longitude ?? first.longitude;
+            if (rawLat && rawLon && !isNaN(Number(rawLat)) && !isNaN(Number(rawLon))) {
+              setCenterCoords([Number(rawLat), Number(rawLon)]);
+              if (!locationLabel) setLocationLabel(first.label || parts.join(", "));
+            }
+          }
+        }
+      } catch (_) {}
+    }, 650);
+
+    return () => clearTimeout(timer);
+  }, [district, subdistrict, village, state]);
+
   const handleGenerateAnalysis = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setIsLoading(true);
@@ -512,6 +542,9 @@ export default function AnalysisPage() {
     }, 700);
 
     try {
+      const isDefault =
+        Math.abs(centerCoords[0] - 20.5937) < 0.005 && Math.abs(centerCoords[1] - 78.9629) < 0.005;
+
       const res = await fetch("/api/v1/feasibility/instant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -522,8 +555,8 @@ export default function AnalysisPage() {
           district: district.trim() || "Anand",
           subdistrict: subdistrict.trim() || district.trim() || "Anand",
           village: village?.trim() || null,
-          latitude: centerCoords[0],
-          longitude: centerCoords[1],
+          latitude: isDefault ? null : centerCoords[0],
+          longitude: isDefault ? null : centerCoords[1],
           availableMargin: numMargin || 150000,
           projectCost: numCost || ((numMargin || 150000) * 8),
           landType,
@@ -573,12 +606,35 @@ export default function AnalysisPage() {
   };
 
   const competitorMarkers: MapMarker[] = useMemo(() => {
-    if (reportData?.feasibility?.competition?.competitors?.length) {
-      return reportData.feasibility.competition.competitors.map((comp: any, idx: number) => {
+    const rawList: any[] = [];
+    const seenNames = new Set<string>();
+
+    const addComp = (c: any) => {
+      if (!c) return;
+      const key = (c.name || c.title || "").toLowerCase().trim();
+      if (!key || seenNames.has(key)) return;
+      seenNames.add(key);
+      rawList.push(c);
+    };
+
+    if (reportData?.competitorRadar?.within10km) {
+      reportData.competitorRadar.within10km.forEach(addComp);
+    }
+    if (reportData?.competitorRadar?.within20km) {
+      reportData.competitorRadar.within20km.forEach(addComp);
+    }
+    if (reportData?.feasibility?.competition?.competitors) {
+      reportData.feasibility.competition.competitors.forEach(addComp);
+    }
+
+    if (rawList.length > 0) {
+      return rawList.map((comp: any, idx: number) => {
         const rawPos = comp.position;
         const pos: [number, number] =
           Array.isArray(rawPos) && rawPos.length >= 2 && typeof rawPos[0] === "number" && typeof rawPos[1] === "number" && rawPos[0] !== 0
             ? [rawPos[0], rawPos[1]]
+            : comp.lat && comp.lon && !isNaN(Number(comp.lat)) && !isNaN(Number(comp.lon))
+            ? [Number(comp.lat), Number(comp.lon)]
             : [
                 centerCoords[0] + (idx % 2 === 0 ? 0.014 : -0.016) * (idx + 1),
                 centerCoords[1] + (idx % 2 === 0 ? 0.013 : -0.015) * (idx + 1),
@@ -1190,6 +1246,23 @@ export default function AnalysisPage() {
                   </p>
                 </div>
               </div>
+
+              {/* Location Coordinate Lock Confirmation */}
+              {(locationLabel || district || (centerCoords[0] !== 20.5937 && centerCoords[1] !== 78.9629)) && (
+                <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-emerald-50/80 border border-emerald-200 rounded-xl text-xs text-emerald-900">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#1E6702] shrink-0" />
+                    <span>
+                      <strong className="text-emerald-950">Target Location Locked:</strong>{" "}
+                      {locationLabel || [village, subdistrict, district, state].filter(Boolean).join(", ")}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 font-mono text-[11px] font-bold text-emerald-800 bg-emerald-100/70 px-2.5 py-1 rounded-lg border border-emerald-300">
+                    <MapPin className="w-3 h-3 text-[#1E6702]" />
+                    <span>{centerCoords[0].toFixed(4)}°N, {centerCoords[1].toFixed(4)}°E</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -1754,6 +1827,85 @@ export default function AnalysisPage() {
                     <Users className="w-3.5 h-3.5 text-indigo-600" />
                     <span>~{activeReach20km.toLocaleString("en-IN")} pop. reach • 1,257 km² zone</span>
                   </div>
+                </div>
+              </div>
+
+              {/* ── Interactive Geospatial Catchment Radar & Competitor Heatmap ── */}
+              <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-xs space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-[#1E6702]" />
+                      <h4 className="text-sm font-black text-slate-900">
+                        OpenStreetMap Catchment Radar ({analysisCatchmentRadius} km)
+                      </h4>
+                    </div>
+                    <p className="text-[11px] text-slate-500 mt-0.5 font-medium">
+                      Target location: <strong className="text-slate-800">{locationLabel || [village, subdistrict, district, state].filter(Boolean).join(", ")}</strong> • Coordinates: <span className="font-mono text-emerald-800 font-bold">{centerCoords[0].toFixed(4)}°N, {centerCoords[1].toFixed(4)}°E</span>
+                    </p>
+                  </div>
+
+                  {/* Catchment Radius Switcher */}
+                  <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase px-2">Radar:</span>
+                    {([5, 10, 20] as const).map((r) => (
+                      <button
+                        key={r}
+                        type="button"
+                        onClick={() => setAnalysisCatchmentRadius(r)}
+                        className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                          analysisCatchmentRadius === r
+                            ? "bg-[#1E6702] text-white shadow-xs"
+                            : "text-slate-600 hover:text-slate-900 hover:bg-white"
+                        }`}
+                      >
+                        {r} km
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Map Canvas */}
+                <div className="w-full h-[460px] rounded-2xl overflow-hidden border border-slate-200 shadow-inner relative">
+                  <DynamicRadiusMap
+                    center={centerCoords}
+                    radiusInKm={analysisCatchmentRadius}
+                    businessName={businessName || "Proposed Business Venture"}
+                    locationLabel={locationLabel || [village, subdistrict, district, state].filter(Boolean).join(", ")}
+                    markers={filteredCompetitorMarkers}
+                    showCatchmentCircles={true}
+                    showLabels={true}
+                    hideTopBadge={false}
+                  />
+                </div>
+
+                {/* Dynamic Legend */}
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-2 text-[11px] text-slate-500 font-medium">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#1E6702] ring-2 ring-emerald-200" />
+                      <strong className="text-slate-800">★ Your Location</strong>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#DC2626]" />
+                      <span>Direct Competitors</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#D97706]" />
+                      <span>Indirect Competitors</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7]" />
+                      <span>Govt Sector</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#9333EA]" />
+                      <span>Private Hospitals</span>
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-slate-400">
+                    {filteredCompetitorMarkers.length} competitors within {analysisCatchmentRadius} km
+                  </span>
                 </div>
               </div>
 

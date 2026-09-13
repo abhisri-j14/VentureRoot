@@ -33,13 +33,13 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = FINANCE_TIMEOUT_M
 export async function calculateFinance({
   availableMargin,
   businessCategory = "Retail",
-  state = "Gujarat",
+  state = "West Bengal",
   proposedProjectCost = null,
 }) {
   const payload = {
     available_margin: Number(availableMargin),
     business_category: businessCategory,
-    state: state,
+    state: state || "West Bengal",
     proposed_project_cost: proposedProjectCost ? Number(proposedProjectCost) : null,
   };
 

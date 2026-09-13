@@ -184,22 +184,52 @@
 
 /* ─── Google Translate Headless Seamless Integration ─── */
 .goog-te-banner-frame,
-.skiptranslate,
+.goog-te-banner-frame.skiptranslate,
+iframe.goog-te-banner-frame,
+iframe[id*="goog-te-banner-frame"],
+iframe.skiptranslate,
+body > iframe[class*="skiptranslate"],
+body > iframe[src*="about:blank"],
+body > .skiptranslate iframe,
+.VIpgJd-ZVi9od-OR9QNe-JJZKKb,
 #goog-gt-tt,
 .goog-te-balloon-frame,
 .goog-tooltip,
 .goog-tooltip:hover {
   display: none !important;
   visibility: hidden !important;
+  height: 0px !important;
+  max-height: 0px !important;
+  min-height: 0px !important;
+  width: 0px !important;
+  max-width: 0px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  z-index: -99999 !important;
 }
 
+html,
 body {
   top: 0px !important;
   position: static !important;
 }
 
 #google_translate_element {
-  display: none !important;
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .goog-text-highlight {

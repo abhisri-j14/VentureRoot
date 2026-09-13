@@ -44,7 +44,8 @@ export const useBusinessesComparison = () => {
         }
       }
 
-      setData(combined);
+      const normalizedList = combined.map(normalizeBusinessLocation);
+      setData(normalizedList);
       setError(null);
     } catch (err: any) {
       console.warn("[useBusinessesComparison] Database fetch failed:", err);
@@ -92,6 +93,30 @@ export const useBusinessesComparison = () => {
   return { data, isLoading, error, refetch: fetchBusinesses };
 };
 
+import { resolveCoordinatesForLocation } from "@/services/location-search.service";
+
+export function normalizeBusinessLocation(biz: any) {
+  if (!biz) return biz;
+  if (!biz.location) return biz;
+  const loc = biz.location;
+  const resolved = resolveCoordinatesForLocation(loc);
+  return {
+    ...biz,
+    location: {
+      ...loc,
+      lat: resolved.lat,
+      lon: resolved.lon,
+      latitude: resolved.lat,
+      longitude: resolved.lon,
+      subdistrict: loc.subdistrict || loc.block || loc.district || "",
+      block: loc.block || loc.subdistrict || "",
+      district: loc.district || "",
+      state: loc.state || "",
+      formatted: resolved.label,
+    },
+  };
+}
+
 export const useBusinessDetails = (id: string) => {
   const [data, setData] = useState<BusinessDetails | null>(
     DATA_SOURCE === "json" ? (businessesData.details as BusinessDetails) : null
@@ -109,7 +134,8 @@ export const useBusinessDetails = (id: string) => {
             try {
               const list = JSON.parse(cached);
               if (Array.isArray(list) && list.length > 0) {
-                return list.find((b: any) => b.id === id) || (id === "123" || !id ? list[0] : null);
+                const found = list.find((b: any) => b.id === id) || (id === "123" || !id ? list[0] : null);
+                return normalizeBusinessLocation(found);
               }
             } catch (_) {}
           }
@@ -139,7 +165,8 @@ export const useBusinessDetails = (id: string) => {
             res?.data?.data?.business ||
             res?.data ||
             res;
-          setData(details as BusinessDetails);
+          const normalized = normalizeBusinessLocation(details);
+          setData(normalized as BusinessDetails);
           setIsLoading(false);
         })
         .catch((err) => {
@@ -154,3 +181,4 @@ export const useBusinessDetails = (id: string) => {
 
   return { data, isLoading, error };
 };
+

@@ -55,10 +55,13 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         document.cookie = `googtrans=/en/${code}; path=/;`;
       }
 
-      // If Google Translate combo is loaded in DOM, synchronize it quietly
+      // If Google Translate combo is loaded in DOM, synchronize it quietly and dispatch change
       const combo = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
-      if (combo && combo.value !== code) {
+      if (combo) {
         combo.value = code;
+        try {
+          combo.dispatchEvent(new Event("change"));
+        } catch (_) {}
       }
     }
   };

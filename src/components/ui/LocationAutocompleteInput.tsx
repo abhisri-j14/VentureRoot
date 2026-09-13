@@ -69,17 +69,24 @@ export const LocationAutocompleteInput: React.FC<LocationAutocompleteInputProps>
   };
 
   const handleSelect = (item: any) => {
-    const label = item.type === "STATE" ? (item.name || item.state) : (item.label || `${item.district || item.name}, ${item.state}`);
+    const d = item.data || {};
+    const label =
+      item.type === "STATE"
+        ? (d.state || item.name || item.state)
+        : (item.label || `${d.village || d.block || d.district || item.name}, ${d.state || item.state}`);
     setSearchTerm(label);
     setIsOpen(false);
 
+    const rawLat = d.latitude ?? item.latitude ?? item.lat;
+    const rawLon = d.longitude ?? item.longitude ?? item.lon;
+
     const loc: SelectedLocation = {
-      state: item.state || item.name || "",
-      district: item.district || item.name || "",
-      block: item.block || item.taluka || "",
-      village: item.village || "",
-      lat: item.lat ? Number(item.lat) : undefined,
-      lon: item.lon ? Number(item.lon) : undefined,
+      state: d.state || item.state || (item.type === "STATE" ? item.name : ""),
+      district: d.district || item.district || (item.type === "DISTRICT" ? item.name : ""),
+      block: d.block || item.block || item.taluka || (item.type === "TALUKA" ? item.name : ""),
+      village: d.village || item.village || (item.type === "VILLAGE" ? item.name : ""),
+      lat: rawLat !== undefined && rawLat !== null && !isNaN(Number(rawLat)) ? Number(rawLat) : undefined,
+      lon: rawLon !== undefined && rawLon !== null && !isNaN(Number(rawLon)) ? Number(rawLon) : undefined,
       label,
     };
 

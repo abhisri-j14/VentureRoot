@@ -11,6 +11,8 @@
  *  }
  */
 
+import { resolveCoordinatesForLocation } from "@/services/location-search.service";
+
 /**
  * Build a confidence object from Model 2 confidence string + Model 1 score.
  */
@@ -904,10 +906,11 @@ const SECTOR_COMPETITOR_TEMPLATES = {
  * Generate verified real-world competitors matching the business's sector and location.
  */
 function generateRealWorldCompetitors(category, location, m2) {
+  const resolved = resolveCoordinatesForLocation(location);
   const district = location?.district || "District";
   const subdistrict = location?.subdistrict || location?.block || district;
-  const lat = location?.lat || location?.latitude || 22.5645;
-  const lon = location?.lon || location?.longitude || 72.9289;
+  const lat = resolved.lat;
+  const lon = resolved.lon;
 
   // Match sector template or use adaptive rural enterprise template
   let templates = SECTOR_COMPETITOR_TEMPLATES[category];

@@ -174,11 +174,11 @@ export const RadiusMap: React.FC<RadiusMapProps> = ({
     setIsMounted(true);
   }, []);
 
-  // Validate center coordinates; fallback to Anand, Gujarat if invalid
+  // Validate center coordinates; fallback to India center if invalid
   const safeCenter: [number, number] =
     Array.isArray(center) && !isNaN(center[0]) && !isNaN(center[1]) && center[0] !== 0
       ? center
-      : [22.5645, 72.9289];
+      : [20.5937, 78.9629];
 
   // Tile layer configuration utilizing user's OpenStreetMap key from .env:
   const osmApiKey = process.env.NEXT_PUBLIC_OPENSTREETMAP_API_KEY || "";

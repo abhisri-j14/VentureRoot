@@ -14,6 +14,9 @@ import {
   fetchCompetitorsByRadius,
 } from "@/services/competitor-radar.service";
 
+import * as financeClient from "@/integrations/finance.client";
+import { resolveCoordinatesForLocation } from "@/services/location-search.service";
+
 
 
 /**
@@ -72,11 +75,13 @@ export async function getFeasibilityContext({
   // 4. Fetch real local competitors via Overpass API (OSM) + Gemini AI enrichment
   let competitorRadar = null;
   try {
-    const lat = data.business?.location?.lat ?? data.business?.location?.latitude;
-    const lon = data.business?.location?.lon ?? data.business?.location?.longitude;
+    const rawLoc = data.business?.location;
+    const resolved = resolveCoordinatesForLocation(rawLoc);
+    const lat = rawLoc?.lat ?? rawLoc?.latitude ?? resolved.lat;
+    const lon = rawLoc?.lon ?? rawLoc?.longitude ?? resolved.lon;
     const category = data.business?.category?.name || data.business?.category || "Agro-Enterprise";
-    const district = data.business?.location?.district?.name || data.business?.location?.district || "Anand";
-    const state = data.business?.location?.state?.name || data.business?.location?.state || "Gujarat";
+    const district = rawLoc?.district?.name || rawLoc?.district || "Local District";
+    const state = rawLoc?.state?.name || rawLoc?.state || "India";
 
     if (lat && lon) {
       competitorRadar = await fetchCompetitorsByRadius({
@@ -91,8 +96,44 @@ export async function getFeasibilityContext({
     console.warn("[feasibility.service] Competitor radar warning:", err?.message);
   }
 
-  if (feasibilityData && competitorRadar) {
-    feasibilityData.competitorRadar = competitorRadar;
+  // 5. Query Python Finance Engine for authoritative calculation based on registered state
+  let financeData = null;
+  try {
+    const availableMargin = Number(data.business?.availableMargin || data.profile?.availableCapital || 150000);
+    const category = data.business?.category?.name || data.business?.category || "Agro-Enterprise";
+    const state = data.business?.location?.state || "West Bengal";
+    const calcProjectCost = availableMargin / 0.1;
+
+    const [calcRes, schemeRes] = await Promise.allSettled([
+      financeClient.calculateFinance({
+        availableMargin,
+        businessCategory: category,
+        state,
+        proposedProjectCost: calcProjectCost,
+      }),
+      financeClient.routeScheme({ projectCost: calcProjectCost }),
+    ]);
+
+    const calculation = calcRes.status === "fulfilled" ? calcRes.value : null;
+    const scheme = schemeRes.status === "fulfilled" ? schemeRes.value : null;
+
+    if (calculation || scheme) {
+      financeData = {
+        calculation,
+        scheme,
+      };
+    }
+  } catch (finErr) {
+    console.warn("[feasibility.service] Remote Python Finance Engine warning:", finErr?.message);
+  }
+
+  if (feasibilityData) {
+    if (competitorRadar) {
+      feasibilityData.competitorRadar = competitorRadar;
+    }
+    if (financeData) {
+      feasibilityData.finance = financeData;
+    }
   }
 
   return {
@@ -112,6 +153,9 @@ export async function getFeasibilityContext({
       feasibilityData,
 
     competitorRadar,
+
+    finance:
+      financeData,
   };
 }
 
@@ -140,11 +184,13 @@ export async function generateFeasibility({
   const feasibility = mapMlPredictionToFeasibility(prediction, data.business);
 
   try {
-    const lat = data.business?.location?.lat ?? data.business?.location?.latitude;
-    const lon = data.business?.location?.lon ?? data.business?.location?.longitude;
+    const rawLoc = data.business?.location;
+    const resolved = resolveCoordinatesForLocation(rawLoc);
+    const lat = rawLoc?.lat ?? rawLoc?.latitude ?? resolved.lat;
+    const lon = rawLoc?.lon ?? rawLoc?.longitude ?? resolved.lon;
     const category = data.business?.category?.name || data.business?.category || "Agro-Enterprise";
-    const district = data.business?.location?.district?.name || data.business?.location?.district || "Anand";
-    const state = data.business?.location?.state?.name || data.business?.location?.state || "Gujarat";
+    const district = rawLoc?.district?.name || rawLoc?.district || "Local District";
+    const state = rawLoc?.state?.name || rawLoc?.state || "India";
 
     if (lat && lon && feasibility) {
       feasibility.competitorRadar = await fetchCompetitorsByRadius({

@@ -34,6 +34,8 @@ import {
   calculateRepaymentSummary,
 } from "@/utils/finance/repayment";
 
+import * as financeClient from "@/integrations/finance.client";
+
 
 export async function GET(request, { params }) {
   try {
@@ -79,6 +81,27 @@ export async function GET(request, { params }) {
       });
     }
 
+    const locResponse = buildLocationResponse(location);
+    const category = business.category?.name || "Retail";
+    const state = locResponse?.state || "West Bengal";
+
+    let pyCalculation = null;
+    let pyScheme = null;
+    try {
+      const calcProjectCost = availableMargin > 0 ? availableMargin / 0.1 : 1500000;
+      const [calcRes, schemeRes] = await Promise.allSettled([
+        financeClient.calculateFinance({
+          availableMargin: availableMargin > 0 ? availableMargin : 150000,
+          businessCategory: category,
+          state,
+          proposedProjectCost: calcProjectCost,
+        }),
+        financeClient.routeScheme({ projectCost: calcProjectCost }),
+      ]);
+      if (calcRes.status === "fulfilled") pyCalculation = calcRes.value;
+      if (schemeRes.status === "fulfilled") pyScheme = schemeRes.value;
+    } catch (_) {}
+
     return successResponse({
       message: "Business finance summary fetched successfully",
       data: {
@@ -93,7 +116,7 @@ export async function GET(request, { params }) {
                 slug: business.category.slug,
               }
             : null,
-          location: buildLocationResponse(location),
+          location: locResponse,
           availableMargin,
           expectedRevenue,
         },
@@ -102,6 +125,8 @@ export async function GET(request, { params }) {
           defaultInterestRate,
           defaultTenureMonths: defaultTenure,
           repayment,
+          engineCalculation: pyCalculation,
+          engineScheme: pyScheme,
           note: "Use POST /finance/structure to compute a full finance plan with custom loan parameters.",
         },
       },

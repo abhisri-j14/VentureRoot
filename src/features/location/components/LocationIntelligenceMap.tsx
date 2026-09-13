@@ -58,7 +58,7 @@ interface LocationIntelligenceMapProps {
 }
 
 export const LocationIntelligenceMap: React.FC<LocationIntelligenceMapProps> = ({
-  center = [22.5645, 72.9289],
+  center = [20.5937, 78.9629],
   locationName = "Regional Enterprise Zone",
   category = "Agro-Enterprise",
   markers: propMarkers = [],

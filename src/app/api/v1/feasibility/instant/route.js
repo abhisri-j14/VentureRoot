@@ -29,35 +29,61 @@ export async function POST(request) {
     const bedCapacity = body.bedCapacity || "";
     const medicalSpecialties = body.medicalSpecialties || "";
 
-    // Resolve accurate user coordinates (OpenStreetMap / Master Census DB)
+    // Resolve accurate user coordinates (Cascading OpenStreetMap & Master Index)
+    const isDefaultIndia = (lat, lon) => {
+      if (!lat || !lon || isNaN(lat) || isNaN(lon)) return true;
+      if (Math.abs(lat - 20.5937) < 0.005 && Math.abs(lon - 78.9629) < 0.005) return true;
+      if (Math.abs(lat - 22.5645) < 0.005 && Math.abs(lon - 72.9289) < 0.005 && !(district || "").toLowerCase().includes("anand")) return true;
+      return false;
+    };
+
     let latitude = body.latitude !== undefined && body.latitude !== null ? Number(body.latitude) : null;
     let longitude = body.longitude !== undefined && body.longitude !== null ? Number(body.longitude) : null;
 
-    if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
-      const match = INDIAN_LOCATIONS_MASTER.find(
-        (l) => l.district.toLowerCase() === district.toLowerCase() &&
-               (!state || l.state.toLowerCase() === state.toLowerCase())
-      ) || INDIAN_LOCATIONS_MASTER.find(
-        (l) => l.district.toLowerCase() === district.toLowerCase()
-      );
+    if (isDefaultIndia(latitude, longitude)) {
+      latitude = null;
+      longitude = null;
 
-      if (match && match.lat && match.lon) {
-        latitude = match.lat;
-        longitude = match.lon;
-      } else {
+      const queries = [
+        [village, subdistrict, district, state].filter(Boolean).join(", ") + ", India",
+        [village, district, state].filter(Boolean).join(", ") + ", India",
+        [subdistrict, district, state].filter(Boolean).join(", ") + ", India",
+        [district, state].filter(Boolean).join(", ") + ", India",
+      ];
+
+      const apiKey = process.env.OPENSTREETMAP_API_KEY || process.env.LOCATIONIQ_API_KEY;
+
+      for (const q of queries) {
         try {
-          const query = encodeURIComponent(`${district}, ${state}, India`);
-          const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`, {
+          let url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&countrycodes=in&limit=1`;
+          if (apiKey) url += `&key=${encodeURIComponent(apiKey)}`;
+          const res = await fetch(url, {
             headers: { "User-Agent": "VentureRoot-App/1.0" },
+            signal: AbortSignal.timeout(3500),
           });
-          if (geoRes.ok) {
-            const geoData = await geoRes.json();
-            if (Array.isArray(geoData) && geoData.length > 0) {
-              latitude = Number(geoData[0].lat);
-              longitude = Number(geoData[0].lon);
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0 && data[0].lat && data[0].lon) {
+              latitude = Number(data[0].lat);
+              longitude = Number(data[0].lon);
+              break;
             }
           }
         } catch (_) {}
+      }
+
+      if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
+        const match = INDIAN_LOCATIONS_MASTER.find(
+          (l) => l.district.toLowerCase() === (district || "").toLowerCase() &&
+                 (!state || l.state.toLowerCase() === (state || "").toLowerCase())
+        ) || INDIAN_LOCATIONS_MASTER.find(
+          (l) => l.district.toLowerCase() === (district || "").toLowerCase()
+        );
+
+        if (match && match.lat && match.lon) {
+          latitude = match.lat;
+          longitude = match.lon;
+        }
       }
     }
 

@@ -121,12 +121,26 @@ export const INDIAN_LOCATIONS_MASTER = [
   { state: "Madhya Pradesh", district: "Ujjain", popularTalukas: ["Ujjain", "Nagda", "Khachrod", "Mahidpur", "Tarana"], lat: 23.1765, lon: 75.7885 },
 
   // West Bengal
-  { state: "West Bengal", district: "Kolkata", popularTalukas: ["Kolkata North", "Kolkata South", "Alipore", "Bhowanipore", "Behala"], lat: 22.5726, lon: 88.3639 },
-  { state: "West Bengal", district: "Howrah", popularTalukas: ["Howrah", "Bally", "Uluberia", "Amta", "Shyampur"], lat: 22.5958, lon: 88.2636 },
-  { state: "West Bengal", district: "North 24 Parganas", popularTalukas: ["Barasat", "Barrackpore", "Bidhannagar", "Basirhat", "Bongaon"], lat: 22.7210, lon: 88.4810 },
-  { state: "West Bengal", district: "South 24 Parganas", popularTalukas: ["Alipore", "Baruipur", "Canning", "Diamond Harbour", "Kakdwip"], lat: 22.1645, lon: 88.4334 },
-  { state: "West Bengal", district: "Hooghly", popularTalukas: ["Chinsurah", "Chandannagar", "Serampore", "Arambagh"], lat: 22.9015, lon: 88.3968 },
-  { state: "West Bengal", district: "Darjeeling", popularTalukas: ["Darjeeling", "Kurseong", "Siliguri", "Mirik"], lat: 27.0410, lon: 88.2663 },
+  { state: "West Bengal", district: "North 24 Parganas", popularTalukas: ["Barasat", "Barrackpore", "Bidhannagar", "Basirhat", "Bongaon", "Habra", "Naihati", "Madhyamgram", "Bhatpara", "Kanchrapara", "Rajarhat"], lat: 22.7210, lon: 88.4810 },
+  { state: "West Bengal", district: "Barasat", popularTalukas: ["Barasat", "Madhyamgram", "Habra", "Duttapukur", "Hridaypur", "Deganga", "Amdanga", "Sashan"], lat: 22.7210, lon: 88.4810 },
+  { state: "West Bengal", district: "Kolkata", popularTalukas: ["Kolkata North", "Kolkata South", "Alipore", "Bhowanipore", "Behala", "Jadavpur", "Salt Lake", "Park Street"], lat: 22.5726, lon: 88.3639 },
+  { state: "West Bengal", district: "Howrah", popularTalukas: ["Howrah", "Bally", "Uluberia", "Amta", "Shyampur", "Bagnan", "Domjur"], lat: 22.5958, lon: 88.2636 },
+  { state: "West Bengal", district: "South 24 Parganas", popularTalukas: ["Alipore", "Baruipur", "Canning", "Diamond Harbour", "Kakdwip", "Sonarpur", "Bhangar", "Budge Budge"], lat: 22.1645, lon: 88.4334 },
+  { state: "West Bengal", district: "Hooghly", popularTalukas: ["Chinsurah", "Chandannagar", "Serampore", "Arambagh", "Uttarpara", "Dankuni", "Singur", "Tarakeswar"], lat: 22.9015, lon: 88.3968 },
+  { state: "West Bengal", district: "Nadia", popularTalukas: ["Krishnanagar", "Kalyani", "Ranaghat", "Tehatta", "Nabadwip", "Santipur", "Chakdaha"], lat: 23.4710, lon: 88.5565 },
+  { state: "West Bengal", district: "Purba Bardhaman", popularTalukas: ["Bardhaman", "Katwa", "Kalna", "Memari", "Galsi", "Bhatar"], lat: 23.2324, lon: 87.8615 },
+  { state: "West Bengal", district: "Paschim Bardhaman", popularTalukas: ["Asansol", "Durgapur", "Raniganj", "Kulti", "Jamuria", "Andal"], lat: 23.6889, lon: 86.9661 },
+  { state: "West Bengal", district: "Murshidabad", popularTalukas: ["Berhampore", "Lalbagh", "Jangipur", "Kandi", "Domkal", "Jiaganj", "Dhulian"], lat: 24.1759, lon: 88.2802 },
+  { state: "West Bengal", district: "Malda", popularTalukas: ["English Bazar", "Chanchal", "Old Malda", "Gazole", "Harishchandrapur", "Kaliachak"], lat: 25.0108, lon: 88.1411 },
+  { state: "West Bengal", district: "Darjeeling", popularTalukas: ["Darjeeling", "Kurseong", "Siliguri", "Mirik", "Bijanbari"], lat: 27.0410, lon: 88.2663 },
+  { state: "West Bengal", district: "Jalpaiguri", popularTalukas: ["Jalpaiguri", "Malbazar", "Dhupguri", "Rajganj", "Maynaguri"], lat: 26.5414, lon: 88.7196 },
+  { state: "West Bengal", district: "Alipurduar", popularTalukas: ["Alipurduar", "Falakata", "Kalchini", "Madarihat", "Kumargram"], lat: 26.4918, lon: 89.5271 },
+  { state: "West Bengal", district: "Cooch Behar", popularTalukas: ["Cooch Behar", "Dinhata", "Mathabhanga", "Tufanganj", "Mekhliganj"], lat: 26.3239, lon: 89.4510 },
+  { state: "West Bengal", district: "Birbhum", popularTalukas: ["Suri", "Bolpur", "Rampurhat", "Sainthia", "Dubrajpur", "Ilambazar"], lat: 23.9056, lon: 87.5246 },
+  { state: "West Bengal", district: "Bankura", popularTalukas: ["Bankura", "Bishnupur", "Khatra", "Sonamukhi", "Barjora"], lat: 23.2324, lon: 87.0784 },
+  { state: "West Bengal", district: "Purulia", popularTalukas: ["Purulia", "Raghunathpur", "Jhalda", "Manbazar", "Baghmundi"], lat: 23.3321, lon: 86.3652 },
+  { state: "West Bengal", district: "Paschim Medinipur", popularTalukas: ["Midnapore", "Kharagpur", "Ghatal", "Jhargram", "Debra"], lat: 22.4257, lon: 87.3199 },
+  { state: "West Bengal", district: "Purba Medinipur", popularTalukas: ["Tamluk", "Haldia", "Contai", "Egra", "Digha", "Mahisadal", "Panskura"], lat: 22.2965, lon: 87.9221 },
 
   // Kerala
   { state: "Kerala", district: "Ernakulam", popularTalukas: ["Kochi", "Kanayannur", "Aluva", "Paravur", "Kothamangalam", "Muvattupuzha"], lat: 9.9816, lon: 76.2999 },
@@ -411,4 +425,214 @@ export async function searchLocationsCombined({ query, limit = 8 }) {
   searchCache.set(cacheKey, merged);
 
   return merged;
+}
+
+/**
+ * State centroid lookup table as reliable geographic anchor
+ */
+export const STATE_CENTROIDS = {
+  "west bengal": { lat: 22.9868, lon: 87.8550 },
+  "maharashtra": { lat: 19.7515, lon: 75.7139 },
+  "gujarat": { lat: 22.2587, lon: 71.1924 },
+  "delhi": { lat: 28.6139, lon: 77.2090 },
+  "karnataka": { lat: 15.3173, lon: 75.7139 },
+  "tamil nadu": { lat: 11.1271, lon: 78.6569 },
+  "uttar pradesh": { lat: 26.8467, lon: 80.9462 },
+  "rajasthan": { lat: 27.0238, lon: 74.2179 },
+  "madhya pradesh": { lat: 22.9734, lon: 78.6569 },
+  "kerala": { lat: 10.8505, lon: 76.2711 },
+  "telangana": { lat: 18.1124, lon: 79.0193 },
+  "andhra pradesh": { lat: 15.9129, lon: 79.7400 },
+  "punjab": { lat: 31.1471, lon: 75.3412 },
+  "haryana": { lat: 29.0588, lon: 76.0856 },
+  "bihar": { lat: 25.0961, lon: 85.3131 },
+  "odisha": { lat: 20.9517, lon: 85.0985 },
+  "jharkhand": { lat: 23.6102, lon: 85.2799 },
+  "chhattisgarh": { lat: 21.2787, lon: 81.8661 },
+  "assam": { lat: 26.2006, lon: 92.9376 },
+};
+
+/**
+ * Deterministic location coordinates resolver
+ * Resolves exact coordinates for any registered location input (village, block, district, state)
+ * without ever falsely defaulting non-Gujarat inputs to Gujarat.
+ */
+export function resolveCoordinatesForLocation(locInput) {
+  if (!locInput) {
+    return { lat: 20.5937, lon: 78.9629, label: "India" };
+  }
+
+  const state = (locInput.state || "").trim();
+  const district = (locInput.district || "").trim();
+  const block = (locInput.block || locInput.subdistrict || "").trim();
+  const village = (locInput.village || "").trim();
+  const rawLat = locInput.lat ?? locInput.latitude;
+  const rawLon = locInput.lon ?? locInput.longitude;
+
+  // Check if coordinates already provided
+  if (
+    rawLat !== undefined &&
+    rawLat !== null &&
+    rawLon !== undefined &&
+    rawLon !== null &&
+    !isNaN(Number(rawLat)) &&
+    !isNaN(Number(rawLon)) &&
+    Number(rawLat) !== 0 &&
+    Number(rawLon) !== 0
+  ) {
+    const latNum = Number(rawLat);
+    const lonNum = Number(rawLon);
+    // Detect and reject accidental Gujarat fallback if user is in another state
+    const isAnandFallback =
+      Math.abs(latNum - 22.5645) < 0.005 &&
+      Math.abs(lonNum - 72.9289) < 0.005 &&
+      !district.toLowerCase().includes("anand");
+
+    if (!isAnandFallback) {
+      const label = [village, block, district, state].filter(Boolean).join(", ");
+      return { lat: latNum, lon: lonNum, label: label || "Business Location" };
+    }
+  }
+
+  const cleanState = state.toLowerCase();
+  const cleanDistrict = district.toLowerCase();
+  const cleanBlock = block.toLowerCase();
+  const cleanVillage = village.toLowerCase();
+
+  // Special priority matching for Barasat, West Bengal
+  if (
+    cleanState.includes("bengal") ||
+    cleanDistrict.includes("barasat") ||
+    cleanBlock.includes("barasat") ||
+    cleanVillage.includes("barasat") ||
+    cleanDistrict.includes("24 pargana")
+  ) {
+    if (
+      cleanDistrict.includes("barasat") ||
+      cleanBlock.includes("barasat") ||
+      cleanVillage.includes("barasat")
+    ) {
+      return {
+        lat: 22.7210,
+        lon: 88.4810,
+        label: [village || "Barasat", block || "Barasat", district || "North 24 Parganas", "West Bengal"]
+          .filter((v, i, a) => a.indexOf(v) === i && Boolean(v))
+          .join(", "),
+      };
+    }
+  }
+
+  // 1. Search in INDIAN_LOCATIONS_MASTER with State matching
+  if (cleanState) {
+    // Exact/Partial District match within state
+    const stateMatches = INDIAN_LOCATIONS_MASTER.filter(
+      (l) => l.state.toLowerCase() === cleanState || l.state.toLowerCase().includes(cleanState) || cleanState.includes(l.state.toLowerCase())
+    );
+
+    if (stateMatches.length > 0) {
+      // Look for district match
+      if (cleanDistrict) {
+        const dMatch = stateMatches.find(
+          (l) =>
+            l.district.toLowerCase() === cleanDistrict ||
+            l.district.toLowerCase().includes(cleanDistrict) ||
+            cleanDistrict.includes(l.district.toLowerCase())
+        );
+        if (dMatch) {
+          return {
+            lat: dMatch.lat,
+            lon: dMatch.lon,
+            label: [village, block, dMatch.district, dMatch.state].filter(Boolean).join(", "),
+          };
+        }
+      }
+
+      // Look for block or village in popularTalukas
+      const subTerm = cleanBlock || cleanVillage;
+      if (subTerm) {
+        const tMatch = stateMatches.find((l) =>
+          l.popularTalukas?.some(
+            (t) =>
+              t.toLowerCase() === subTerm ||
+              t.toLowerCase().includes(subTerm) ||
+              subTerm.includes(t.toLowerCase())
+          )
+        );
+        if (tMatch) {
+          return {
+            lat: tMatch.lat,
+            lon: tMatch.lon,
+            label: [village, block, tMatch.district, tMatch.state].filter(Boolean).join(", "),
+          };
+        }
+      }
+
+      // If state matches but district doesn't match specific row, use first match or state centroid
+      if (STATE_CENTROIDS[cleanState]) {
+        return {
+          lat: STATE_CENTROIDS[cleanState].lat,
+          lon: STATE_CENTROIDS[cleanState].lon,
+          label: [village, block, district, state].filter(Boolean).join(", "),
+        };
+      }
+      return {
+        lat: stateMatches[0].lat,
+        lon: stateMatches[0].lon,
+        label: [village, block, district, state].filter(Boolean).join(", "),
+      };
+    }
+  }
+
+  // 2. Search anywhere in INDIAN_LOCATIONS_MASTER by District
+  if (cleanDistrict) {
+    const dMatch = INDIAN_LOCATIONS_MASTER.find(
+      (l) =>
+        l.district.toLowerCase() === cleanDistrict ||
+        l.district.toLowerCase().includes(cleanDistrict) ||
+        cleanDistrict.includes(l.district.toLowerCase())
+    );
+    if (dMatch) {
+      return {
+        lat: dMatch.lat,
+        lon: dMatch.lon,
+        label: [village, block, dMatch.district, dMatch.state].filter(Boolean).join(", "),
+      };
+    }
+  }
+
+  // 3. Search anywhere by Block / Village
+  const searchSub = cleanBlock || cleanVillage;
+  if (searchSub) {
+    const sMatch = INDIAN_LOCATIONS_MASTER.find((l) =>
+      l.popularTalukas?.some(
+        (t) =>
+          t.toLowerCase() === searchSub ||
+          t.toLowerCase().includes(searchSub) ||
+          searchSub.includes(t.toLowerCase())
+      )
+    );
+    if (sMatch) {
+      return {
+        lat: sMatch.lat,
+        lon: sMatch.lon,
+        label: [village, block, sMatch.district, sMatch.state].filter(Boolean).join(", "),
+      };
+    }
+  }
+
+  // 4. State Centroid fallback
+  if (cleanState && STATE_CENTROIDS[cleanState]) {
+    return {
+      lat: STATE_CENTROIDS[cleanState].lat,
+      lon: STATE_CENTROIDS[cleanState].lon,
+      label: [village, block, district, state].filter(Boolean).join(", "),
+    };
+  }
+
+  // 5. Default safe center of India
+  return {
+    lat: 20.5937,
+    lon: 78.9629,
+    label: [village, block, district, state].filter(Boolean).join(", ") || "India",
+  };
 }

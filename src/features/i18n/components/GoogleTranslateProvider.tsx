@@ -82,7 +82,7 @@ export const GoogleTranslateProvider = () => {
     // Synchronize HTML document language attribute
     document.documentElement.lang = lang;
 
-    // Set / clear the googtrans cookie without duplicate host/domain clashes
+    // Set / clear the googtrans cookie
     if (lang === "en") {
       document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     } else {
@@ -91,24 +91,111 @@ export const GoogleTranslateProvider = () => {
 
     // Check if the combo element is available in the DOM
     const combo = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
-    if (combo && combo.value !== lang) {
-      combo.value = lang;
-      try {
-        combo.dispatchEvent(new Event("change"));
-      } catch (_) {}
+    if (combo) {
+      if (combo.value !== lang) {
+        combo.value = lang;
+        try {
+          combo.dispatchEvent(new Event("change"));
+        } catch (_) {}
+      }
       lastAppliedLang.current = lang;
+      return true;
     }
+    return false;
   };
 
-  // Re-apply translation when language changes (do NOT reload on pathname changes)
+  /**
+   * Proactively suppresses Google Translate's banner iframe and prevents
+   * document.body from being pushed down, keeping the top navbar 100% visible.
+   */
+  const suppressGoogleTranslateBanner = () => {
+    if (typeof document === "undefined") return;
+
+    if (document.body && document.body.style.top && document.body.style.top !== "0px") {
+      document.body.style.top = "0px";
+    }
+
+    const iframes = document.querySelectorAll<HTMLIFrameElement>(
+      "iframe.goog-te-banner-frame, iframe.skiptranslate, iframe[id*='goog-te-banner-frame'], body > iframe"
+    );
+    iframes.forEach((iframe) => {
+      if (
+        iframe.classList.contains("goog-te-banner-frame") ||
+        iframe.classList.contains("skiptranslate") ||
+        iframe.id.includes("goog-te-banner-frame") ||
+        iframe.src.includes("about:blank")
+      ) {
+        iframe.style.setProperty("display", "none", "important");
+        iframe.style.setProperty("visibility", "hidden", "important");
+        iframe.style.setProperty("height", "0", "important");
+        iframe.style.setProperty("width", "0", "important");
+        iframe.style.setProperty("position", "absolute", "important");
+        iframe.style.setProperty("top", "-9999px", "important");
+        iframe.style.setProperty("pointer-events", "none", "important");
+      }
+    });
+
+    const bodyChildren = document.querySelectorAll<HTMLElement>("body > .skiptranslate");
+    bodyChildren.forEach((el) => {
+      const mountNode = document.getElementById("google_translate_element");
+      if (mountNode && !el.contains(mountNode) && el !== mountNode) {
+        el.style.setProperty("display", "none", "important");
+        el.style.setProperty("height", "0", "important");
+      }
+    });
+  };
+
+  // Observe DOM mutations to continuously eliminate the top banner and body top push
   useEffect(() => {
-    applyLanguage(language);
-  }, [language]);
+    if (typeof window === "undefined") return;
+
+    suppressGoogleTranslateBanner();
+
+    const observer = new MutationObserver(() => {
+      suppressGoogleTranslateBanner();
+    });
+
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["style", "class"],
+      childList: true,
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Re-apply translation when language or route changes with reliable polling
+  useEffect(() => {
+    const applied = applyLanguage(language);
+    if (!applied) {
+      let attempts = 0;
+      const interval = setInterval(() => {
+        attempts++;
+        const success = applyLanguage(language);
+        if (success || attempts >= 30) {
+          clearInterval(interval);
+        }
+      }, 100);
+      return () => clearInterval(interval);
+    }
+  }, [language, pathname]);
 
   return (
     <>
-      {/* Hidden mount node for Google Translate widget */}
-      <div id="google_translate_element" style={{ display: "none" }} />
+      {/* Off-screen mount node for Google Translate widget (must NOT be display:none for script to mount select properly) */}
+      <div
+        id="google_translate_element"
+        style={{
+          position: "absolute",
+          top: -9999,
+          left: -9999,
+          width: 1,
+          height: 1,
+          overflow: "hidden",
+          opacity: 0,
+          pointerEvents: "none",
+        }}
+      />
 
       {/* Google Translate Init Script — runs before the API script loads */}
       <Script
@@ -121,7 +208,8 @@ export const GoogleTranslateProvider = () => {
                 {
                   pageLanguage: 'en',
                   includedLanguages: 'en,bn,hi,pa,mr,ta,te',
-                  autoDisplay: false
+                  autoDisplay: false,
+                  layout: window.google?.translate?.TranslateElement?.InlineLayout?.SIMPLE
                 },
                 'google_translate_element'
               );

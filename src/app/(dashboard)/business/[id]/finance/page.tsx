@@ -5,7 +5,8 @@ import Link from "next/link";
 import {
   ArrowLeft, Map, Compass, TrendingUp, Wallet, PiggyBank,
   BarChart3, CheckCircle2, AlertTriangle, ShieldCheck, ArrowRight,
-  IndianRupee, Clock, Percent, CalendarDays, ChevronLeft, ChevronRight
+  IndianRupee, Clock, Percent, CalendarDays, ChevronLeft, ChevronRight,
+  MapPin
 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { WhatIfSimulator } from "@/features/finance/components/WhatIfSimulator";
@@ -140,6 +141,15 @@ export default function FinancePage() {
   const id = params?.id as string;
   const { data: business, isLoading } = useBusinessDetails(id);
 
+  const businessLocationStr = useMemo(() => {
+    const loc = (business as any)?.location;
+    if (!loc) return null;
+    if (loc.formatted) return loc.formatted;
+    const parts = [loc.village, loc.block || loc.subdistrict, loc.district, loc.state].filter(Boolean);
+    const unique = parts.filter((v: string, i: number, a: string[]) => a.indexOf(v) === i);
+    return unique.join(", ");
+  }, [business]);
+
   // Get margin from business data
   const availableMargin = business?.capital?.availableMargin ?? (business as any)?.availableMargin ?? 0;
 
@@ -209,9 +219,17 @@ export default function FinancePage() {
             <p className="font-sans text-xs sm:text-[14px] text-slate-500 font-medium mt-0.5 break-words">
               Understand the money needed, possible funding, and repayment burden.
             </p>
-            <span className="inline-block mt-2 font-sans text-[10px] sm:text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full uppercase tracking-wider break-words">
-              Preliminary estimate · based on information provided
-            </span>
+            <div className="flex flex-wrap items-center gap-2 mt-2">
+              <span className="inline-block font-sans text-[10px] sm:text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full uppercase tracking-wider break-words">
+                Preliminary estimate · based on information provided
+              </span>
+              {businessLocationStr && (
+                <span className="inline-flex items-center gap-1 font-sans text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
+                  <MapPin className="w-3 h-3 text-emerald-600 shrink-0" />
+                  {businessLocationStr}
+                </span>
+              )}
+            </div>
           </div>
           <div className="flex flex-wrap gap-2 sm:gap-3 shrink-0">
             <Link href={`/business/${id}/feasibility`}
