@@ -519,19 +519,21 @@ export const LocationIntelligenceMap: React.FC<LocationIntelligenceMapProps> = (
           markers={dynamicMarkers}
           showCatchmentCircles={true}
           showLabels={true}
+          hideTopBadge={true}
         />
 
         {/* Live Status Overlay */}
-        <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm text-xs px-3.5 py-2.5 rounded-xl border border-slate-200/90 shadow-sm z-[400] max-w-sm pointer-events-auto">
-          <p className="font-bold text-slate-900 text-xs flex items-center gap-1">
-            📍 {locationName}
-          </p>
-          <p className="text-[10.5px] text-slate-600 mt-0.5 font-medium">
+        <div className="absolute top-2.5 sm:top-3 left-2.5 sm:left-3 bg-white/95 backdrop-blur-md rounded-xl p-2.5 sm:p-3 shadow-md border border-slate-200/90 z-[400] max-w-[calc(100%-20px)] sm:max-w-xs pointer-events-auto flex flex-col gap-1">
+          <div className="flex items-center gap-1.5 font-bold text-slate-900 text-xs">
+            <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+            <span className="truncate">{locationName}</span>
+          </div>
+          <div className="text-[10.5px] text-slate-600 font-medium leading-snug">
             Catchment: <span className="font-bold text-emerald-800">{radius} km</span> • Reach: <span className="font-bold text-emerald-900">~{populationReach.toLocaleString('en-IN')} pop.</span>
-          </p>
-          <p className="text-[10px] text-slate-500 font-medium mt-0.5">
+          </div>
+          <div className="text-[10px] text-slate-500 font-medium leading-snug">
             Visible Nodes: <span className="font-bold text-slate-800">{dynamicMarkers.length} markers</span> (Area: {Math.round(Math.PI * radius * radius)} km²)
-          </p>
+          </div>
         </div>
       </div>
     </div>

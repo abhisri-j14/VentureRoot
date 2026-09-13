@@ -156,6 +156,7 @@ interface RadiusMapProps {
   markers?: MapMarker[];
   showCatchmentCircles?: boolean;
   showLabels?: boolean;
+  hideTopBadge?: boolean;
 }
 
 export const RadiusMap: React.FC<RadiusMapProps> = ({
@@ -166,6 +167,7 @@ export const RadiusMap: React.FC<RadiusMapProps> = ({
   markers = [],
   showCatchmentCircles = true,
   showLabels = true,
+  hideTopBadge = false,
 }) => {
   const [isMounted, setIsMounted] = React.useState(false);
   useEffect(() => {
@@ -269,15 +271,17 @@ export const RadiusMap: React.FC<RadiusMapProps> = ({
       `}</style>
 
       {/* Floating Radius & Catchment Info Badge */}
-      <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200/90 shadow-sm z-[400] pointer-events-auto flex items-center gap-2">
-        <span className="w-2 h-2 rounded-full bg-[#1E6702] animate-pulse" />
-        <span className="text-[11px] font-bold text-slate-800">
-          {radiusInKm} km Radar Catchment
-        </span>
-        <span className="text-[10px] font-medium text-slate-500 border-l border-slate-200 pl-2">
-          ~{Math.round(Math.PI * radiusInKm * radiusInKm)} km²
-        </span>
-      </div>
+      {!hideTopBadge && (
+        <div className="hidden sm:flex absolute top-3 right-3 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200/90 shadow-sm z-[400] pointer-events-auto items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-[#1E6702] animate-pulse" />
+          <span className="text-[11px] font-bold text-slate-800">
+            {radiusInKm} km Radar Catchment
+          </span>
+          <span className="text-[10px] font-medium text-slate-500 border-l border-slate-200 pl-2">
+            ~{Math.round(Math.PI * radiusInKm * radiusInKm)} km²
+          </span>
+        </div>
+      )}
 
       <MapContainer
         center={safeCenter}
@@ -535,19 +539,19 @@ export const RadiusMap: React.FC<RadiusMapProps> = ({
                 <Tooltip
                   permanent
                   direction="top"
-                  offset={[0, -32]}
+                  offset={[0, -28]}
                   opacity={1}
                   className="vr-map-marker-tooltip"
                 >
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", minWidth: "90px", maxWidth: "185px", textAlign: "center", lineHeight: "1.2" }}>
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", minWidth: "80px", maxWidth: "155px", textAlign: "center", lineHeight: "1.25", padding: "1px 2px" }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "4px", width: "100%", marginBottom: "2px" }}>
                       <span
                         style={{
-                          fontSize: "8.5px",
-                          fontWeight: 900,
+                          fontSize: "8px",
+                          fontWeight: 800,
                           textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          padding: "1px 6px",
+                          letterSpacing: "0.04em",
+                          padding: "1px 5px",
                           borderRadius: "9999px",
                           lineHeight: "1.2",
                           backgroundColor: badgeBg,
@@ -558,21 +562,22 @@ export const RadiusMap: React.FC<RadiusMapProps> = ({
                         {badgeText}
                       </span>
                       {marker.distanceKm != null && (
-                        <span style={{ fontSize: "9px", fontWeight: 800, color: "#334155", whiteSpace: "nowrap" }}>
-                          📍 {marker.distanceKm.toFixed(1)} km
+                        <span style={{ fontSize: "8.5px", fontWeight: 700, color: "#475569", whiteSpace: "nowrap" }}>
+                          • {marker.distanceKm.toFixed(1)} km
                         </span>
                       )}
                     </div>
                     <span
                       style={{
-                        fontSize: "10.5px",
-                        fontWeight: 800,
+                        fontSize: "10px",
+                        fontWeight: 700,
                         color: "#0f172a",
                         display: "-webkit-box",
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: "vertical",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
+                        lineHeight: "1.25",
                       }}
                       title={marker.title}
                     >
@@ -650,71 +655,71 @@ export const RadiusMap: React.FC<RadiusMapProps> = ({
       </MapContainer>
 
       {/* Dynamic Map Legend Overlay */}
-      <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-2 rounded-xl shadow-md border border-slate-200 z-[400] text-[11px] flex flex-wrap items-center gap-2.5 max-w-[95%] pointer-events-auto">
-        <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-[#1E6702] border border-white shadow-sm inline-block" />
+      <div className="absolute bottom-2.5 sm:bottom-3 right-2.5 sm:right-3 bg-white/95 backdrop-blur-md px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl shadow-md border border-slate-200/90 z-[400] text-[10px] sm:text-[11px] flex flex-wrap items-center gap-1.5 sm:gap-2.5 max-w-[calc(100%-20px)] sm:max-w-md pointer-events-auto">
+        <div className="flex items-center gap-1">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#1E6702] border border-white shadow-xs inline-block" />
           <span className="font-semibold text-slate-700">Your Venture</span>
         </div>
 
         {counts.govt > 0 && (
-          <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-[#0284C7] border border-white shadow-sm inline-block" />
-            <span className="font-semibold text-sky-700">Govt Sector ({counts.govt})</span>
+          <div className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7] border border-white shadow-xs inline-block" />
+            <span className="font-semibold text-sky-700">Govt ({counts.govt})</span>
           </div>
         )}
 
         {counts.pvt > 0 && (
-          <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-[#9333EA] border border-white shadow-sm inline-block" />
-            <span className="font-semibold text-purple-700">Pvt Sector ({counts.pvt})</span>
+          <div className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#9333EA] border border-white shadow-xs inline-block" />
+            <span className="font-semibold text-purple-700">Pvt ({counts.pvt})</span>
           </div>
         )}
 
         {counts.direct > 0 && counts.govt === 0 && (
-          <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-[#DC2626] border border-white shadow-sm inline-block" />
+          <div className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#DC2626] border border-white shadow-xs inline-block" />
             <span className="font-semibold text-red-700">Direct ({counts.direct})</span>
           </div>
         )}
 
         {counts.indirect > 0 && counts.govt === 0 && (
-          <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-[#D97706] border border-white shadow-sm inline-block" />
+          <div className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#D97706] border border-white shadow-xs inline-block" />
             <span className="font-semibold text-amber-700">Indirect ({counts.indirect})</span>
           </div>
         )}
 
         {counts.market > 0 && (
-          <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-[#059669] border border-white shadow-sm inline-block" />
+          <div className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#059669] border border-white shadow-xs inline-block" />
             <span className="font-semibold text-emerald-700">Mandi ({counts.market})</span>
           </div>
         )}
 
         {counts.transport > 0 && (
-          <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-[#4F46E5] border border-white shadow-sm inline-block" />
+          <div className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#4F46E5] border border-white shadow-xs inline-block" />
             <span className="font-semibold text-indigo-700">Transport ({counts.transport})</span>
           </div>
         )}
 
         {counts.supply > 0 && (
-          <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-[#0D9488] border border-white shadow-sm inline-block" />
-            <span className="font-semibold text-teal-700">Supply Nodes ({counts.supply})</span>
+          <div className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#0D9488] border border-white shadow-xs inline-block" />
+            <span className="font-semibold text-teal-700">Supply ({counts.supply})</span>
           </div>
         )}
 
         {counts.population > 0 && (
-          <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-[#0284C7] border border-white shadow-sm inline-block" />
-            <span className="font-semibold text-sky-700">Pop. Hubs ({counts.population})</span>
+          <div className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7] border border-white shadow-xs inline-block" />
+            <span className="font-semibold text-sky-700">Pop. ({counts.population})</span>
           </div>
         )}
 
-        <div className="flex items-center gap-1.5 border-l border-slate-200 pl-2">
-          <span className="w-2.5 h-2.5 rounded-full border-2 border-emerald-600 border-dashed inline-block" />
-          <span className="text-slate-500">5km Catchment</span>
+        <div className="flex items-center gap-1 border-l border-slate-200 pl-1.5">
+          <span className="w-2 h-2 rounded-full border border-emerald-600 border-dashed inline-block" />
+          <span className="text-slate-500 font-medium">{radiusInKm}km Catchment</span>
         </div>
       </div>
     </div>

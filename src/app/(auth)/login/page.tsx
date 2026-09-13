@@ -150,8 +150,8 @@ function LoginPageContent() {
           </Link>
 
           <div className="absolute inset-0 flex flex-col justify-center p-8 pointer-events-none z-10">
-            <div className="max-w-[380px]">
-              <h2 className="font-heading text-[28px] font-normal italic text-[#FFFBE7] leading-[1.15] drop-shadow-sm">
+            <div className="w-full">
+              <h2 className="font-heading text-[20px] lg:text-[24px] xl:text-[27px] font-normal italic text-[#FFFBE7] leading-[1.15] whitespace-nowrap drop-shadow-sm">
                 <TextEffect per='char' preset='fade'>
                   Grow your local business with clarity.
                 </TextEffect>

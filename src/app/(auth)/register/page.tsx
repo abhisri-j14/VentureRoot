@@ -103,9 +103,9 @@ export default function RegisterPage() {
             <img src="/logo-wordmark.png" alt="VentureRoot" className="h-8 w-auto object-contain mix-blend-multiply" />
           </Link>
 
-          <div className="mt-12 pointer-events-none z-10">
-            <div className="max-w-[380px] p-1">
-              <h2 className="font-heading text-[28px] font-medium italic text-[#FFFBE7] leading-[1.15] [text-shadow:_0_4px_24px_rgba(0,0,0,0.6)]">
+          <div className="mt-8 lg:mt-12 pointer-events-none z-10">
+            <div className="w-full">
+              <h2 className="font-heading text-[20px] lg:text-[24px] xl:text-[27px] font-medium italic text-[#FFFBE7] leading-[1.15] whitespace-nowrap [text-shadow:_0_4px_24px_rgba(0,0,0,0.6)]">
                 <TextEffect per='char' preset='fade'>
                   Your idea deserves a clear path.
                 </TextEffect>

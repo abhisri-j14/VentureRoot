@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { DATA_SOURCE } from "./source";
-import reportsData from "@/data/reports.json";
 import { reportApi } from "@/features/reports/api/reportApi";
 import { businessApi } from "@/features/business/api/businessApi";
 import { feasibilityApi } from "@/features/feasibility/api/feasibilityApi";
@@ -321,7 +320,7 @@ export function buildBusinessReport(business: any, feasibilityData?: any) {
 
 // ── Hook: useReports ─────────────────────────────────────────────────────────
 export const useReports = () => {
-  const [data, setData] = useState<any[]>(reportsData);
+  const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -329,13 +328,19 @@ export const useReports = () => {
     async function loadAllReports() {
       setIsLoading(true);
       try {
-        const resBiz: any = await businessApi.list();
+        const [resBiz, resRep] = await Promise.allSettled([
+          businessApi.list(),
+          reportApi.list(),
+        ]);
+
         const bizList =
-          resBiz?.data?.businesses ||
-          resBiz?.data?.data?.businesses ||
-          resBiz?.data?.items ||
-          resBiz?.items ||
-          [];
+          resBiz.status === "fulfilled"
+            ? (resBiz.value as any)?.data?.businesses ||
+              (resBiz.value as any)?.data?.data?.businesses ||
+              (resBiz.value as any)?.data?.items ||
+              (resBiz.value as any)?.items ||
+              []
+            : [];
 
         // Build report entries for all real user businesses
         const bizReports = (Array.isArray(bizList) ? bizList : []).map((b: any) => {
@@ -353,15 +358,35 @@ export const useReports = () => {
           };
         });
 
-        // Merge with json templates
-        const combined = [...bizReports, ...reportsData];
+        // Get persistent reports created by user from reportApi if any
+        let dbReports: any[] = [];
+        if (resRep.status === "fulfilled") {
+          const rawRep =
+            (resRep.value as any)?.data?.reports ||
+            (resRep.value as any)?.data?.data?.reports ||
+            (resRep.value as any)?.data?.items ||
+            (Array.isArray((resRep.value as any)?.data) ? (resRep.value as any)?.data : []);
+          dbReports = (Array.isArray(rawRep) ? rawRep : []).map((r: any) => ({
+            id: r.id,
+            title: r.title || `${r.businessName || "Enterprise"} - Report`,
+            businessId: r.businessId || r.id,
+            businessName: r.businessName || r.business?.name || "Target Enterprise",
+            location: r.location || (r.business?.location?.district ? `${r.business.location.district}, ${r.business.location.state || ""}` : "Catchment Area"),
+            status: r.status || "READY",
+            createdAt: r.createdAt || new Date().toISOString(),
+            type: r.type || "Detailed Project Report",
+          }));
+        }
+
+        // Combine ONLY user-generated reports and user businesses (no hardcoded reports)
+        const combined = [...dbReports, ...bizReports];
         // Deduplicate by id
         const unique = Array.from(new Map(combined.map((item) => [item.id, item])).values());
         setData(unique);
         setError(null);
       } catch (err: any) {
-        console.warn("[useReports] Error loading businesses for reports list:", err);
-        setData(reportsData);
+        console.warn("[useReports] Error loading user reports list:", err);
+        setData([]);
       } finally {
         setIsLoading(false);
       }
@@ -386,17 +411,7 @@ export const useReportDetails = (id: string) => {
     async function resolveReport() {
       setIsLoading(true);
       try {
-        // 1. Check existing mock JSON
-        const mockMatch = reportsData.find((r) => r.id === id);
-        if (mockMatch && (mockMatch as any).feasibilityData) {
-          if (isMounted) {
-            setData(mockMatch);
-            setIsLoading(false);
-          }
-          return;
-        }
-
-        // 2. Try reportApi
+        // 1. Try reportApi
         let apiReport = null;
         try {
           const res: any = await reportApi.get(id);
@@ -411,14 +426,14 @@ export const useReportDetails = (id: string) => {
           return;
         }
 
-        // 3. If id is a business ID or business report requested, fetch business details
+        // 2. If id is a business ID or business report requested, fetch business details
         let businessObj = null;
         try {
           const bizRes: any = await businessApi.get(id);
           businessObj = bizRes?.data?.business || bizRes?.data?.data?.business || bizRes?.data;
         } catch (_) {}
 
-        // 4. Fetch feasibility if business found
+        // 3. Fetch feasibility if business found
         let feasibilityObj = null;
         if (businessObj) {
           try {
@@ -436,9 +451,9 @@ export const useReportDetails = (id: string) => {
           return;
         }
 
-        // Fallback to mock or empty
+        // Report does not belong to user or does not exist
         if (isMounted) {
-          setData(mockMatch || null);
+          setData(null);
           setIsLoading(false);
         }
       } catch (err: any) {
@@ -462,13 +477,7 @@ export const useReportDetails = (id: string) => {
 export const getReportDetails = async (id: string): Promise<any | null> => {
   if (!id) return null;
 
-  // 1. Check existing JSON
-  const mockMatch = reportsData.find((r) => r.id === id);
-  if (mockMatch && (mockMatch as any).feasibilityData) {
-    return mockMatch;
-  }
-
-  // 2. Try reportApi
+  // 1. Try reportApi
   try {
     const res: any = await reportApi.get(id);
     const apiReport = res?.data?.report || res?.data?.data?.report || res?.data;
@@ -477,7 +486,7 @@ export const getReportDetails = async (id: string): Promise<any | null> => {
     }
   } catch (_) {}
 
-  // 3. If id corresponds to a business, load business and build comprehensive DPR
+  // 2. If id corresponds to a business, load business and build comprehensive DPR
   try {
     const bizRes: any = await businessApi.get(id);
     const businessObj = bizRes?.data?.business || bizRes?.data?.data?.business || bizRes?.data;
@@ -492,6 +501,6 @@ export const getReportDetails = async (id: string): Promise<any | null> => {
     }
   } catch (_) {}
 
-  return mockMatch || null;
+  return null;
 };
 

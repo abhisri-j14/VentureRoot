@@ -117,6 +117,11 @@ export const TopNav = () => {
     return resolved;
   }, [profileData?.fullName, user?.name, user?.email]);
 
+  const userInitial = React.useMemo(() => {
+    if (!displayName || displayName === "Entrepreneur") return "A";
+    return displayName.trim().charAt(0).toUpperCase();
+  }, [displayName]);
+
   const activeRoleLabel = "Entrepreneur";
 
   return (
@@ -183,29 +188,25 @@ export const TopNav = () => {
         </div>
 
         {/* Right: Actions (Desktop & Mobile trigger) */}
-        <div className="flex items-center gap-3 relative z-10">
-          <div className="hidden md:block transition-all duration-300 hover:-translate-y-[1px] hover:scale-[1.01] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] rounded-lg">
-            <LanguageSwitcher />
+        <div className="flex items-center gap-2 sm:gap-2.5 relative z-10">
+          <div className="transition-all duration-300">
+            <LanguageSwitcher variant="compact" />
           </div>
           
           {/* Profile Dropdown */}
           <div className="relative" ref={profileRef}>
             <button
               onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="flex items-center gap-2 md:gap-2.5 group focus:outline-none bg-[#FFFBE7] border border-black/5 px-2 py-1.5 md:pl-2 md:pr-3 rounded-full shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05),0_2px_5px_rgba(0,0,0,0.1)] hover:-translate-y-[1px] hover:scale-[1.02] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-300 active:scale-[0.98]"
+              className="h-8 flex items-center gap-1.5 group focus:outline-none bg-[#FFFBE7] border border-black/5 pl-1 pr-2 py-1 rounded-full shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05),0_2px_5px_rgba(0,0,0,0.08)] hover:-translate-y-[1px] hover:scale-[1.02] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-300 active:scale-[0.98] cursor-pointer"
               aria-expanded={isProfileOpen}
+              title={displayName}
             >
-              <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-[#1E6702] flex items-center justify-center text-white shadow-inner transition-transform duration-300 group-hover:scale-[1.04]">
-                <User className="w-3.5 h-3.5" />
+              <div className="w-6 h-6 rounded-full bg-[#1E6702] flex items-center justify-center text-[#FFFBE7] font-bold text-[11px] tracking-tight shadow-inner transition-transform duration-300 group-hover:scale-105">
+                {userInitial}
               </div>
-              <div className="hidden md:flex items-center gap-1.5">
-                <span className="text-[13px] font-bold text-[#200813] truncate max-w-[130px] md:max-w-[180px] group-hover:text-[#1E6702] transition-colors duration-300">
-                  {displayName}
-                </span>
-                <motion.div animate={{ rotate: isProfileOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                  <ChevronDown className="w-3 h-3 text-[#200813]/40 group-hover:text-[#1E6702] transition-colors duration-300" />
-                </motion.div>
-              </div>
+              <motion.div animate={{ rotate: isProfileOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                <ChevronDown className="w-3 h-3 text-[#200813]/40 group-hover:text-[#1E6702] transition-colors duration-300" />
+              </motion.div>
             </button>
 
             <AnimatePresence>

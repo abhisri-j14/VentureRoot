@@ -282,15 +282,15 @@ export default function DashboardPage() {
         variants={headerVariants}
         initial="hidden"
         animate="visible"
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-4 sm:gap-4.5"
       >
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4">
           <div>
             <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#242424] tracking-tight leading-tight">
               Executive Overview, {firstName}
             </h1>
-            <p className="text-slate-600 text-xs sm:text-sm font-medium mt-1 flex flex-wrap items-center gap-1.5 sm:gap-2">
-              <span className="font-bold text-[#1E6702] bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
+            <p className="text-slate-600 text-xs sm:text-sm font-medium mt-1.5 flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <span className="font-bold text-[#1E6702] bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200/60 shadow-2xs">
                 Active Venture {currentIdx + 1}: {businessName}
               </span>
               <span>•</span>
@@ -301,7 +301,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Real-time Status Badge */}
-          <div className="flex items-center gap-2 self-start lg:self-auto bg-white border border-slate-200/90 rounded-xl px-3 py-1.5 shadow-xs">
+          <div className="flex items-center gap-2 self-start lg:self-auto bg-white border border-slate-200/90 rounded-xl px-3.5 py-2 shadow-2xs">
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
@@ -311,10 +311,10 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* ─── Multi-Business Horizontal Switcher (Scroll-safe on mobile) ─── */}
-        <div className="w-full flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-0.5 scrollbar-none">
+        {/* ─── Multi-Business Horizontal Switcher (Clean, comfortable spacing) ─── */}
+        <div className="w-full flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 scrollbar-none">
           {businesses && businesses.length > 0 ? (
-            <div className="flex items-center gap-1.5 sm:gap-2 flex-nowrap">
+            <div className="flex items-center gap-2 flex-nowrap">
               {businesses.map((biz: any, idx: number) => {
                 const isSelected = idx === currentIdx;
                 return (
@@ -322,18 +322,18 @@ export default function DashboardPage() {
                     key={biz.id || idx}
                     type="button"
                     onClick={() => setSelectedBusinessIndex(idx)}
-                    className={`shrink-0 px-2 py-0.5 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 ${
+                    className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-2xs ${
                       isSelected
-                        ? "bg-[#1E6702] text-white shadow-sm shadow-emerald-900/20 ring-1.5 ring-emerald-600/30 scale-[1.01]"
-                        : "bg-white hover:bg-slate-50 text-slate-700 border border-slate-200"
+                        ? "bg-[#1E6702] text-white shadow-sm shadow-emerald-900/20 ring-1 ring-emerald-600/40"
+                        : "bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/90"
                     }`}
                   >
-                    <Briefcase className={`w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 ${isSelected ? "text-emerald-200" : "text-slate-400"}`} />
+                    <Briefcase className={`w-3.5 h-3.5 shrink-0 ${isSelected ? "text-emerald-200" : "text-slate-400"}`} />
                     <span className={isSelected ? "text-emerald-200 font-extrabold" : "text-slate-400"}>
                       <span className="sm:hidden">V{idx + 1}:</span>
                       <span className="hidden sm:inline">Venture {idx + 1}:</span>
                     </span>
-                    <span className="truncate max-w-[36px] xs:max-w-[50px] sm:max-w-[150px]">
+                    <span className="truncate max-w-[120px] sm:max-w-[180px]">
                       {biz.name || `Business ${idx + 1}`}
                     </span>
                   </button>
@@ -342,18 +342,17 @@ export default function DashboardPage() {
 
               <Link
                 href="/business/create"
-                className="shrink-0 px-2 py-0.5 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#1E6702] text-[10px] sm:text-xs font-bold border border-emerald-200 transition-all flex items-center gap-1"
+                className="shrink-0 px-3 py-1.5 rounded-xl bg-emerald-50/80 hover:bg-emerald-100/80 text-[#1E6702] text-xs font-bold border border-emerald-200/80 transition-all flex items-center gap-1.5 shadow-2xs"
               >
-                <PlusCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
-                <span className="sm:hidden">Add</span>
-                <span className="hidden sm:inline">+ Add Venture</span>
+                <PlusCircle className="w-3.5 h-3.5 shrink-0" />
+                <span>+ Add Venture</span>
               </Link>
             </div>
           ) : null}
         </div>
       </motion.div>
 
-      {/* ═══ 4 CORE EXECUTIVE STATUS CARDS (Text-First, Qualitative Intelligence) ═══ */}
+      {/* ═══ 4 CORE EXECUTIVE STATUS CARDS (Spacious, Clean, Professional) ═══ */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -371,28 +370,36 @@ export default function DashboardPage() {
           <div className="absolute -top-10 -right-10 w-28 h-28 bg-emerald-500/5 rounded-full blur-xl pointer-events-none group-hover:bg-emerald-500/10 transition-colors" />
 
           {/* Header */}
-          <div className="flex items-start justify-between gap-2 min-h-[54px]">
-            <div>
-              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mb-1">
+          <div>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                 Feasibility Status
               </span>
-              <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug line-clamp-2">
-                {feasibilitySummary.verdict}
-              </h3>
+              <span className={`text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md border shrink-0 shadow-2xs ${feasibilitySummary.statusTheme}`}>
+                {feasibilitySummary.grade}
+              </span>
             </div>
-            <span className={`text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md border shrink-0 shadow-xs ${feasibilitySummary.statusTheme}`}>
-              {feasibilitySummary.grade}
-            </span>
+            <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug">
+              {feasibilitySummary.verdict.includes("—") ? feasibilitySummary.verdict.split("—")[0].trim() : feasibilitySummary.verdict}
+              <span className="font-sans font-medium text-slate-500 text-xs block mt-1 leading-normal">
+                {feasibilitySummary.verdict.includes("—") ? feasibilitySummary.verdict.split("—")[1]?.trim() : "High Catchment Viability"}
+              </span>
+            </h3>
           </div>
 
           {/* Body */}
-          <div className="flex-1 flex flex-col justify-between my-3">
-            <div className="space-y-1.5 text-xs text-slate-600 leading-relaxed bg-slate-50/90 backdrop-blur-xs p-3 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]">
-              <p className="line-clamp-3 sm:line-clamp-none">{feasibilitySummary.why}</p>
-              <div className="pt-2 border-t border-slate-200/60 flex items-center gap-1.5 font-medium text-emerald-800 text-[11px]">
-                <Sparkles className="w-3 h-3 text-emerald-600 shrink-0" />
-                <span className="truncate">Moat: {feasibilitySummary.keyMoat}</span>
+          <div className="flex-1 flex flex-col justify-between my-3 sm:my-3.5">
+            <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] flex flex-col gap-2.5">
+              <p className="text-xs text-slate-600 leading-relaxed">
+                {feasibilitySummary.why}
+              </p>
+              <div className="pt-2 border-t border-slate-200/60 flex items-start gap-1.5 text-[11px] text-emerald-800 font-medium">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                <div className="leading-snug">
+                  <span className="font-bold text-emerald-950">Moat: </span>
+                  <span>{feasibilitySummary.keyMoat}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -419,38 +426,44 @@ export default function DashboardPage() {
           <div className="absolute -top-10 -right-10 w-28 h-28 bg-sky-500/5 rounded-full blur-xl pointer-events-none group-hover:bg-sky-500/10 transition-colors" />
 
           {/* Header */}
-          <div className="flex items-start justify-between gap-2 min-h-[54px]">
-            <div>
-              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mb-1">
+          <div>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                 <Landmark className="w-3.5 h-3.5 text-sky-600" />
                 Capital & Financing
               </span>
-              <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug line-clamp-2">
-                Structured ₹{totalCapex}L Outlay (80% Debt Eligible)
-              </h3>
+              <span className="text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md border text-sky-700 bg-sky-50 border-sky-200 shrink-0 shadow-2xs">
+                PMEGP Eligible
+              </span>
             </div>
-            <span className="text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md border text-sky-700 bg-sky-50 border-sky-200 shrink-0 shadow-xs">
-              PMEGP Eligible
-            </span>
+            <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug">
+              Structured ₹{totalCapex}L Outlay
+              <span className="font-sans font-medium text-slate-500 text-xs block mt-1 leading-normal">
+                80% Debt & Term Loan Eligible
+              </span>
+            </h3>
           </div>
 
           {/* Body */}
-          <div className="flex-1 flex flex-col justify-between my-3">
-            <div className="space-y-1.5 text-xs text-slate-600 bg-slate-50/90 backdrop-blur-xs p-3 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]">
-              <div className="flex justify-between items-center text-[11px]">
-                <span className="text-slate-500">Promoter Equity (15%):</span>
-                <span className="font-bold text-slate-900">₹{promoterEquity}L</span>
+          <div className="flex-1 flex flex-col justify-between my-3 sm:my-3.5">
+            <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] flex flex-col gap-2.5">
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="text-slate-500">Promoter Equity (15%):</span>
+                  <span className="font-bold text-slate-900">₹{promoterEquity}L</span>
+                </div>
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="text-slate-500">Bank Term Loan (80%):</span>
+                  <span className="font-bold text-sky-800">₹{loanAmount}L</span>
+                </div>
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="text-slate-500">Govt Subsidy Grant:</span>
+                  <span className="font-bold text-emerald-800">Up to ₹{subsidyAmount}L</span>
+                </div>
               </div>
-              <div className="flex justify-between items-center text-[11px]">
-                <span className="text-slate-500">Bank Term Loan (80%):</span>
-                <span className="font-bold text-sky-800">₹{loanAmount}L</span>
-              </div>
-              <div className="flex justify-between items-center text-[11px]">
-                <span className="text-slate-500">Govt Subsidy Grant:</span>
-                <span className="font-bold text-emerald-800">Up to ₹{subsidyAmount}L</span>
-              </div>
-              <div className="pt-1.5 border-t border-slate-200/60 text-[11px] text-slate-500 font-medium">
-                Break-Even: <span className="font-bold text-slate-800">{feasibilitySummary.breakEvenHorizon}</span>
+              <div className="pt-2 border-t border-slate-200/60 text-[11px] text-slate-600 font-medium flex items-start gap-1 leading-snug">
+                <span className="text-slate-500 shrink-0">Break-Even:</span>
+                <span className="font-bold text-slate-800">{feasibilitySummary.breakEvenHorizon}</span>
               </div>
             </div>
           </div>
@@ -477,37 +490,42 @@ export default function DashboardPage() {
           <div className="absolute -top-10 -right-10 w-28 h-28 bg-amber-500/5 rounded-full blur-xl pointer-events-none group-hover:bg-amber-500/10 transition-colors" />
 
           {/* Header */}
-          <div className="flex items-start justify-between gap-2 min-h-[54px]">
-            <div>
-              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mb-1">
+          <div>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-amber-600" />
                 Demographic Reach
               </span>
-              <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug line-clamp-2">
-                ~{pop5km >= 100000 ? `${(pop5km / 100000).toFixed(2)}L` : pop5km.toLocaleString("en-IN")} Pop. in 5km Core
-              </h3>
+              <span className="text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md border text-amber-800 bg-amber-50 border-amber-200 shrink-0 shadow-2xs">
+                Census 2011 PCA
+              </span>
             </div>
-            <span className="text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md border text-amber-800 bg-amber-50 border-amber-200 shrink-0 shadow-xs">
-              Census 2011 PCA
-            </span>
+            <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug">
+              ~{pop5km >= 100000 ? `${(pop5km / 100000).toFixed(2)}L` : pop5km.toLocaleString("en-IN")} Population
+              <span className="font-sans font-medium text-slate-500 text-xs block mt-1 leading-normal">
+                Within 5km Core Catchment Radius
+              </span>
+            </h3>
           </div>
 
           {/* Body */}
-          <div className="flex-1 flex flex-col justify-between my-3">
-            <div className="space-y-1.5 text-xs text-slate-600 bg-slate-50/90 backdrop-blur-xs p-3 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]">
-              <div className="flex justify-between items-center text-[11px]">
-                <span className="text-slate-500">5km Daily Footfall:</span>
-                <span className="font-bold text-slate-900">~{pop5km.toLocaleString("en-IN")}</span>
+          <div className="flex-1 flex flex-col justify-between my-3 sm:my-3.5">
+            <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] flex flex-col gap-2.5">
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="text-slate-500">5km Daily Footfall:</span>
+                  <span className="font-bold text-slate-900">~{pop5km.toLocaleString("en-IN")}</span>
+                </div>
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="text-slate-500">10km Regional Trade:</span>
+                  <span className="font-bold text-slate-900">~{pop10km.toLocaleString("en-IN")}</span>
+                </div>
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="text-slate-500">20km District Reach:</span>
+                  <span className="font-bold text-slate-900">~{pop20km.toLocaleString("en-IN")}</span>
+                </div>
               </div>
-              <div className="flex justify-between items-center text-[11px]">
-                <span className="text-slate-500">10km Regional Trade:</span>
-                <span className="font-bold text-slate-900">~{pop10km.toLocaleString("en-IN")}</span>
-              </div>
-              <div className="flex justify-between items-center text-[11px]">
-                <span className="text-slate-500">20km District Reach:</span>
-                <span className="font-bold text-slate-900">~{pop20km.toLocaleString("en-IN")}</span>
-              </div>
-              <div className="pt-1.5 border-t border-slate-200/60 text-[11px] text-slate-500 font-medium truncate">
+              <div className="pt-2 border-t border-slate-200/60 text-[11px] text-slate-600 font-medium leading-snug">
                 Density: <span className="font-bold text-slate-800">{density} /km²</span> in {activeBusiness?.location?.district || "District"}
               </div>
             </div>
@@ -535,30 +553,33 @@ export default function DashboardPage() {
           <div className="absolute -top-10 -right-10 w-28 h-28 bg-purple-500/5 rounded-full blur-xl pointer-events-none group-hover:bg-purple-500/10 transition-colors" />
 
           {/* Header */}
-          <div className="flex items-start justify-between gap-2 min-h-[54px]">
-            <div>
-              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mb-1">
+          <div>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                 <Target className="w-3.5 h-3.5 text-purple-600" />
                 Execution Roadmap
               </span>
-              <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug line-clamp-2">
-                Phase 1: Clearances & Statutory Filing
-              </h3>
+              <span className="text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md border text-purple-800 bg-purple-50 border-purple-200 shrink-0 shadow-2xs">
+                3 Actions Active
+              </span>
             </div>
-            <span className="text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md border text-purple-800 bg-purple-50 border-purple-200 shrink-0 shadow-xs">
-              3 Actions Active
-            </span>
+            <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug">
+              Phase 1: Clearances & Filing
+              <span className="font-sans font-medium text-slate-500 text-xs block mt-1 leading-normal">
+                Immediate 30-Day Operational Milestones
+              </span>
+            </h3>
           </div>
 
           {/* Body */}
-          <div className="flex-1 flex flex-col justify-between my-3">
-            <div className="space-y-1.5 text-xs text-slate-600 bg-slate-50/90 backdrop-blur-xs p-3 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]">
+          <div className="flex-1 flex flex-col justify-between my-3 sm:my-3.5">
+            <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] space-y-2.5">
               {immediateMilestones.map((item, idx) => (
-                <div key={idx} className="flex items-start gap-1.5 text-[11px]">
+                <div key={idx} className="flex items-start gap-2 text-[11px]">
                   <CheckSquare className="w-3.5 h-3.5 text-purple-600 mt-0.5 shrink-0" />
-                  <div>
-                    <span className="font-bold text-slate-900">{item.title}: </span>
-                    <span className="text-slate-600 line-clamp-1 sm:line-clamp-none">{item.desc}</span>
+                  <div className="min-w-0">
+                    <div className="font-bold text-slate-900 leading-tight">{item.title}</div>
+                    <div className="text-[11px] text-slate-600 leading-snug mt-0.5">{item.desc}</div>
                   </div>
                 </div>
               ))}

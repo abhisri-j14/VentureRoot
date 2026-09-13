@@ -501,21 +501,21 @@ export const BusinessComparison = () => {
 
             {/* ── HEADER ROW: Business Names & Winner Badges ── */}
             <div
-              className="grid border-b-2 border-slate-200 bg-slate-50/70"
+              className="grid border-b-2 border-emerald-200/80 bg-[#edf7ed]"
               style={{ gridTemplateColumns: gridColTemplate }}
             >
-              <div className="sticky left-0 z-20 bg-slate-100 p-3 sm:p-5 flex flex-col justify-end border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)]">
-                <span className="font-sans text-[10px] sm:text-[12px] font-bold uppercase tracking-wider text-slate-700 leading-tight">
+              <div className="sticky left-0 z-20 bg-[#e2f0e3] p-3 sm:p-5 flex flex-col justify-end border-r border-emerald-200/80 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)]">
+                <span className="font-sans text-[10px] sm:text-[12px] font-bold uppercase tracking-wider text-emerald-950 leading-tight">
                   Comparative Parameter
                 </span>
               </div>
               {activeBiz.map((b) => (
                 <div
                   key={b.id}
-                  className="flex flex-col items-center justify-center p-3 sm:p-5 border-l border-slate-200 text-center"
+                  className="flex flex-col items-center justify-center p-3 sm:p-5 border-l border-emerald-200/70 text-center"
                 >
                   {b.badgeWinner && (
-                    <span className="font-sans text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full mb-1.5 border border-emerald-200 shadow-2xs break-words text-center">
+                    <span className="font-sans text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider bg-white/90 text-emerald-800 px-2 py-0.5 rounded-full mb-1.5 border border-emerald-200 shadow-2xs break-words text-center">
                       {b.badgeWinner}
                     </span>
                   )}
@@ -523,8 +523,8 @@ export const BusinessComparison = () => {
                     {b.name}
                   </h3>
                   <div className="mt-1 flex flex-wrap items-center justify-center gap-1">
-                    <span className="text-[11px] sm:text-xs font-bold text-emerald-700">Score: {b.score}/100</span>
-                    <span className="text-[9px] sm:text-[10px] text-slate-500 uppercase tracking-tight">({b.viability})</span>
+                    <span className="text-[11px] sm:text-xs font-bold text-emerald-800">Score: {b.score}/100</span>
+                    <span className="text-[9px] sm:text-[10px] text-emerald-900/70 uppercase tracking-tight font-medium">({b.viability})</span>
                   </div>
                 </div>
               ))}

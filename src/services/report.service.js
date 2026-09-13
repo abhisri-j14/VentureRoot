@@ -19,8 +19,6 @@ import {
   BadRequestError,
 } from "@/errors/http-error";
 
-import reportsData from "@/data/reports.json";
-
 
 function buildReportTitle({
   businessName,
@@ -140,11 +138,6 @@ export async function getReport({
   }
 
   if (!report) {
-    const mockReport = reportsData.find((r) => r.id === reportId);
-    if (mockReport) {
-      return mockReport;
-    }
-
     throw new NotFoundError(
       "Report not found"
     );

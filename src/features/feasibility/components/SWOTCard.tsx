@@ -25,46 +25,46 @@ export const SWOTCard = ({ data }: { data?: SWOTAnalysis }) => {
 
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
         {/* Table Headers */}
-        <div className="grid grid-cols-1 md:grid-cols-12 border-b border-slate-200">
+        <div className="grid grid-cols-1 md:grid-cols-12 border-b border-slate-200 bg-slate-50/50">
           <div className="hidden md:block md:col-span-1" />
-          <div className="md:col-span-5 p-2 text-center border-b md:border-b-0 md:border-r border-slate-200">
-            <span className="font-sans text-[11px] font-bold text-teal-600 uppercase tracking-wider">Helpful</span>
+          <div className="md:col-span-5 p-2.5 text-center border-b md:border-b-0 md:border-r border-slate-200">
+            <span className="font-sans text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Helpful</span>
           </div>
-          <div className="md:col-span-5 p-2 text-center">
-            <span className="font-sans text-[11px] font-bold text-red-500 uppercase tracking-wider">Harmful</span>
+          <div className="md:col-span-5 p-2.5 text-center">
+            <span className="font-sans text-[11px] font-bold text-rose-600 uppercase tracking-wider">Harmful</span>
           </div>
         </div>
 
         {/* Row 1: Internal */}
         <div className="grid grid-cols-1 md:grid-cols-12 border-b border-slate-200">
-          <div className="hidden md:flex md:col-span-1 items-center justify-center border-r border-slate-200 bg-slate-50">
+          <div className="hidden md:flex md:col-span-1 items-center justify-center border-r border-slate-200 bg-slate-50/80">
             <span className="font-sans text-[11px] font-bold text-slate-500 uppercase tracking-wider -rotate-90">Internal</span>
           </div>
 
-          {/* Strengths */}
-          <div className="md:col-span-5 p-5 bg-[#b4ffa8] border-b md:border-b-0 md:border-r border-slate-200">
-            <h4 className="font-sans text-[14px] font-bold text-gray-900 mb-3">
+          {/* Strengths - Soft soothing mint/sage pastel */}
+          <div className="md:col-span-5 p-5 bg-[#edf7ed] border-b md:border-b-0 md:border-r border-slate-200">
+            <h4 className="font-sans text-[14px] font-bold text-emerald-950 mb-3">
               {t("feasi.strengths") || "Strengths"}
             </h4>
             <ul className="flex flex-col gap-2.5">
               {data.strengths.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2 font-sans text-[12px] font-medium text-gray-800">
-                  <ArrowUpRight className="w-4 h-4 text-teal-600 mt-0.5 shrink-0" />
+                <li key={idx} className="flex items-start gap-2 font-sans text-[12px] font-medium text-slate-700">
+                  <ArrowUpRight className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
                   <span className="leading-snug">{item}</span>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Weaknesses */}
-          <div className="md:col-span-5 p-5 bg-[#fae293]">
-            <h4 className="font-sans text-[14px] font-bold text-gray-900 mb-3">
+          {/* Weaknesses - Soft soothing butter/amber pastel */}
+          <div className="md:col-span-5 p-5 bg-[#fef9e7]">
+            <h4 className="font-sans text-[14px] font-bold text-amber-950 mb-3">
               {t("feasi.weaknesses") || "Weaknesses"}
             </h4>
             <ul className="flex flex-col gap-2.5">
               {data.weaknesses.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2 font-sans text-[12px] font-medium text-gray-800">
-                  <ArrowDownRight className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />
+                <li key={idx} className="flex items-start gap-2 font-sans text-[12px] font-medium text-slate-700">
+                  <ArrowDownRight className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
                   <span className="leading-snug">{item}</span>
                 </li>
               ))}
@@ -74,18 +74,18 @@ export const SWOTCard = ({ data }: { data?: SWOTAnalysis }) => {
 
         {/* Row 2: External */}
         <div className="grid grid-cols-1 md:grid-cols-12">
-          <div className="hidden md:flex md:col-span-1 items-center justify-center border-r border-slate-200 bg-slate-50">
+          <div className="hidden md:flex md:col-span-1 items-center justify-center border-r border-slate-200 bg-slate-50/80">
             <span className="font-sans text-[11px] font-bold text-slate-500 uppercase tracking-wider -rotate-90">External</span>
           </div>
 
-          {/* Opportunities */}
-          <div className="md:col-span-5 p-5 bg-[#ebd2fc] border-b md:border-b-0 md:border-r border-slate-200">
-            <h4 className="font-sans text-[14px] font-bold text-gray-900 mb-3">
+          {/* Opportunities - Soft soothing lavender/wisteria pastel */}
+          <div className="md:col-span-5 p-5 bg-[#f5eef8] border-b md:border-b-0 md:border-r border-slate-200">
+            <h4 className="font-sans text-[14px] font-bold text-purple-950 mb-3">
               {t("feasi.swotOpp") || "Opportunities"}
             </h4>
             <ul className="flex flex-col gap-2.5">
               {data.opportunities.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2 font-sans text-[12px] font-medium text-gray-800">
+                <li key={idx} className="flex items-start gap-2 font-sans text-[12px] font-medium text-slate-700">
                   <ShieldCheck className="w-4 h-4 text-purple-600 mt-0.5 shrink-0" />
                   <span className="leading-snug">{item}</span>
                 </li>
@@ -93,15 +93,15 @@ export const SWOTCard = ({ data }: { data?: SWOTAnalysis }) => {
             </ul>
           </div>
 
-          {/* Threats */}
-          <div className="md:col-span-5 p-5 bg-[#ffc1bd]">
-            <h4 className="font-sans text-[14px] font-bold text-gray-900 mb-3">
+          {/* Threats - Soft soothing blush/rose pastel */}
+          <div className="md:col-span-5 p-5 bg-[#fdecea]">
+            <h4 className="font-sans text-[14px] font-bold text-rose-950 mb-3">
               {t("feasi.swotThreats") || "Threats"}
             </h4>
             <ul className="flex flex-col gap-2.5">
               {data.threats.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2 font-sans text-[12px] font-medium text-gray-800">
-                  <Flame className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />
+                <li key={idx} className="flex items-start gap-2 font-sans text-[12px] font-medium text-slate-700">
+                  <Flame className="w-4 h-4 text-rose-500 mt-0.5 shrink-0" />
                   <span className="leading-snug">{item}</span>
                 </li>
               ))}

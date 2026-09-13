@@ -92,19 +92,25 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         onClick={() => setIsOpen((prev) => !prev)}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        className="flex items-center justify-between gap-2.5 bg-white/90 hover:bg-white text-slate-800 border border-slate-200/90 hover:border-slate-300 rounded-lg px-3 py-1.5 text-sm font-medium shadow-xs transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#1E6702]/25"
+        className={
+          variant === "compact"
+            ? "h-8 flex items-center justify-between gap-1.5 bg-[#FFFBE7] hover:bg-white text-[#200813] border border-black/5 rounded-full px-2.5 py-1 text-xs font-bold shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05),0_2px_5px_rgba(0,0,0,0.08)] hover:-translate-y-[1px] hover:scale-[1.02] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-300 active:scale-[0.98] focus:outline-none cursor-pointer"
+            : "flex items-center justify-between gap-2.5 bg-white/90 hover:bg-white text-slate-800 border border-slate-200/90 hover:border-slate-300 rounded-lg px-3 py-1.5 text-sm font-medium shadow-xs transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#1E6702]/25 cursor-pointer"
+        }
       >
-        <div className="flex items-center gap-2">
-          <Globe className="w-4 h-4 text-[#1E6702] shrink-0" aria-hidden="true" />
-          <span className="font-semibold text-xs tracking-wider uppercase text-slate-500">
+        <div className="flex items-center gap-1.5">
+          <Globe className={`text-[#1E6702] shrink-0 ${variant === "compact" ? "w-3.5 h-3.5" : "w-4 h-4"}`} aria-hidden="true" />
+          <span className="font-bold text-xs tracking-wider uppercase text-[#200813]">
             {currentLang.code}
           </span>
-          <span className="text-slate-700 hidden sm:inline text-xs font-medium">
-            {currentLang.nativeLabel}
-          </span>
+          {variant !== "compact" && (
+            <span className="text-slate-700 hidden sm:inline text-xs font-medium">
+              {currentLang.nativeLabel}
+            </span>
+          )}
         </div>
         <ChevronDown
-          className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-200 ${
+          className={`text-[#200813]/50 transition-transform duration-200 ${variant === "compact" ? "w-3 h-3" : "w-3.5 h-3.5"} ${
             isOpen ? "rotate-180" : ""
           }`}
         />
@@ -117,7 +123,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.98 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute right-0 mt-1.5 w-44 bg-white rounded-xl shadow-lg border border-slate-200/80 py-1.5 z-50 overflow-hidden"
+            className="absolute right-0 mt-2 w-44 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_12px_40px_-10px_rgba(0,0,0,0.15)] border border-black/5 py-1.5 z-50 overflow-hidden"
             role="listbox"
           >
             <div className="px-3 py-1 text-[11px] font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-100">

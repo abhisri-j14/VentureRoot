@@ -27,11 +27,24 @@ export function TextEffect({ children, per = "char", preset = "fade", trigger = 
   };
 
   const renderText = (text: string, keyPrefix: string) => {
-    const items = per === "char" ? text.split("") : text.split(" ");
-    return items.map((char, index) => (
-      <motion.span key={`${keyPrefix}-${index}`} variants={item} className="inline-block whitespace-pre">
-        {char === " " ? "\u00A0" : char}
-      </motion.span>
+    if (per === "word") {
+      const words = text.split(" ");
+      return words.map((word, index) => (
+        <motion.span key={`${keyPrefix}-${index}`} variants={item} className="inline-block whitespace-pre">
+          {word}{index < words.length - 1 ? "\u00A0" : ""}
+        </motion.span>
+      ));
+    }
+    const words = text.split(" ");
+    return words.map((word, wIdx) => (
+      <span key={`${keyPrefix}-w-${wIdx}`} className="inline-block whitespace-nowrap">
+        {word.split("").map((char, cIdx) => (
+          <motion.span key={`${keyPrefix}-${wIdx}-${cIdx}`} variants={item} className="inline-block">
+            {char}
+          </motion.span>
+        ))}
+        {wIdx < words.length - 1 && <span className="inline-block whitespace-pre">{"\u00A0"}</span>}
+      </span>
     ));
   };
 
