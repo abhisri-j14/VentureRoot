@@ -351,32 +351,6 @@ export default function DashboardPage() {
             </div>
           ) : null}
         </div>
-
-        {/* ─── Portfolio Context Bar (If multiple businesses exist) ─── */}
-        {businesses && businesses.length > 1 ? (
-          <div className="bg-emerald-950 text-white rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm border border-emerald-900">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-emerald-200 shrink-0">
-                <Layers className="w-4 h-4" />
-              </div>
-              <div>
-                <span className="text-[11px] uppercase tracking-wider font-bold text-emerald-300 block">
-                  Enterprise Portfolio ({businesses.length} Active Ventures)
-                </span>
-                <p className="text-xs sm:text-[13px] text-emerald-100 font-medium">
-                  Switching ventures adjusts feasibility summaries, demographic footfall, and financing allocations in real-time.
-                </p>
-              </div>
-            </div>
-            <Link
-              href="/business/compare"
-              className="self-end sm:self-auto shrink-0 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 px-3.5 py-1.5 rounded-xl font-sans text-xs font-extrabold transition-colors flex items-center gap-1.5 shadow-sm"
-            >
-              <span>Side-by-Side Compare</span>
-              <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-        ) : null}
       </motion.div>
 
       {/* ═══ 4 CORE EXECUTIVE STATUS CARDS (Text-First, Qualitative Intelligence) ═══ */}
