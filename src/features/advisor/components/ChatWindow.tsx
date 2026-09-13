@@ -148,6 +148,15 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
     sendQuery(input);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (input.trim() && !isStreaming) {
+        sendQuery(input);
+      }
+    }
+  };
+
   const clearChat = () => {
     setMessages([
       {
@@ -368,28 +377,29 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
           <form
             id="chat-form"
             onSubmit={handleSend}
-            className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl p-1.5 focus-within:ring-2 focus-within:ring-[#1E6702]/20 focus-within:border-[#1E6702] transition-all w-full min-w-0"
+            className="flex items-end gap-1.5 sm:gap-2 bg-slate-50 border border-slate-200 rounded-xl p-1.5 focus-within:ring-2 focus-within:ring-[#1E6702]/20 focus-within:border-[#1E6702] transition-all w-full min-w-0"
           >
             <button
               type="button"
               onClick={() => setShowVoiceRecorder(true)}
-              className="p-2 text-slate-500 hover:text-[#1E6702] hover:bg-[#1E6702]/10 rounded-lg transition-colors flex-shrink-0"
+              className="p-2 mb-0.5 text-slate-500 hover:text-[#1E6702] hover:bg-[#1E6702]/10 rounded-lg transition-colors flex-shrink-0"
               title="Voice Input (Speak your question)"
             >
               <Mic className="w-4 h-4" />
             </button>
-            <input
-              type="text"
+            <textarea
+              rows={2}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about local demand, PMEGP/MUDRA subsidies..."
-              className="flex-1 min-w-0 bg-transparent border-none focus:ring-0 px-2 py-1.5 font-sans text-[13px] sm:text-[14px] text-secondary outline-none break-words"
+              onKeyDown={handleKeyDown}
+              placeholder="Ask about local demand, PMEGP/MUDRA subsidies, cost breakdown..."
+              className="flex-1 min-w-0 bg-transparent border-none focus:ring-0 px-2 py-1.5 font-sans text-[12.5px] sm:text-[14px] text-secondary outline-none resize-none leading-snug break-words whitespace-pre-wrap max-h-24 overflow-y-auto placeholder:text-slate-400 placeholder:leading-snug"
               disabled={isStreaming}
             />
             <button
               type="submit"
               disabled={!input.trim() || isStreaming}
-              className="p-2.5 bg-[#1E6702] text-white rounded-lg hover:bg-[#155201] disabled:opacity-40 disabled:hover:bg-[#1E6702] transition-all flex-shrink-0 shadow-xs active:scale-95 cursor-pointer"
+              className="p-2.5 mb-0.5 bg-[#1E6702] text-white rounded-lg hover:bg-[#155201] disabled:opacity-40 disabled:hover:bg-[#1E6702] transition-all flex-shrink-0 shadow-xs active:scale-95 cursor-pointer"
             >
               <Send className="w-4 h-4" />
             </button>
