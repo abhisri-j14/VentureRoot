@@ -20,16 +20,58 @@ export const useBusinessesComparison = () => {
         res?.data?.items ||
         res?.items ||
         [];
-      setData(Array.isArray(list) ? list : []);
+      const items = Array.isArray(list) ? list : [];
+
+      // Check user-scoped client cache
+      let combined = [...items];
+      if (typeof window !== "undefined") {
+        const userId = localStorage.getItem("ventureroot_user_id");
+        const cached = localStorage.getItem(`ventureroot_businesses_${userId || "default"}`);
+        if (cached) {
+          try {
+            const parsed = JSON.parse(cached);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              for (const b of parsed) {
+                if (!combined.some((c) => c.id === b.id || (c.name && c.name === b.name))) {
+                  combined.push(b);
+                }
+              }
+            }
+          } catch (_) {}
+        }
+        if (combined.length > 0) {
+          localStorage.setItem(`ventureroot_businesses_${userId || "default"}`, JSON.stringify(combined));
+        }
+      }
+
+      setData(combined);
       setError(null);
     } catch (err: any) {
       console.warn("[useBusinessesComparison] Database fetch failed:", err);
       setError(err);
-      // Only fallback to json if DATA_SOURCE is strictly explicitly set to json
-      if (DATA_SOURCE === "json") {
-        setData(businessesData.comparison);
-      } else {
-        setData([]);
+
+      // Check user-scoped client cache on fetch error
+      let foundCached = false;
+      if (typeof window !== "undefined") {
+        const userId = localStorage.getItem("ventureroot_user_id");
+        const cached = localStorage.getItem(`ventureroot_businesses_${userId || "default"}`);
+        if (cached) {
+          try {
+            const parsed = JSON.parse(cached);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setData(parsed);
+              foundCached = true;
+            }
+          } catch (_) {}
+        }
+      }
+
+      if (!foundCached) {
+        if (DATA_SOURCE === "json") {
+          setData(businessesData.comparison);
+        } else {
+          setData([]);
+        }
       }
     } finally {
       setIsLoading(false);
@@ -59,11 +101,36 @@ export const useBusinessDetails = (id: string) => {
 
   useEffect(() => {
     if (DATA_SOURCE === "database") {
+      const getFromCache = () => {
+        if (typeof window !== "undefined") {
+          const userId = localStorage.getItem("ventureroot_user_id");
+          const cached = localStorage.getItem(`ventureroot_businesses_${userId || "default"}`);
+          if (cached) {
+            try {
+              const list = JSON.parse(cached);
+              if (Array.isArray(list) && list.length > 0) {
+                return list.find((b: any) => b.id === id) || (id === "123" || !id ? list[0] : null);
+              }
+            } catch (_) {}
+          }
+        }
+        return null;
+      };
+
+      const cachedBiz = getFromCache();
+      if (cachedBiz) {
+        setData(cachedBiz as BusinessDetails);
+        setIsLoading(false);
+      }
+
       if (!id || id === "123") {
-        setData(businessesData.details as BusinessDetails);
+        if (!cachedBiz) {
+          setData(null);
+        }
         setIsLoading(false);
         return;
       }
+
       businessApi
         .get(id)
         .then((res: any) => {
@@ -77,7 +144,9 @@ export const useBusinessDetails = (id: string) => {
         })
         .catch((err) => {
           setError(err);
-          setData(null);
+          if (!cachedBiz) {
+            setData(null);
+          }
           setIsLoading(false);
         });
     }

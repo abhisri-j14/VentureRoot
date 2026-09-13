@@ -10,6 +10,10 @@ import {
   mapMlPredictionToFeasibility,
 } from "@/utils/feasibility.mapper";
 
+import {
+  fetchCompetitorsByRadius,
+} from "@/services/competitor-radar.service";
+
 
 
 /**
@@ -65,6 +69,32 @@ export async function getFeasibilityContext({
           data.business
         );
 
+  // 4. Fetch real local competitors via Overpass API (OSM) + Gemini AI enrichment
+  let competitorRadar = null;
+  try {
+    const lat = data.business?.location?.lat ?? data.business?.location?.latitude;
+    const lon = data.business?.location?.lon ?? data.business?.location?.longitude;
+    const category = data.business?.category?.name || data.business?.category || "Agro-Enterprise";
+    const district = data.business?.location?.district?.name || data.business?.location?.district || "Anand";
+    const state = data.business?.location?.state?.name || data.business?.location?.state || "Gujarat";
+
+    if (lat && lon) {
+      competitorRadar = await fetchCompetitorsByRadius({
+        lat: Number(lat),
+        lon: Number(lon),
+        category,
+        district,
+        state,
+      });
+    }
+  } catch (err) {
+    console.warn("[feasibility.service] Competitor radar warning:", err?.message);
+  }
+
+  if (feasibilityData && competitorRadar) {
+    feasibilityData.competitorRadar = competitorRadar;
+  }
+
   return {
     businessId,
 
@@ -80,6 +110,8 @@ export async function getFeasibilityContext({
 
     feasibility:
       feasibilityData,
+
+    competitorRadar,
   };
 }
 
@@ -105,5 +137,27 @@ export async function generateFeasibility({
       profile: data.profile,
     });
 
-  return mapMlPredictionToFeasibility(prediction, data.business);
+  const feasibility = mapMlPredictionToFeasibility(prediction, data.business);
+
+  try {
+    const lat = data.business?.location?.lat ?? data.business?.location?.latitude;
+    const lon = data.business?.location?.lon ?? data.business?.location?.longitude;
+    const category = data.business?.category?.name || data.business?.category || "Agro-Enterprise";
+    const district = data.business?.location?.district?.name || data.business?.location?.district || "Anand";
+    const state = data.business?.location?.state?.name || data.business?.location?.state || "Gujarat";
+
+    if (lat && lon && feasibility) {
+      feasibility.competitorRadar = await fetchCompetitorsByRadius({
+        lat: Number(lat),
+        lon: Number(lon),
+        category,
+        district,
+        state,
+      });
+    }
+  } catch (err) {
+    console.warn("[feasibility.service] Competitor radar warning in generateFeasibility:", err?.message);
+  }
+
+  return feasibility;
 }

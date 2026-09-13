@@ -49,6 +49,10 @@ export const useAuthStore = create<AuthState>()(
       logout: () => {
         if (typeof window !== "undefined") {
           localStorage.removeItem("ventureroot_token");
+          localStorage.removeItem("ventureroot_user_name");
+          localStorage.removeItem("ventureroot_user_email");
+          localStorage.removeItem("ventureroot_user_id");
+          localStorage.removeItem("ventureroot_auth_storage");
           document.cookie = "ventureroot_token=; path=/; max-age=0";
         }
         set({ token: null, user: null });

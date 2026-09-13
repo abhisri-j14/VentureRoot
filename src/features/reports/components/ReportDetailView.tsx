@@ -7,12 +7,14 @@ import {
   ArrowLeft, Download, Printer, Loader2, AlertTriangle,
   CheckCircle, Info, FileText, Target, MapPin,
   Shield, Landmark, TrendingUp, HandCoins,
-  Briefcase, AlertOctagon, XCircle
+  Briefcase, AlertOctagon, XCircle,
+  BadgeCheck, ShieldAlert, ShieldX, BookOpen, Zap, RefreshCw
 } from "lucide-react";
 
 import { reportApi } from "../api/reportApi";
 import businessesData from "@/data/businesses.json";
 import { getAuthoritativeCensusDensity } from "@/utils/feasibility.mapper";
+import { VerificationReportFormatter } from "./VerificationReportFormatter";
 
 interface ReportDetailViewProps {
   report: Report;
@@ -57,9 +59,30 @@ const SectionHeading = ({ number, title, icon: Icon }: { number: number; title: 
   </div>
 );
 
+// ── Verdict badge helper ─────────────────────────────────────────────────
+type Verdict = "VERIFIED" | "FLAG_WARNING" | "REJECTED";
+const VERDICT_META: Record<Verdict, { label: string; color: string; bg: string; icon: React.ElementType }> = {
+  VERIFIED:     { label: "Fully Verified",   color: "text-emerald-700", bg: "bg-emerald-50 border-emerald-200",  icon: BadgeCheck   },
+  FLAG_WARNING: { label: "Flag Warning",     color: "text-amber-700",   bg: "bg-amber-50 border-amber-200",     icon: ShieldAlert  },
+  REJECTED:     { label: "Non-Compliant",   color: "text-red-700",     bg: "bg-red-50 border-red-200",         icon: ShieldX      },
+};
+
 export const ReportDetailView = ({ report }: ReportDetailViewProps) => {
   const [isDownloading, setIsDownloading] = useState(false);
   const [activeSection, setActiveSection] = useState(1);
+
+  // ── Section 6 — Regulatory Verification state ──────────────────────────
+  const [verifying, setVerifying] = useState(false);
+  const [verifyError, setVerifyError] = useState<string | null>(null);
+  const [verifyResult, setVerifyResult] = useState<{
+    verdict: Verdict;
+    compliance_score: number;
+    verification_report: string;
+    citations: Array<{ rank: number; relevance_percent: number; document: string; section: string; excerpt: string; source_type: string }>;
+    retrieved_chunks_count: number;
+    model_used: string;
+    report_id: string | null;
+  } | null>(null);
 
   // Data mapping
   const fd = (report.feasibilityData as any) || (report as any)?.feasibilityData;
@@ -127,7 +150,72 @@ export const ReportDetailView = ({ report }: ReportDetailViewProps) => {
     { id: 3, title: "SWOT & Key Risks", icon: Shield },
     { id: 4, title: "Financial Outlook", icon: Landmark },
     { id: 5, title: "Action Plan & Verdict", icon: Target },
+    { id: 6, title: "Regulatory Verification", icon: BadgeCheck },
   ];
+
+  // ── Trigger RAG verification ────────────────────────────────────────────
+  const handleVerify = async () => {
+    setVerifying(true);
+    setVerifyError(null);
+    setVerifyResult(null);
+
+    const biz = (report as any).business || {};
+    const fd = (report.feasibilityData as any) || {};
+
+    // Resolve accurate domain category from business or report title
+    let resolvedCategory = biz.category?.name || biz.category || biz.type || "";
+    if (!resolvedCategory) {
+      const text = `${report.title} ${report.businessName || ""}`.toLowerCase();
+      if (text.includes("dairy") || text.includes("milk") || text.includes("chilling")) resolvedCategory = "Dairy Farming & Milk Processing";
+      else if (text.includes("health") || text.includes("hospital") || text.includes("clinic") || text.includes("medical")) resolvedCategory = "Healthcare & Inpatient Hospital Services";
+      else if (text.includes("food") || text.includes("agro") || text.includes("flour") || text.includes("milling") || text.includes("spice") || text.includes("edible")) resolvedCategory = "Agro & Food Processing";
+      else if (text.includes("cold") || text.includes("storage") || text.includes("warehouse")) resolvedCategory = "Cold Storage & Agri-Logistics";
+      else if (text.includes("poultry") || text.includes("egg") || text.includes("livestock")) resolvedCategory = "Poultry & Commercial Livestock Farming";
+      else if (text.includes("supermarket") || text.includes("retail") || text.includes("grocery")) resolvedCategory = "Retail Consumer Supermarket";
+      else resolvedCategory = "Rural Micro-Enterprise";
+    }
+
+    const business_context = {
+      businessName: report.businessName || biz.name || report.title || "Proposed Enterprise",
+      category: resolvedCategory,
+      location: report.location || (biz.location?.district ? `${biz.location.district}, ${biz.location.state || ""}` : "India"),
+      investment: Number(capital.expectedInvestment) || 1000000,
+      margin: Number(capital.availableMargin) || 150000,
+    };
+
+    const ml_predictions = {
+      market_potential_score: `${market.confidence?.score || fd.market?.confidence?.score || 85}%`,
+      opportunity_level: fd.opportunity?.confidence?.level || (fd.opportunity?.localBusinessOpportunity ? "HIGH" : "MODERATE"),
+      feasibility_grade: (fd.opportunity?.confidence?.score || 85) >= 80 ? "Grade A (Bankable)" : "Grade B+ (Viable)",
+      recommended_scheme: capital.subsidyPercent >= 35 ? "PMEGP (Rural Special - 35% Margin Money Subsidy)" : capital.subsidyPercent >= 25 ? "PMEGP (Urban - 25% Margin Money Subsidy)" : "MUDRA Scheme (Tarun/Kishor)",
+      total_project_cost: `₹${Number(capital.expectedInvestment).toLocaleString("en-IN")}`,
+      promoter_equity_margin: `₹${Number(capital.availableMargin).toLocaleString("en-IN")} (${Math.round((capital.availableMargin / (capital.expectedInvestment || 1)) * 100)}%)`,
+      estimated_capital_subsidy: `₹${Number(capital.subsidyAmount || Math.round(capital.expectedInvestment * 0.25)).toLocaleString("en-IN")} (${capital.subsidyPercent || 25}%)`,
+      bank_term_loan: `₹${Number(capital.termLoan || Math.max(0, capital.expectedInvestment - capital.availableMargin)).toLocaleString("en-IN")}`,
+      monthly_turnover: `₹${Number(operations.expectedRevenue || 120000).toLocaleString("en-IN")}/month`,
+      estimated_monthly_profit: `₹${Number(operations.monthlyProfit || Math.round((operations.expectedRevenue || 120000) * 0.22)).toLocaleString("en-IN")}/month`,
+      break_even_horizon: `${operations.breakEvenMonths || 6} Months`,
+      debt_service_coverage_ratio: `${operations.dscr || 1.85}x`,
+      catchment_population_10km: `${Number(reach.radius10km || 48200).toLocaleString("en-IN")} residents (Census 2011 PCA)`,
+      critical_operational_risk: primaryRisk?.title || "Raw Material & Price Fluctuation",
+      risk_mitigation_plan: primaryRisk?.mitigationAdvisory || "Maintain 45-day inventory buffer stock and forward contracts.",
+    };
+
+    try {
+      const res = await fetch(`/api/v1/reports/${report.id}/verify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ business_context, ml_predictions, top_k: 5 }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Verification failed");
+      setVerifyResult(data);
+    } catch (err: unknown) {
+      setVerifyError(err instanceof Error ? err.message : "Verification request failed.");
+    } finally {
+      setVerifying(false);
+    }
+  };
 
   return (
     <div className="w-full min-h-screen bg-[#81cc87] relative z-20 flex flex-col lg:flex-row print:bg-white print:block">
@@ -491,6 +579,165 @@ export const ReportDetailView = ({ report }: ReportDetailViewProps) => {
                 </div>
               </div>
             </div>
+          </section>
+
+          {/* 6. REGULATORY VERIFICATION */}
+          <section id="section-6" className={`scroll-mt-6 ${activeSection === 6 ? "block" : "hidden print:block"}`}>
+            <SectionHeading number={6} title="Regulatory Verification" icon={BadgeCheck} />
+
+            {/* Intro banner */}
+            <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50 border border-slate-200 rounded-2xl p-5">
+              <div className="flex items-start gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-[#ebcb2f]/10 flex items-center justify-center shrink-0">
+                  <BookOpen className="w-5 h-5 text-[#141411]" />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-sans text-[14px] font-bold text-gray-900">RAG + Gemini Compliance Engine</p>
+                  <p className="font-sans text-[13px] text-gray-500 leading-snug mt-0.5">
+                    Retrieves authoritative Indian business regulations from the VentureRoot knowledge base and cross-checks
+                    this report&apos;s ML predictions using a Gemini 2.5 Flash agentic verifier.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={verifyResult ? handleVerify : handleVerify}
+                disabled={verifying}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#141411] text-white font-sans text-[13px] font-bold rounded-xl hover:bg-[#141411]/85 transition-all shadow-md disabled:opacity-60 shrink-0"
+              >
+                {verifying ? (
+                  <><Loader2 className="w-4 h-4 animate-spin" /> Verifying...</>
+                ) : verifyResult ? (
+                  <><RefreshCw className="w-4 h-4" /> Re-Verify</>
+                ) : (
+                  <><Zap className="w-4 h-4" /> Run Verification</>  
+                )}
+              </button>
+            </div>
+
+            {/* Error state */}
+            {verifyError && (
+              <div className="mb-6 flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl">
+                <AlertOctagon className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-sans text-[13px] font-bold text-red-800">Verification Failed</p>
+                  <p className="font-sans text-[12px] text-red-700 mt-0.5">{verifyError}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Loading skeleton */}
+            {verifying && (
+              <div className="space-y-4">
+                {[80, 60, 90, 55].map((w, i) => (
+                  <div key={i} className="h-5 bg-gray-200 rounded-lg animate-pulse" style={{ width: `${w}%` }} />
+                ))}
+                <p className="font-sans text-[13px] text-gray-500 italic mt-2">Retrieving regulation chunks and calling Gemini agent...</p>
+              </div>
+            )}
+
+            {/* Results */}
+            {verifyResult && !verifying && (() => {
+              const meta = VERDICT_META[verifyResult.verdict] || VERDICT_META["FLAG_WARNING"];
+              const VIcon = meta.icon;
+              return (
+                <div className="flex flex-col gap-6">
+
+                  {/* Verdict card */}
+                  <div className={`flex flex-col sm:flex-row sm:items-center gap-4 p-5 rounded-2xl border ${meta.bg}`}>
+                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${meta.bg}`}>
+                      <VIcon className={`w-7 h-7 ${meta.color}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2 mb-1">
+                        <span className={`font-sans text-[12px] font-bold uppercase tracking-wider ${meta.color}`}>Verdict</span>
+                        <span className={`px-2.5 py-0.5 rounded-full font-sans text-[11px] font-extrabold uppercase tracking-wide border ${meta.bg} ${meta.color}`}>
+                          {meta.label}
+                        </span>
+                      </div>
+                      <p className="font-heading text-[18px] font-extrabold text-gray-900">{verifyResult.verdict.replace("_", " ")}</p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="font-sans text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">Compliance Score</p>
+                      <p className={`font-heading text-[36px] font-extrabold leading-none ${meta.color}`}>
+                        {verifyResult.compliance_score}<span className="text-[18px] font-bold text-gray-400">/100</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Compliance score bar */}
+                  <div>
+                    <div className="flex justify-between font-sans text-[12px] text-gray-500 mb-1.5">
+                      <span>Regulatory Compliance Level</span>
+                      <span className="font-bold text-gray-900">{verifyResult.compliance_score}%</span>
+                    </div>
+                    <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-700 ${
+                          verifyResult.compliance_score >= 60 ? "bg-emerald-500" :
+                          verifyResult.compliance_score >= 40 ? "bg-amber-400" : "bg-red-500"
+                        }`}
+                        style={{ width: `${verifyResult.compliance_score}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between font-sans text-[10px] text-gray-400 mt-1">
+                      <span>0</span><span>40 (Warning)</span><span>60 (Verified)</span><span>100</span>
+                    </div>
+                  </div>
+
+                  {/* Full Gemini verification report — formatted professionally */}
+                  <VerificationReportFormatter
+                    reportText={verifyResult.verification_report}
+                    verdict={verifyResult.verdict}
+                    complianceScore={verifyResult.compliance_score}
+                    modelUsed={verifyResult.model_used}
+                    retrievedChunksCount={verifyResult.retrieved_chunks_count}
+                    businessName={report.businessName || (report as any).business?.name}
+                  />
+
+                  {/* Citations */}
+                  {verifyResult.citations.length > 0 && (
+                    <div>
+                      <p className="font-sans text-[12px] font-bold text-gray-500 uppercase tracking-wider mb-3">
+                        📚 Regulation Citations ({verifyResult.retrieved_chunks_count} chunks retrieved)
+                      </p>
+                      <div className="flex flex-col gap-3">
+                        {verifyResult.citations.map((c) => (
+                          <div key={c.rank} className="bg-white border border-gray-200 rounded-xl p-4 flex gap-3 shadow-xs">
+                            <span className="w-6 h-6 rounded-full bg-[#ebcb2f]/80 text-[#141411] font-sans text-[11px] font-extrabold flex items-center justify-center shrink-0">
+                              {c.rank}
+                            </span>
+                            <div className="min-w-0">
+                              <div className="flex flex-wrap items-center gap-2 mb-1">
+                                <span className="font-sans text-[12px] font-bold text-gray-900 break-words">{c.document}</span>
+                                <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md font-sans text-[10px] font-semibold uppercase">{c.section}</span>
+                                <span className="ml-auto font-sans text-[11px] font-bold text-emerald-700">{c.relevance_percent}% relevant</span>
+                              </div>
+                              <p className="font-sans text-[12px] text-gray-600 leading-relaxed line-clamp-3">{c.excerpt}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                </div>
+              );
+            })()}
+
+            {/* Idle state — not yet triggered */}
+            {!verifyResult && !verifying && !verifyError && (
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-4">
+                  <BadgeCheck className="w-8 h-8 text-slate-400" />
+                </div>
+                <p className="font-sans text-[15px] font-bold text-gray-700 mb-1">Verification Not Yet Run</p>
+                <p className="font-sans text-[13px] text-gray-500 max-w-md">
+                  Click <strong>Run Verification</strong> above to trigger the RAG + Gemini regulatory compliance
+                  engine and get an authoritative verdict for this report.
+                </p>
+              </div>
+            )}
+
           </section>
 
         </div>

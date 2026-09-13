@@ -6,8 +6,12 @@
  * moratorium capitalisation, and working capital estimations.
  */
 
-const FINANCE_ENGINE_URL = process.env.FINANCE_ENGINE_URL || "http://127.0.0.1:8004";
-const FINANCE_TIMEOUT_MS = 15000;
+function getFinanceEngineUrl() {
+  const url = process.env.FINANCE_ENGINE_URL || "https://ventureroot-finance-engine.onrender.com";
+  return url.trim().replace(/\/+$/, "");
+}
+
+const FINANCE_TIMEOUT_MS = Number(process.env.FINANCE_TIMEOUT_MS) || 45000;
 
 /**
  * Fetch wrapper with AbortController timeout
@@ -39,7 +43,7 @@ export async function calculateFinance({
     proposed_project_cost: proposedProjectCost ? Number(proposedProjectCost) : null,
   };
 
-  const res = await fetchWithTimeout(`${FINANCE_ENGINE_URL}/api/v1/finance/calculate`, {
+  const res = await fetchWithTimeout(`${getFinanceEngineUrl()}/api/v1/finance/calculate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -63,7 +67,7 @@ export async function calculateEmi({ principal, annualInterestRate, tenureMonths
     tenure_months: Number(tenureMonths),
   };
 
-  const res = await fetchWithTimeout(`${FINANCE_ENGINE_URL}/api/v1/finance/emi`, {
+  const res = await fetchWithTimeout(`${getFinanceEngineUrl()}/api/v1/finance/emi`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -93,7 +97,7 @@ export async function generateRepaymentSchedule({
     moratorium_months: Number(moratoriumMonths),
   };
 
-  const res = await fetchWithTimeout(`${FINANCE_ENGINE_URL}/api/v1/finance/repayment-schedule`, {
+  const res = await fetchWithTimeout(`${getFinanceEngineUrl()}/api/v1/finance/repayment-schedule`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -115,7 +119,7 @@ export async function routeScheme({ projectCost }) {
     project_cost: Number(projectCost),
   };
 
-  const res = await fetchWithTimeout(`${FINANCE_ENGINE_URL}/api/v1/finance/scheme`, {
+  const res = await fetchWithTimeout(`${getFinanceEngineUrl()}/api/v1/finance/scheme`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -148,7 +152,7 @@ export async function calculateWorkingCapital(params) {
     contingency_pct: Number(params.contingencyPct || params.contingency_pct || 5.0),
   };
 
-  const res = await fetchWithTimeout(`${FINANCE_ENGINE_URL}/api/v1/finance/working-capital`, {
+  const res = await fetchWithTimeout(`${getFinanceEngineUrl()}/api/v1/finance/working-capital`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -166,7 +170,7 @@ export async function calculateWorkingCapital(params) {
  * Fetch official list of government credit schemes
  */
 export async function getSchemes() {
-  const res = await fetchWithTimeout(`${FINANCE_ENGINE_URL}/api/v1/schemes`, {
+  const res = await fetchWithTimeout(`${getFinanceEngineUrl()}/api/v1/schemes`, {
     method: "GET",
   });
 

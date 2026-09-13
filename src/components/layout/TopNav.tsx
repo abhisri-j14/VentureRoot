@@ -45,7 +45,7 @@ export const TopNav = () => {
   }, []);
 
   const activeBusiness = businesses?.[0];
-  const businessBase = activeBusiness?.id ? `/business/${activeBusiness.id}` : "/business/create";
+  const businessBase = activeBusiness?.id ? `/business/${activeBusiness.id}` : "/business";
   const financeBase = activeBusiness?.id ? `/business/${activeBusiness.id}/finance` : "/business/create";
   const feasibilityBase = activeBusiness?.id ? `/business/${activeBusiness.id}/feasibility` : "/business/create";
 
@@ -75,7 +75,7 @@ export const TopNav = () => {
         return pathname === "/advisor" || pathname.startsWith("/advisor/");
       case "nav-my-business":
         return (
-          pathname.startsWith("/business") &&
+          (pathname === "/business" || pathname.startsWith("/business/")) &&
           !pathname.startsWith("/business/create") &&
           !pathname.startsWith("/business/compare") &&
           !pathname.includes("/finance") &&

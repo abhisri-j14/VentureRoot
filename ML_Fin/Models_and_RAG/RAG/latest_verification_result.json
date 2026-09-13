@@ -1,0 +1,37 @@
+{
+  "verdict": "VERIFIED",
+  "compliance_score": 65,
+  "verification_report": "**VERDICT: VERIFIED**\n\n**Compliance Score: 65/100**\n\n---",StartLine:2,TargetContent:\n\n### ✅ Verified Findings\n*   **Business Formalization Requirement**: The business category (Dairy & Food Processing) and its intent to access schemes necessitate formalization, including MSME classification and Udyam registration, to establish a recognized enterprise identity.\n    *   *Citation*: VentureRoot_RAG_Business_Research_Encyclopedia_500plus_pages.pdf | SECTION: VENTUREROOT | \"Formalization can improve access to schemes,",
+  "citations": [
+    {
+      "rank": 1,
+      "relevance_score": 0.6302,
+      "relevance_percent": 63.0,
+      "document": "VentureRoot_RAG_Business_Research_Encyclopedia_500plus_pages",
+      "section": "VENTUREROOT",
+      "excerpt": "staffing. Food businesses may face hygiene and safety requirements; manufacturing may involve\nenvironmental or local permissions; professional services may require qualifications; transport or\nstorage may involve sector rules. Failure to comply can create fines, closure risk, reputational\ndamage, or...",
+      "source_type": "business_regulation"
+    },
+    {
+      "rank": 2,
+      "relevance_score": 0.6208,
+      "relevance_percent": 62.1,
+      "document": "VentureRoot_RAG_Business_Research_Encyclopedia_500plus_pages",
+      "section": "VENTUREROOT",
+      "excerpt": "local income, credit conditions, and input-price trends. Social factors include demographics,\nmigration, culture, household behaviour, and changing preferences. Technological factors include\ndigital payments, e-commerce, production technology, logistics platforms, connectivity, and\nautomation. Legal...",
+      "source_type": "business_regulation"
+    },
+    {
+      "rank": 3,
+      "relevance_score": 0.6129,
+      "relevance_percent": 61.3,
+      "document": "VentureRoot_RAG_Business_Research_Encyclopedia_500plus_pages",
+      "section": "VENTUREROOT",
+      "excerpt": "For VentureRoot, supply-chain factors are especially important in agriculture, food processing, retail,\nand local manufacturing. Market-potential scores should not be interpreted as overall viability\nwithout checking whether the business can reliably source and deliver the required inputs.\nVentureRo...",
+      "source_type": "business_regulation"
+    }
+  ],
+  "retrieved_chunks_count": 3,
+  "model_used": "gemini-2.5-flash",
+  "report_id": null
+}

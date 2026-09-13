@@ -73,13 +73,15 @@ export default function DashboardPage() {
   const { data: activeFeasibility } = useFeasibility(activeBusiness?.id || "");
 
   const firstName =
-    profileData?.fullName?.split(" ")[0] ||
     user?.name?.split(" ")[0] ||
+    (typeof window !== "undefined" ? localStorage.getItem("ventureroot_user_name")?.split(" ")[0] : null) ||
+    profileData?.fullName?.split(" ")[0] ||
     "Entrepreneur";
 
-  const locationStr = profileData?.location?.state
-    ? `${profileData.location.village ? profileData.location.village + ", " : ""}${profileData.location.district ? profileData.location.district + ", " : ""}${profileData.location.state}`
-    : "Local Region";
+  const locationStr =
+    profileData?.location?.district && profileData?.location?.state
+      ? `${profileData.location.district}, ${profileData.location.state}`
+      : user?.location || profileData?.location?.state || "Local Region";
 
   const businessLocationStr = activeBusiness?.location?.district
     ? `${activeBusiness.location.district}, ${activeBusiness.location.state || profileData?.location?.state || "State"}`
@@ -211,97 +213,53 @@ export default function DashboardPage() {
   ];
   const totalBreakdown = capexBreakdown.reduce((sum: number, item: any) => sum + item.value, 0);
 
-  // Fresh Account Check: If user has 0 businesses, show graceful frosted prompt
-  if (!isBusinessesLoading && (!businesses || businesses.length === 0)) {
-    return (
-      <div className="relative w-full min-h-[85vh] p-4 sm:p-6 lg:p-8 flex flex-col gap-6 overflow-hidden">
-        <div className="filter blur-md opacity-30 select-none pointer-events-none flex flex-col gap-6">
-          <div className="h-10 w-64 bg-slate-300 rounded-xl"></div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="h-44 bg-slate-200 rounded-2xl"></div>
-            <div className="h-44 bg-slate-200 rounded-2xl"></div>
-            <div className="h-44 bg-slate-200 rounded-2xl"></div>
-            <div className="h-44 bg-slate-200 rounded-2xl"></div>
-          </div>
-          <div className="h-64 bg-slate-200 rounded-2xl"></div>
-        </div>
-
-        <div className="absolute inset-0 z-20 flex items-center justify-center p-4 bg-slate-900/10 backdrop-blur-[2px]">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94, y: 15 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.45, ease: EASE_OUT_EXPO }}
-            className="bg-white/95 backdrop-blur-2xl border border-[#1E6702]/30 rounded-3xl p-6 sm:p-10 shadow-2xl max-w-lg w-full text-center flex flex-col items-center gap-5"
-          >
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wide">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-              <span>No Active Venture Yet</span>
-            </div>
-
-            <div className="w-16 h-16 rounded-2xl bg-[#1E6702] text-white flex items-center justify-center shadow-lg shadow-emerald-950/20">
-              <Building2 className="w-8 h-8" />
-            </div>
-
-            <div className="space-y-2">
-              <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#242424] tracking-tight">
-                Create Your Business to Activate Dashboard
-              </h2>
-              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed max-w-md mx-auto">
-                Your dashboard synthesizes real-time Census demographics, capital structures, and feasibility intelligence once your first venture is registered.
-              </p>
-            </div>
-
-            <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-              <Link
-                href="/business/create"
-                className="w-full sm:w-auto px-6 py-3 bg-[#1E6702] hover:bg-[#165201] text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
-              >
-                <PlusCircle className="w-4 h-4" />
-                <span>+ Create New Business</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-              <Link
-                href="/analysis"
-                className="w-full sm:w-auto px-5 py-3 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-semibold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-2"
-              >
-                <Sparkles className="w-4 h-4 text-emerald-700" />
-                <span>Instant Analysis</span>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
+  const hasNoBusinesses = !isBusinessesLoading && (!businesses || businesses.length === 0);
 
   return (
-    <div className="w-full h-full p-3 sm:p-5 md:p-6 lg:p-8 flex flex-col gap-5 sm:gap-6 overflow-x-hidden">
+    <div className="relative w-full h-full p-3 sm:p-5 md:p-6 lg:p-8 flex flex-col gap-5 sm:gap-6 overflow-x-hidden min-h-screen">
+
+      {/* ─── Hazy Blur Container for Dashboard Content when No Businesses ─── */}
+      <div className={hasNoBusinesses ? "filter blur-[8px] opacity-35 pointer-events-none select-none transition-all duration-700 flex flex-col gap-5 sm:gap-6" : "flex flex-col gap-5 sm:gap-6"}>
 
       {/* ═══ HEADER: Multi-Business Tabs + Executive Status ═══ */}
       <motion.div
         variants={headerVariants}
         initial="hidden"
         animate="visible"
-        className="flex flex-col gap-4 sm:gap-4.5"
+        className="flex flex-col gap-4"
       >
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           <div>
             <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#242424] tracking-tight leading-tight">
               Executive Overview, {firstName}
             </h1>
-            <p className="text-slate-600 text-xs sm:text-sm font-medium mt-1.5 flex flex-wrap items-center gap-1.5 sm:gap-2">
-              <span className="font-bold text-[#1E6702] bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200/60 shadow-2xs">
-                Active Venture {currentIdx + 1}: {businessName}
-              </span>
-              <span>•</span>
-              <span className="text-slate-700 font-semibold">{rawCategory}</span>
-              <span>•</span>
-              <span className="text-slate-500">{businessLocationStr}</span>
+            <p className="text-slate-600 text-xs sm:text-sm font-medium mt-1 flex flex-wrap items-center gap-1.5 sm:gap-2">
+              {businesses && businesses.length > 0 ? (
+                <>
+                  <span className="font-bold text-[#1E6702] bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
+                    Active Venture {currentIdx + 1}: {businessName}
+                  </span>
+                  <span>•</span>
+                  <span className="text-slate-700 font-semibold">{rawCategory}</span>
+                  <span>•</span>
+                  <span className="text-slate-500">{businessLocationStr}</span>
+                </>
+              ) : (
+                <>
+                  <span className="font-bold text-[#1E6702] bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
+                    Welcome to VentureRoot
+                  </span>
+                  <span>•</span>
+                  <span className="text-slate-600">Register your first rural enterprise to activate real-time analytics</span>
+                  <span>•</span>
+                  <span className="text-slate-500">{locationStr}</span>
+                </>
+              )}
             </p>
           </div>
 
           {/* Real-time Status Badge */}
-          <div className="flex items-center gap-2 self-start lg:self-auto bg-white border border-slate-200/90 rounded-xl px-3.5 py-2 shadow-2xs">
+          <div className="flex items-center gap-2 self-start lg:self-auto bg-white border border-slate-200/90 rounded-xl px-3 py-1.5 shadow-xs">
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
@@ -311,10 +269,10 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* ─── Multi-Business Horizontal Switcher (Clean, comfortable spacing) ─── */}
-        <div className="w-full flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 scrollbar-none">
-          {businesses && businesses.length > 0 ? (
-            <div className="flex items-center gap-2 flex-nowrap">
+        {/* ─── Multi-Business Horizontal Switcher (Scroll-safe on mobile) ─── */}
+        {businesses && businesses.length > 0 ? (
+          <div className="w-full flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-0.5 scrollbar-none">
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-nowrap">
               {businesses.map((biz: any, idx: number) => {
                 const isSelected = idx === currentIdx;
                 return (
@@ -322,18 +280,18 @@ export default function DashboardPage() {
                     key={biz.id || idx}
                     type="button"
                     onClick={() => setSelectedBusinessIndex(idx)}
-                    className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-2xs ${
+                    className={`shrink-0 px-2 py-0.5 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 ${
                       isSelected
-                        ? "bg-[#1E6702] text-white shadow-sm shadow-emerald-900/20 ring-1 ring-emerald-600/40"
-                        : "bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/90"
+                        ? "bg-[#1E6702] text-white shadow-sm shadow-emerald-900/20 ring-1.5 ring-emerald-600/30 scale-[1.01]"
+                        : "bg-white hover:bg-slate-50 text-slate-700 border border-slate-200"
                     }`}
                   >
-                    <Briefcase className={`w-3.5 h-3.5 shrink-0 ${isSelected ? "text-emerald-200" : "text-slate-400"}`} />
+                    <Briefcase className={`w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 ${isSelected ? "text-emerald-200" : "text-slate-400"}`} />
                     <span className={isSelected ? "text-emerald-200 font-extrabold" : "text-slate-400"}>
                       <span className="sm:hidden">V{idx + 1}:</span>
                       <span className="hidden sm:inline">Venture {idx + 1}:</span>
                     </span>
-                    <span className="truncate max-w-[120px] sm:max-w-[180px]">
+                    <span className="truncate max-w-[36px] xs:max-w-[50px] sm:max-w-[150px]">
                       {biz.name || `Business ${idx + 1}`}
                     </span>
                   </button>
@@ -342,17 +300,79 @@ export default function DashboardPage() {
 
               <Link
                 href="/business/create"
-                className="shrink-0 px-3 py-1.5 rounded-xl bg-emerald-50/80 hover:bg-emerald-100/80 text-[#1E6702] text-xs font-bold border border-emerald-200/80 transition-all flex items-center gap-1.5 shadow-2xs"
+                className="shrink-0 px-2 py-0.5 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#1E6702] text-[10px] sm:text-xs font-bold border border-emerald-200 transition-all flex items-center gap-1"
               >
-                <PlusCircle className="w-3.5 h-3.5 shrink-0" />
-                <span>+ Add Venture</span>
+                <PlusCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+                <span className="sm:hidden">Add</span>
+                <span className="hidden sm:inline">+ Add Venture</span>
               </Link>
             </div>
-          ) : null}
-        </div>
+          </div>
+        ) : null}
+
+        {/* ─── Dedicated First-Time / Zero-Business Onboarding Banner ─── */}
+        {!isBusinessesLoading && (!businesses || businesses.length === 0) && (
+          <div className="bg-gradient-to-r from-[#173809] via-slate-900 to-[#122b07] text-white rounded-2xl p-5 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-lg border border-emerald-800/40 relative overflow-hidden">
+            <div className="absolute right-0 top-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="relative z-10 max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold mb-2 border border-emerald-500/30">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                <span>New Dedicated Entrepreneur Workspace</span>
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+                Welcome to your dashboard, {firstName}!
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
+                You haven&apos;t added any rural enterprises yet. Create your first business profile to unlock live Census demographic intelligence, AI-backed DPR generation, and automated statutory compliance verification.
+              </p>
+            </div>
+            <div className="relative z-10 shrink-0 flex flex-wrap gap-2.5">
+              <Link
+                href="/business/create"
+                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-md hover:shadow-emerald-500/25 flex items-center gap-2"
+              >
+                <PlusCircle className="w-4 h-4" />
+                <span>Create Your First Venture</span>
+              </Link>
+              <Link
+                href="/analysis"
+                className="bg-white/10 hover:bg-white/15 text-white border border-white/20 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5"
+              >
+                <span>Run Quick Feasibility</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* ─── Portfolio Context Bar (If multiple businesses exist) ─── */}
+        {businesses && businesses.length > 1 ? (
+          <div className="bg-emerald-950 text-white rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm border border-emerald-900">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-emerald-200 shrink-0">
+                <Layers className="w-4 h-4" />
+              </div>
+              <div>
+                <span className="text-[11px] uppercase tracking-wider font-bold text-emerald-300 block">
+                  Enterprise Portfolio ({businesses.length} Active Ventures)
+                </span>
+                <p className="text-xs sm:text-[13px] text-emerald-100 font-medium">
+                  Switching ventures adjusts feasibility summaries, demographic footfall, and financing allocations in real-time.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/business/compare"
+              className="self-end sm:self-auto shrink-0 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 px-3.5 py-1.5 rounded-xl font-sans text-xs font-extrabold transition-colors flex items-center gap-1.5 shadow-sm"
+            >
+              <span>Side-by-Side Compare</span>
+              <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+        ) : null}
       </motion.div>
 
-      {/* ═══ 4 CORE EXECUTIVE STATUS CARDS (Spacious, Clean, Professional) ═══ */}
+      {/* ═══ 4 CORE EXECUTIVE STATUS CARDS (Text-First, Qualitative Intelligence) ═══ */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -370,36 +390,28 @@ export default function DashboardPage() {
           <div className="absolute -top-10 -right-10 w-28 h-28 bg-emerald-500/5 rounded-full blur-xl pointer-events-none group-hover:bg-emerald-500/10 transition-colors" />
 
           {/* Header */}
-          <div>
-            <div className="flex items-center justify-between gap-2 mb-2">
-              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <div className="flex items-start justify-between gap-2 min-h-[54px]">
+            <div>
+              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mb-1">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                 Feasibility Status
               </span>
-              <span className={`text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md border shrink-0 shadow-2xs ${feasibilitySummary.statusTheme}`}>
-                {feasibilitySummary.grade}
-              </span>
+              <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug line-clamp-2">
+                {feasibilitySummary.verdict}
+              </h3>
             </div>
-            <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug">
-              {feasibilitySummary.verdict.includes("—") ? feasibilitySummary.verdict.split("—")[0].trim() : feasibilitySummary.verdict}
-              <span className="font-sans font-medium text-slate-500 text-xs block mt-1 leading-normal">
-                {feasibilitySummary.verdict.includes("—") ? feasibilitySummary.verdict.split("—")[1]?.trim() : "High Catchment Viability"}
-              </span>
-            </h3>
+            <span className={`text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md border shrink-0 shadow-xs ${feasibilitySummary.statusTheme}`}>
+              {feasibilitySummary.grade}
+            </span>
           </div>
 
           {/* Body */}
-          <div className="flex-1 flex flex-col justify-between my-3 sm:my-3.5">
-            <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] flex flex-col gap-2.5">
-              <p className="text-xs text-slate-600 leading-relaxed">
-                {feasibilitySummary.why}
-              </p>
-              <div className="pt-2 border-t border-slate-200/60 flex items-start gap-1.5 text-[11px] text-emerald-800 font-medium">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                <div className="leading-snug">
-                  <span className="font-bold text-emerald-950">Moat: </span>
-                  <span>{feasibilitySummary.keyMoat}</span>
-                </div>
+          <div className="flex-1 flex flex-col justify-between my-3">
+            <div className="space-y-1.5 text-xs text-slate-600 leading-relaxed bg-slate-50/90 backdrop-blur-xs p-3 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]">
+              <p className="line-clamp-3 sm:line-clamp-none">{feasibilitySummary.why}</p>
+              <div className="pt-2 border-t border-slate-200/60 flex items-center gap-1.5 font-medium text-emerald-800 text-[11px]">
+                <Sparkles className="w-3 h-3 text-emerald-600 shrink-0" />
+                <span className="truncate">Moat: {feasibilitySummary.keyMoat}</span>
               </div>
             </div>
           </div>
@@ -426,44 +438,38 @@ export default function DashboardPage() {
           <div className="absolute -top-10 -right-10 w-28 h-28 bg-sky-500/5 rounded-full blur-xl pointer-events-none group-hover:bg-sky-500/10 transition-colors" />
 
           {/* Header */}
-          <div>
-            <div className="flex items-center justify-between gap-2 mb-2">
-              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <div className="flex items-start justify-between gap-2 min-h-[54px]">
+            <div>
+              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mb-1">
                 <Landmark className="w-3.5 h-3.5 text-sky-600" />
                 Capital & Financing
               </span>
-              <span className="text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md border text-sky-700 bg-sky-50 border-sky-200 shrink-0 shadow-2xs">
-                PMEGP Eligible
-              </span>
+              <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug line-clamp-2">
+                Structured ₹{totalCapex}L Outlay (80% Debt Eligible)
+              </h3>
             </div>
-            <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug">
-              Structured ₹{totalCapex}L Outlay
-              <span className="font-sans font-medium text-slate-500 text-xs block mt-1 leading-normal">
-                80% Debt & Term Loan Eligible
-              </span>
-            </h3>
+            <span className="text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md border text-sky-700 bg-sky-50 border-sky-200 shrink-0 shadow-xs">
+              PMEGP Eligible
+            </span>
           </div>
 
           {/* Body */}
-          <div className="flex-1 flex flex-col justify-between my-3 sm:my-3.5">
-            <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] flex flex-col gap-2.5">
-              <div className="space-y-2 text-xs">
-                <div className="flex justify-between items-center text-[11px]">
-                  <span className="text-slate-500">Promoter Equity (15%):</span>
-                  <span className="font-bold text-slate-900">₹{promoterEquity}L</span>
-                </div>
-                <div className="flex justify-between items-center text-[11px]">
-                  <span className="text-slate-500">Bank Term Loan (80%):</span>
-                  <span className="font-bold text-sky-800">₹{loanAmount}L</span>
-                </div>
-                <div className="flex justify-between items-center text-[11px]">
-                  <span className="text-slate-500">Govt Subsidy Grant:</span>
-                  <span className="font-bold text-emerald-800">Up to ₹{subsidyAmount}L</span>
-                </div>
+          <div className="flex-1 flex flex-col justify-between my-3">
+            <div className="space-y-1.5 text-xs text-slate-600 bg-slate-50/90 backdrop-blur-xs p-3 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]">
+              <div className="flex justify-between items-center text-[11px]">
+                <span className="text-slate-500">Promoter Equity (15%):</span>
+                <span className="font-bold text-slate-900">₹{promoterEquity}L</span>
               </div>
-              <div className="pt-2 border-t border-slate-200/60 text-[11px] text-slate-600 font-medium flex items-start gap-1 leading-snug">
-                <span className="text-slate-500 shrink-0">Break-Even:</span>
-                <span className="font-bold text-slate-800">{feasibilitySummary.breakEvenHorizon}</span>
+              <div className="flex justify-between items-center text-[11px]">
+                <span className="text-slate-500">Bank Term Loan (80%):</span>
+                <span className="font-bold text-sky-800">₹{loanAmount}L</span>
+              </div>
+              <div className="flex justify-between items-center text-[11px]">
+                <span className="text-slate-500">Govt Subsidy Grant:</span>
+                <span className="font-bold text-emerald-800">Up to ₹{subsidyAmount}L</span>
+              </div>
+              <div className="pt-1.5 border-t border-slate-200/60 text-[11px] text-slate-500 font-medium">
+                Break-Even: <span className="font-bold text-slate-800">{feasibilitySummary.breakEvenHorizon}</span>
               </div>
             </div>
           </div>
@@ -490,42 +496,37 @@ export default function DashboardPage() {
           <div className="absolute -top-10 -right-10 w-28 h-28 bg-amber-500/5 rounded-full blur-xl pointer-events-none group-hover:bg-amber-500/10 transition-colors" />
 
           {/* Header */}
-          <div>
-            <div className="flex items-center justify-between gap-2 mb-2">
-              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <div className="flex items-start justify-between gap-2 min-h-[54px]">
+            <div>
+              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mb-1">
                 <MapPin className="w-3.5 h-3.5 text-amber-600" />
                 Demographic Reach
               </span>
-              <span className="text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md border text-amber-800 bg-amber-50 border-amber-200 shrink-0 shadow-2xs">
-                Census 2011 PCA
-              </span>
+              <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug line-clamp-2">
+                ~{pop5km >= 100000 ? `${(pop5km / 100000).toFixed(2)}L` : pop5km.toLocaleString("en-IN")} Pop. in 5km Core
+              </h3>
             </div>
-            <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug">
-              ~{pop5km >= 100000 ? `${(pop5km / 100000).toFixed(2)}L` : pop5km.toLocaleString("en-IN")} Population
-              <span className="font-sans font-medium text-slate-500 text-xs block mt-1 leading-normal">
-                Within 5km Core Catchment Radius
-              </span>
-            </h3>
+            <span className="text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md border text-amber-800 bg-amber-50 border-amber-200 shrink-0 shadow-xs">
+              Census 2011 PCA
+            </span>
           </div>
 
           {/* Body */}
-          <div className="flex-1 flex flex-col justify-between my-3 sm:my-3.5">
-            <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] flex flex-col gap-2.5">
-              <div className="space-y-2 text-xs">
-                <div className="flex justify-between items-center text-[11px]">
-                  <span className="text-slate-500">5km Daily Footfall:</span>
-                  <span className="font-bold text-slate-900">~{pop5km.toLocaleString("en-IN")}</span>
-                </div>
-                <div className="flex justify-between items-center text-[11px]">
-                  <span className="text-slate-500">10km Regional Trade:</span>
-                  <span className="font-bold text-slate-900">~{pop10km.toLocaleString("en-IN")}</span>
-                </div>
-                <div className="flex justify-between items-center text-[11px]">
-                  <span className="text-slate-500">20km District Reach:</span>
-                  <span className="font-bold text-slate-900">~{pop20km.toLocaleString("en-IN")}</span>
-                </div>
+          <div className="flex-1 flex flex-col justify-between my-3">
+            <div className="space-y-1.5 text-xs text-slate-600 bg-slate-50/90 backdrop-blur-xs p-3 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]">
+              <div className="flex justify-between items-center text-[11px]">
+                <span className="text-slate-500">5km Daily Footfall:</span>
+                <span className="font-bold text-slate-900">~{pop5km.toLocaleString("en-IN")}</span>
               </div>
-              <div className="pt-2 border-t border-slate-200/60 text-[11px] text-slate-600 font-medium leading-snug">
+              <div className="flex justify-between items-center text-[11px]">
+                <span className="text-slate-500">10km Regional Trade:</span>
+                <span className="font-bold text-slate-900">~{pop10km.toLocaleString("en-IN")}</span>
+              </div>
+              <div className="flex justify-between items-center text-[11px]">
+                <span className="text-slate-500">20km District Reach:</span>
+                <span className="font-bold text-slate-900">~{pop20km.toLocaleString("en-IN")}</span>
+              </div>
+              <div className="pt-1.5 border-t border-slate-200/60 text-[11px] text-slate-500 font-medium truncate">
                 Density: <span className="font-bold text-slate-800">{density} /km²</span> in {activeBusiness?.location?.district || "District"}
               </div>
             </div>
@@ -553,33 +554,30 @@ export default function DashboardPage() {
           <div className="absolute -top-10 -right-10 w-28 h-28 bg-purple-500/5 rounded-full blur-xl pointer-events-none group-hover:bg-purple-500/10 transition-colors" />
 
           {/* Header */}
-          <div>
-            <div className="flex items-center justify-between gap-2 mb-2">
-              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <div className="flex items-start justify-between gap-2 min-h-[54px]">
+            <div>
+              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mb-1">
                 <Target className="w-3.5 h-3.5 text-purple-600" />
                 Execution Roadmap
               </span>
-              <span className="text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md border text-purple-800 bg-purple-50 border-purple-200 shrink-0 shadow-2xs">
-                3 Actions Active
-              </span>
+              <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug line-clamp-2">
+                Phase 1: Clearances & Statutory Filing
+              </h3>
             </div>
-            <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug">
-              Phase 1: Clearances & Filing
-              <span className="font-sans font-medium text-slate-500 text-xs block mt-1 leading-normal">
-                Immediate 30-Day Operational Milestones
-              </span>
-            </h3>
+            <span className="text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md border text-purple-800 bg-purple-50 border-purple-200 shrink-0 shadow-xs">
+              3 Actions Active
+            </span>
           </div>
 
           {/* Body */}
-          <div className="flex-1 flex flex-col justify-between my-3 sm:my-3.5">
-            <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] space-y-2.5">
+          <div className="flex-1 flex flex-col justify-between my-3">
+            <div className="space-y-1.5 text-xs text-slate-600 bg-slate-50/90 backdrop-blur-xs p-3 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]">
               {immediateMilestones.map((item, idx) => (
-                <div key={idx} className="flex items-start gap-2 text-[11px]">
+                <div key={idx} className="flex items-start gap-1.5 text-[11px]">
                   <CheckSquare className="w-3.5 h-3.5 text-purple-600 mt-0.5 shrink-0" />
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-900 leading-tight">{item.title}</div>
-                    <div className="text-[11px] text-slate-600 leading-snug mt-0.5">{item.desc}</div>
+                  <div>
+                    <span className="font-bold text-slate-900">{item.title}: </span>
+                    <span className="text-slate-600 line-clamp-1 sm:line-clamp-none">{item.desc}</span>
                   </div>
                 </div>
               ))}
@@ -879,6 +877,62 @@ export default function DashboardPage() {
 
       </motion.div>
 
+      </div> {/* ─── Closes Hazy Blur Container ─── */}
+
+      {/* ─── Focal Overlay Prompt when User Has No Business ─── */}
+      {hasNoBusinesses && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-md">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: EASE_OUT_EXPO }}
+            className="bg-white/95 backdrop-blur-2xl border-2 border-[#1E6702]/30 rounded-3xl p-6 sm:p-10 shadow-2xl max-w-lg w-full text-center flex flex-col items-center gap-5 relative overflow-hidden"
+          >
+            <div className="absolute right-0 top-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wide">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+              <span>No Business Registered Yet</span>
+            </div>
+
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#1E6702] to-[#124201] text-white flex items-center justify-center shadow-lg shadow-emerald-950/20">
+              <Building2 className="w-8 h-8" />
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#242424] tracking-tight">
+                Welcome, {firstName}!
+              </h2>
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed max-w-md mx-auto">
+                Your executive dashboard is currently hazy because no business is connected to your account. Creating your enterprise unlocks live Census demographic catchment, scheme subsidies (PMEGP/MUDRA), and bankable DPR analysis.
+              </p>
+              <p className="text-emerald-800 font-semibold text-xs bg-emerald-50/80 p-2.5 rounded-xl border border-emerald-200/60">
+                Please create your first rural enterprise to activate your workspace.
+              </p>
+            </div>
+
+            <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+              <Link
+                href="/business/create"
+                className="w-full sm:w-auto px-6 py-3.5 bg-[#1E6702] hover:bg-[#165201] text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-900/25 hover:shadow-emerald-900/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+              >
+                <PlusCircle className="w-4 h-4" />
+                <span>+ Create Your Business</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <Link
+                href="/analysis"
+                className="w-full sm:w-auto px-5 py-3.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-semibold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-2"
+              >
+                <Sparkles className="w-4 h-4 text-emerald-700" />
+                <span>Run Instant Feasibility</span>
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
     </div>
   );
 }
+
