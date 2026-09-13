@@ -129,7 +129,7 @@ export default function DashboardPage() {
   const feasibilitySummary = useMemo(() => {
     if (isHealthcare) {
       return {
-        verdict: "Highly Feasible — Severe Rural Inpatient Bed Deficit",
+        verdict: "Highly Feasible",
         grade: "Grade A+ (Viability: 91/100)",
         statusTheme: "text-emerald-700 bg-emerald-50 border-emerald-200",
         why: `Acute deficit in secondary hospital beds across ${businessLocationStr} with ~${pop10km.toLocaleString("en-IN")} population in 10km catchment. High OPD conversion backed by Ayushman Bharat (PM-JAY) subsidy eligibility.`,
@@ -139,7 +139,7 @@ export default function DashboardPage() {
     }
     if (isFoodProcessing) {
       return {
-        verdict: "Strong Feasibility — High Margin Value-Addition Arbitrage",
+        verdict: "Strong Feasibility",
         grade: "Grade A (Viability: 87/100)",
         statusTheme: "text-emerald-700 bg-emerald-50 border-emerald-200",
         why: `High farmgate produce availability in ${businessLocationStr} allows 22–26% net value-addition margin over raw Mandi auction prices. Caters to ~${pop10km.toLocaleString("en-IN")} consumers across regional wholesale and retail corridors.`,
@@ -149,7 +149,7 @@ export default function DashboardPage() {
     }
     if (isDairy) {
       return {
-        verdict: "Exceptional Feasibility — Guaranteed Daily Milk Offtake",
+        verdict: "Exceptional Feasibility",
         grade: "Grade A+ (Viability: 92/100)",
         statusTheme: "text-emerald-700 bg-emerald-50 border-emerald-200",
         why: `High-velocity daily liquidity cycle supported by ~${pop5km.toLocaleString("en-IN")} residents within 5km. Captures consistent institutional demand from regional sweet makers, dairy booths, and chilling cooperatives.`,
@@ -158,7 +158,7 @@ export default function DashboardPage() {
       };
     }
     return {
-      verdict: "Prime Feasibility — High Catchment Demand with Manageable Incumbents",
+      verdict: "Prime Feasibility",
       grade: "Grade A (Viability: 84/100)",
       statusTheme: "text-emerald-700 bg-emerald-50 border-emerald-200",
       why: `Sustained consumer consumption base in ${businessLocationStr} with ~${pop5km.toLocaleString("en-IN")} localized footfall. Healthy margin buffer under current inflationary pricing trends.`,
@@ -396,7 +396,7 @@ export default function DashboardPage() {
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                 Feasibility Status
               </span>
-              <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug line-clamp-2">
+              <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug">
                 {feasibilitySummary.verdict}
               </h3>
             </div>
