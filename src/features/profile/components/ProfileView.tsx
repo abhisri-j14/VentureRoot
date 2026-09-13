@@ -363,11 +363,19 @@ export const ProfileView = () => {
                   Verified
                 </span>
               </div>
-              <p className={`${classes.supportingText} mt-1 flex items-center gap-1.5`}>
+              <p className={`${classes.supportingText} mt-1 flex items-center gap-1.5 flex-wrap`}>
                 <Leaf className="w-3.5 h-3.5 text-[#1E6702]" />
                 <span>{districtName}, {stateName} Entrepreneur</span>
                 <span>•</span>
-                <span className="text-slate-400">Username: @{currentProfile.fullName.toLowerCase().replace(/\s+/g, "_")}</span>
+                {businesses && businesses.length > 0 ? (
+                  <span className="font-bold text-[#1E6702] bg-emerald-50 px-2.5 py-0.5 rounded-lg border border-emerald-200/80 text-xs">
+                    Registered Venture: {businesses[0].name || "My Business"} ({businesses[0].category?.name || businesses[0].category || "Enterprise"})
+                  </span>
+                ) : (
+                  <span className="text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-lg border border-amber-200 text-xs font-semibold">
+                    No Registered Venture
+                  </span>
+                )}
               </p>
             </div>
           </div>
@@ -434,6 +442,87 @@ export const ProfileView = () => {
         {saveError && (
           <div className="mx-6 md:mx-8 mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl">
             {saveError}
+          </div>
+        )}
+      </motion.div>
+
+      {/* ═══ PRIMARY REGISTERED BUSINESS SPOTLIGHT CARD ═══ */}
+      <motion.div variants={itemVariants}>
+        {businesses && businesses.length > 0 ? (
+          <div className="bg-gradient-to-br from-emerald-950 via-slate-900 to-emerald-900 text-white rounded-2xl p-6 shadow-xl border border-emerald-800/50 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative overflow-hidden">
+            <div className="absolute right-0 top-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="relative z-10 flex items-start gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-300 shrink-0 shadow-inner">
+                <Briefcase className="w-7 h-7" />
+              </div>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/30 text-emerald-200 text-[11px] font-extrabold uppercase tracking-wide border border-emerald-400/30">
+                    Primary Registered Venture
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-white text-[11px] font-semibold border border-white/15">
+                    {businesses[0].status || "Active"}
+                  </span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                  {businesses[0].name || "My Registered Enterprise"}
+                </h3>
+                <p className="text-xs sm:text-sm text-emerald-100/80 flex items-center gap-2 flex-wrap">
+                  <span>{businesses[0].category?.name || businesses[0].category || "Agro-Processing & Rural Enterprise"}</span>
+                  <span>•</span>
+                  <span className="flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-emerald-300" />
+                    {businesses[0].location?.district ? `${businesses[0].location.district}, ${businesses[0].location.state || ""}` : `${districtName}, ${stateName}`}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <div className="relative z-10 flex flex-wrap items-center gap-3 w-full lg:w-auto">
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10 flex flex-col gap-0.5 min-w-[120px]">
+                <span className="text-[10px] uppercase font-bold text-emerald-300 tracking-wider">Available Margin</span>
+                <span className="text-base font-bold text-white">₹{Number(businesses[0].availableMargin || 0).toLocaleString("en-IN")}</span>
+              </div>
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10 flex flex-col gap-0.5 min-w-[120px]">
+                <span className="text-[10px] uppercase font-bold text-emerald-300 tracking-wider">Target Revenue</span>
+                <span className="text-base font-bold text-white">₹{Number(businesses[0].expectedRevenue || 0).toLocaleString("en-IN")}/mo</span>
+              </div>
+              <div className="flex gap-2 w-full sm:w-auto mt-2 sm:mt-0">
+                <Link
+                  href={`/business/${businesses[0].id || "123"}`}
+                  className="flex-1 sm:flex-none px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 text-xs font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5"
+                >
+                  <span>Overview</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+                <Link
+                  href={`/business/${businesses[0].id || "123"}/feasibility`}
+                  className="flex-1 sm:flex-none px-4 py-2.5 bg-white/15 hover:bg-white/20 text-white text-xs font-semibold rounded-xl border border-white/20 transition-all flex items-center justify-center gap-1.5"
+                >
+                  <BarChart2 className="w-3.5 h-3.5" />
+                  <span>Feasibility</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-gradient-to-r from-amber-500/10 via-amber-100/30 to-amber-500/10 border-2 border-dashed border-amber-300/80 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-900 flex items-center justify-center shrink-0">
+                <Building2 className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-heading text-base font-bold text-amber-950">No Business Registered to Profile</h3>
+                <p className="text-xs text-amber-800/80">Register your first rural enterprise to display your venture telemetry and sync financial allocations.</p>
+              </div>
+            </div>
+            <Link
+              href="/business/create"
+              className="shrink-0 px-4 py-2.5 bg-[#1E6702] hover:bg-[#154a01] text-white text-xs font-bold rounded-xl shadow-sm flex items-center gap-1.5 transition-all"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>+ Register Business</span>
+            </Link>
           </div>
         )}
       </motion.div>

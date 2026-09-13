@@ -63,21 +63,20 @@ function LoginPageContent() {
       
       const rawFullName = backendUser?.user_metadata?.full_name || backendUser?.user_metadata?.name || backendUser?.user_metadata?.username;
       const formattedEmailName = (backendUser?.email || data.email || "").split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
-      let resolvedName = rawFullName || (typeof window !== "undefined" ? localStorage.getItem("ventureroot_user_name") : null) || formattedEmailName || "Entrepreneur";
-      if (/abhisri/i.test(resolvedName)) {
-        resolvedName = "Abhisri";
-      }
+      const resolvedName = (rawFullName && rawFullName.trim()) || (formattedEmailName && formattedEmailName.trim()) || "Entrepreneur";
 
       if (typeof window !== "undefined") {
         localStorage.setItem("ventureroot_user_name", resolvedName);
+        localStorage.setItem("ventureroot_user_email", backendUser?.email || data.email);
+        localStorage.setItem("ventureroot_user_id", backendUser?.id || "");
       }
 
-      const authUser = backendUser ? {
-        id: backendUser.id,
+      const authUser = {
+        id: backendUser?.id || "user-" + Date.now(),
         name: resolvedName,
-        email: backendUser.email || data.email,
-        roleLabel: backendUser.user_metadata?.role || "Entrepreneur",
-      } : mockUser!;
+        email: backendUser?.email || data.email,
+        roleLabel: backendUser?.user_metadata?.role || "Entrepreneur",
+      };
 
       loginAction(token, authUser);
       setIsSubmitting(false);
@@ -92,7 +91,19 @@ function LoginPageContent() {
       // we gracefully fall back to the mock token to allow UI testing to continue.
       if (error?.message === "Network Error") {
         console.warn("Backend not running. Proceeding with mock login for UI testing.");
-        loginAction("mock-token-xyz-123", mockUser!);
+        const fallbackEmailName = (data.email || "").split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase()) || "Entrepreneur";
+        const fallbackUser = {
+          id: "user-" + (data.email ? data.email.replace(/[^a-zA-Z0-9]/g, "_") : "guest"),
+          name: fallbackEmailName,
+          email: data.email || "entrepreneur@ventureroot.in",
+          roleLabel: "Entrepreneur",
+        };
+        if (typeof window !== "undefined") {
+          localStorage.setItem("ventureroot_user_name", fallbackEmailName);
+          localStorage.setItem("ventureroot_user_email", fallbackUser.email);
+          localStorage.setItem("ventureroot_user_id", fallbackUser.id);
+        }
+        loginAction("mock-token-xyz-123", fallbackUser);
         setIsSubmitting(false);
         if (redirectUrl) {
           router.push(redirectUrl);

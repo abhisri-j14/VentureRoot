@@ -73,13 +73,15 @@ export default function DashboardPage() {
   const { data: activeFeasibility } = useFeasibility(activeBusiness?.id || "");
 
   const firstName =
-    profileData?.fullName?.split(" ")[0] ||
     user?.name?.split(" ")[0] ||
+    (typeof window !== "undefined" ? localStorage.getItem("ventureroot_user_name")?.split(" ")[0] : null) ||
+    profileData?.fullName?.split(" ")[0] ||
     "Entrepreneur";
 
-  const locationStr = profileData?.location?.state
-    ? `${profileData.location.village ? profileData.location.village + ", " : ""}${profileData.location.district ? profileData.location.district + ", " : ""}${profileData.location.state}`
-    : "Local Region";
+  const locationStr =
+    profileData?.location?.district && profileData?.location?.state
+      ? `${profileData.location.district}, ${profileData.location.state}`
+      : user?.location || profileData?.location?.state || "Local Region";
 
   const businessLocationStr = activeBusiness?.location?.district
     ? `${activeBusiness.location.district}, ${activeBusiness.location.state || profileData?.location?.state || "State"}`
@@ -211,71 +213,13 @@ export default function DashboardPage() {
   ];
   const totalBreakdown = capexBreakdown.reduce((sum: number, item: any) => sum + item.value, 0);
 
-  // Fresh Account Check: If user has 0 businesses, show graceful frosted prompt
-  if (!isBusinessesLoading && (!businesses || businesses.length === 0)) {
-    return (
-      <div className="relative w-full min-h-[85vh] p-4 sm:p-6 lg:p-8 flex flex-col gap-6 overflow-hidden">
-        <div className="filter blur-md opacity-30 select-none pointer-events-none flex flex-col gap-6">
-          <div className="h-10 w-64 bg-slate-300 rounded-xl"></div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="h-44 bg-slate-200 rounded-2xl"></div>
-            <div className="h-44 bg-slate-200 rounded-2xl"></div>
-            <div className="h-44 bg-slate-200 rounded-2xl"></div>
-            <div className="h-44 bg-slate-200 rounded-2xl"></div>
-          </div>
-          <div className="h-64 bg-slate-200 rounded-2xl"></div>
-        </div>
-
-        <div className="absolute inset-0 z-20 flex items-center justify-center p-4 bg-slate-900/10 backdrop-blur-[2px]">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94, y: 15 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.45, ease: EASE_OUT_EXPO }}
-            className="bg-white/95 backdrop-blur-2xl border border-[#1E6702]/30 rounded-3xl p-6 sm:p-10 shadow-2xl max-w-lg w-full text-center flex flex-col items-center gap-5"
-          >
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wide">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-              <span>No Active Venture Yet</span>
-            </div>
-
-            <div className="w-16 h-16 rounded-2xl bg-[#1E6702] text-white flex items-center justify-center shadow-lg shadow-emerald-950/20">
-              <Building2 className="w-8 h-8" />
-            </div>
-
-            <div className="space-y-2">
-              <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#242424] tracking-tight">
-                Create Your Business to Activate Dashboard
-              </h2>
-              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed max-w-md mx-auto">
-                Your dashboard synthesizes real-time Census demographics, capital structures, and feasibility intelligence once your first venture is registered.
-              </p>
-            </div>
-
-            <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-              <Link
-                href="/business/create"
-                className="w-full sm:w-auto px-6 py-3 bg-[#1E6702] hover:bg-[#165201] text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
-              >
-                <PlusCircle className="w-4 h-4" />
-                <span>+ Create New Business</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-              <Link
-                href="/analysis"
-                className="w-full sm:w-auto px-5 py-3 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-semibold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-2"
-              >
-                <Sparkles className="w-4 h-4 text-emerald-700" />
-                <span>Instant Analysis</span>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
+  const hasNoBusinesses = !isBusinessesLoading && (!businesses || businesses.length === 0);
 
   return (
-    <div className="w-full h-full p-3 sm:p-5 md:p-6 lg:p-8 flex flex-col gap-5 sm:gap-6 overflow-x-hidden">
+    <div className="relative w-full h-full p-3 sm:p-5 md:p-6 lg:p-8 flex flex-col gap-5 sm:gap-6 overflow-x-hidden min-h-screen">
+
+      {/* ─── Hazy Blur Container for Dashboard Content when No Businesses ─── */}
+      <div className={hasNoBusinesses ? "filter blur-[8px] opacity-35 pointer-events-none select-none transition-all duration-700 flex flex-col gap-5 sm:gap-6" : "flex flex-col gap-5 sm:gap-6"}>
 
       {/* ═══ HEADER: Multi-Business Tabs + Executive Status ═══ */}
       <motion.div
@@ -290,13 +234,27 @@ export default function DashboardPage() {
               Executive Overview, {firstName}
             </h1>
             <p className="text-slate-600 text-xs sm:text-sm font-medium mt-1 flex flex-wrap items-center gap-1.5 sm:gap-2">
-              <span className="font-bold text-[#1E6702] bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
-                Active Venture {currentIdx + 1}: {businessName}
-              </span>
-              <span>•</span>
-              <span className="text-slate-700 font-semibold">{rawCategory}</span>
-              <span>•</span>
-              <span className="text-slate-500">{businessLocationStr}</span>
+              {businesses && businesses.length > 0 ? (
+                <>
+                  <span className="font-bold text-[#1E6702] bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
+                    Active Venture {currentIdx + 1}: {businessName}
+                  </span>
+                  <span>•</span>
+                  <span className="text-slate-700 font-semibold">{rawCategory}</span>
+                  <span>•</span>
+                  <span className="text-slate-500">{businessLocationStr}</span>
+                </>
+              ) : (
+                <>
+                  <span className="font-bold text-[#1E6702] bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
+                    Welcome to VentureRoot
+                  </span>
+                  <span>•</span>
+                  <span className="text-slate-600">Register your first rural enterprise to activate real-time analytics</span>
+                  <span>•</span>
+                  <span className="text-slate-500">{locationStr}</span>
+                </>
+              )}
             </p>
           </div>
 
@@ -312,8 +270,8 @@ export default function DashboardPage() {
         </div>
 
         {/* ─── Multi-Business Horizontal Switcher (Scroll-safe on mobile) ─── */}
-        <div className="w-full flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-0.5 scrollbar-none">
-          {businesses && businesses.length > 0 ? (
+        {businesses && businesses.length > 0 ? (
+          <div className="w-full flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-0.5 scrollbar-none">
             <div className="flex items-center gap-1.5 sm:gap-2 flex-nowrap">
               {businesses.map((biz: any, idx: number) => {
                 const isSelected = idx === currentIdx;
@@ -349,8 +307,43 @@ export default function DashboardPage() {
                 <span className="hidden sm:inline">+ Add Venture</span>
               </Link>
             </div>
-          ) : null}
-        </div>
+          </div>
+        ) : null}
+
+        {/* ─── Dedicated First-Time / Zero-Business Onboarding Banner ─── */}
+        {!isBusinessesLoading && (!businesses || businesses.length === 0) && (
+          <div className="bg-gradient-to-r from-[#173809] via-slate-900 to-[#122b07] text-white rounded-2xl p-5 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-lg border border-emerald-800/40 relative overflow-hidden">
+            <div className="absolute right-0 top-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="relative z-10 max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold mb-2 border border-emerald-500/30">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                <span>New Dedicated Entrepreneur Workspace</span>
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+                Welcome to your dashboard, {firstName}!
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
+                You haven&apos;t added any rural enterprises yet. Create your first business profile to unlock live Census demographic intelligence, AI-backed DPR generation, and automated statutory compliance verification.
+              </p>
+            </div>
+            <div className="relative z-10 shrink-0 flex flex-wrap gap-2.5">
+              <Link
+                href="/business/create"
+                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-md hover:shadow-emerald-500/25 flex items-center gap-2"
+              >
+                <PlusCircle className="w-4 h-4" />
+                <span>Create Your First Venture</span>
+              </Link>
+              <Link
+                href="/analysis"
+                className="bg-white/10 hover:bg-white/15 text-white border border-white/20 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5"
+              >
+                <span>Run Quick Feasibility</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* ─── Portfolio Context Bar (If multiple businesses exist) ─── */}
         {businesses && businesses.length > 1 ? (
@@ -884,6 +877,62 @@ export default function DashboardPage() {
 
       </motion.div>
 
+      </div> {/* ─── Closes Hazy Blur Container ─── */}
+
+      {/* ─── Focal Overlay Prompt when User Has No Business ─── */}
+      {hasNoBusinesses && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-md">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: EASE_OUT_EXPO }}
+            className="bg-white/95 backdrop-blur-2xl border-2 border-[#1E6702]/30 rounded-3xl p-6 sm:p-10 shadow-2xl max-w-lg w-full text-center flex flex-col items-center gap-5 relative overflow-hidden"
+          >
+            <div className="absolute right-0 top-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wide">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+              <span>No Business Registered Yet</span>
+            </div>
+
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#1E6702] to-[#124201] text-white flex items-center justify-center shadow-lg shadow-emerald-950/20">
+              <Building2 className="w-8 h-8" />
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#242424] tracking-tight">
+                Welcome, {firstName}!
+              </h2>
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed max-w-md mx-auto">
+                Your executive dashboard is currently hazy because no business is connected to your account. Creating your enterprise unlocks live Census demographic catchment, scheme subsidies (PMEGP/MUDRA), and bankable DPR analysis.
+              </p>
+              <p className="text-emerald-800 font-semibold text-xs bg-emerald-50/80 p-2.5 rounded-xl border border-emerald-200/60">
+                Please create your first rural enterprise to activate your workspace.
+              </p>
+            </div>
+
+            <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+              <Link
+                href="/business/create"
+                className="w-full sm:w-auto px-6 py-3.5 bg-[#1E6702] hover:bg-[#165201] text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-900/25 hover:shadow-emerald-900/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+              >
+                <PlusCircle className="w-4 h-4" />
+                <span>+ Create Your Business</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <Link
+                href="/analysis"
+                className="w-full sm:w-auto px-5 py-3.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-semibold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-2"
+              >
+                <Sparkles className="w-4 h-4 text-emerald-700" />
+                <span>Run Instant Feasibility</span>
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
     </div>
   );
 }
+

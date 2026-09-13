@@ -17,7 +17,7 @@ export const MobileBottomNav = () => {
   const activeBusiness = businesses?.[0];
   const selectedBusinessId = routeBusinessId || activeBusiness?.id;
 
-  const businessBase = selectedBusinessId ? `/business/${selectedBusinessId}` : "/business/create";
+  const businessBase = selectedBusinessId ? `/business/${selectedBusinessId}` : "/business";
   const financeBase = selectedBusinessId ? `/business/${selectedBusinessId}/finance` : "/business/create";
 
   const NAV_ITEMS = [

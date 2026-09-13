@@ -68,14 +68,16 @@ export const useProfile = () => {
         .then((res: any) => {
           let profile = res?.data?.profile ?? null;
           if (!profile) {
+            const activeUser = typeof window !== "undefined" ? (window as any).__VR_USER__ || null : null;
             const localSavedName = typeof window !== "undefined" ? localStorage.getItem("ventureroot_user_name") : null;
+            const localSavedEmail = typeof window !== "undefined" ? localStorage.getItem("ventureroot_user_email") : null;
             profile = {
               fullName: localSavedName || "Entrepreneur",
-              email: "entrepreneur@ventureroot.in",
+              email: localSavedEmail || "entrepreneur@ventureroot.in",
               phone: "9876543210",
-              location: { state: "Gujarat", district: "Anand", block: "Anand", village: "Anand" },
+              location: { state: "Enterprise Hub", district: "Local Catchment" },
               financial: { availableCapital: 100000, income: 25000 },
-              experience: { businessExperience: "1-3 years", skills: ["Local Trade", "Management"], education: "Graduate" },
+              experience: { businessExperience: "1-3 years", skills: ["Enterprise Operations", "Local Trade"], education: "Graduate" },
             };
           }
           setData(profile);
@@ -84,13 +86,14 @@ export const useProfile = () => {
         })
         .catch(() => {
           const localSavedName = typeof window !== "undefined" ? localStorage.getItem("ventureroot_user_name") : null;
+          const localSavedEmail = typeof window !== "undefined" ? localStorage.getItem("ventureroot_user_email") : null;
           const fallbackProfile = {
             fullName: localSavedName || "Entrepreneur",
-            email: "entrepreneur@ventureroot.in",
+            email: localSavedEmail || "entrepreneur@ventureroot.in",
             phone: "9876543210",
-            location: { state: "Gujarat", district: "Anand", block: "Anand", village: "Anand" },
+            location: { state: "Enterprise Hub", district: "Local Catchment" },
             financial: { availableCapital: 100000, income: 25000 },
-            experience: { businessExperience: "1-3 years", skills: ["Local Trade", "Management"], education: "Graduate" },
+            experience: { businessExperience: "1-3 years", skills: ["Enterprise Operations", "Local Trade"], education: "Graduate" },
           };
           setData(fallbackProfile);
           setOnboardingCompleted(true);

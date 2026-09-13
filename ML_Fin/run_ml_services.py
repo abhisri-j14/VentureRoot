@@ -58,6 +58,12 @@ SERVICES = [
         "cmd": [sys.executable, "-m", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8005"],
         "port": 8005,
     },
+    {
+        "name": "RAG Knowledge & Verification Service",
+        "dir": BASE_DIR / "Models_and_RAG" / "RAG",
+        "cmd": [sys.executable, "-m", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8006"],
+        "port": 8006,
+    },
 ]
 
 
