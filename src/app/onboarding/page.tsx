@@ -1,5 +1,6 @@
 import { OnboardingFlow } from "@/features/profile/components/OnboardingFlow";
 import Link from "next/link";
+import { PageFooter } from "@/components/layout/PageFooter";
 
 export default function OnboardingPage() {
   return (
@@ -29,6 +30,8 @@ export default function OnboardingPage() {
       <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 z-10 w-full pt-20 md:pt-8">
         <OnboardingFlow />
       </div>
+
+      <PageFooter className="z-10 py-3 text-slate-400/80" />
     </div>
   );
 }

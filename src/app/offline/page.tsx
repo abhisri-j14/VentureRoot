@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { PageFooter } from "@/components/layout/PageFooter";
 
 export default function OfflinePage() {
   const [isOnline, setIsOnline] = useState(false);
@@ -142,6 +143,7 @@ export default function OfflinePage() {
           </Link>
         </div>
       </div>
+      <PageFooter className="mt-auto py-4" />
     </main>
   );
 }
