@@ -47,7 +47,9 @@ export const MobileBottomNav = () => {
         pathname.startsWith("/business") &&
         !pathname.startsWith("/business/create") &&
         !pathname.startsWith("/business/compare") &&
-        !pathname.includes("/finance"),
+        !pathname.includes("/finance") &&
+        !pathname.includes("/feasibility") &&
+        !pathname.includes("/roadmap"),
     },
     {
       id: "mob-finance",

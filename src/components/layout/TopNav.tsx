@@ -59,6 +59,36 @@ export const TopNav = () => {
     { id: "nav-advisor",      href: "/advisor",       tKey: "nav.advisor",     icon: MessageSquare },
   ];
 
+  const isItemActive = (itemId: string, href: string) => {
+    switch (itemId) {
+      case "nav-dashboard":
+        return pathname === "/dashboard";
+      case "nav-analysis":
+        return pathname === "/analysis" || pathname.startsWith("/analysis/");
+      case "nav-finance":
+        return pathname.includes("/finance");
+      case "nav-feasibility":
+        return pathname.includes("/feasibility");
+      case "nav-new-business":
+        return pathname === "/business/create" || pathname.startsWith("/business/create");
+      case "nav-advisor":
+        return pathname === "/advisor" || pathname.startsWith("/advisor/");
+      case "nav-my-business":
+        return (
+          pathname.startsWith("/business") &&
+          !pathname.startsWith("/business/create") &&
+          !pathname.startsWith("/business/compare") &&
+          !pathname.includes("/finance") &&
+          !pathname.includes("/feasibility") &&
+          !pathname.includes("/roadmap")
+        );
+      default: {
+        const basePath = href.split("?")[0];
+        return basePath === pathname;
+      }
+    }
+  };
+
   const displayName = React.useMemo(() => {
     let resolved = "Entrepreneur";
     if (profileData?.fullName && profileData.fullName.trim() !== "") {
@@ -116,11 +146,7 @@ export const TopNav = () => {
         {/* Center: Nav Links (Desktop) */}
         <div className="hidden lg:flex items-center gap-1.5 relative z-10" onMouseLeave={() => setHoveredIndex(null)}>
           {NAV_ITEMS.map((link, idx) => {
-            const basePath = link.href.split("?")[0];
-            const isActive =
-              (basePath === "/dashboard" && pathname === "/dashboard") ||
-              (basePath === "/profile" && pathname === "/profile") ||
-              (basePath !== "/dashboard" && basePath !== "/profile" && pathname.startsWith(basePath));
+            const isActive = isItemActive(link.id, link.href);
 
             return (
               <Link 
@@ -249,11 +275,7 @@ export const TopNav = () => {
           >
             <div className="px-3 py-4 flex flex-col gap-1.5">
               {NAV_ITEMS.map((link, idx) => {
-                const basePath = link.href.split("?")[0];
-                const isActive =
-                  (basePath === "/dashboard" && pathname === "/dashboard") ||
-                  (basePath === "/profile" && pathname === "/profile") ||
-                  (basePath !== "/dashboard" && basePath !== "/profile" && pathname.startsWith(basePath));
+                const isActive = isItemActive(link.id, link.href);
 
                 return (
                   <motion.div
