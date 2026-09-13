@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, BarChart2, Briefcase, TrendingUp, MessageSquare, User } from "lucide-react";
+import { Home, BarChart2, Briefcase, TrendingUp, ShieldAlert, MessageSquare } from "lucide-react";
 import { useBusinessesComparison } from "@/lib/data/businesses";
 import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 
@@ -19,6 +19,7 @@ export const MobileBottomNav = () => {
 
   const businessBase = selectedBusinessId ? `/business/${selectedBusinessId}` : "/business/create";
   const financeBase = selectedBusinessId ? `/business/${selectedBusinessId}/finance` : "/business/create";
+  const feasibilityBase = selectedBusinessId ? `/business/${selectedBusinessId}/feasibility` : "/business/create";
 
   const NAV_ITEMS = [
     {
@@ -59,6 +60,13 @@ export const MobileBottomNav = () => {
       isActive: pathname.includes("/finance"),
     },
     {
+      id: "mob-feasibility",
+      href: feasibilityBase,
+      label: t("nav.feasibility" as any) || "Feasibility",
+      icon: ShieldAlert,
+      isActive: pathname.includes("/feasibility"),
+    },
+    {
       id: "mob-advisor",
       href: "/advisor",
       label:
@@ -67,16 +75,6 @@ export const MobileBottomNav = () => {
           : t("nav.advisor" as any) || "Advisor",
       icon: MessageSquare,
       isActive: pathname === "/advisor" || pathname.startsWith("/advisor/"),
-    },
-    {
-      id: "mob-profile",
-      href: "/profile",
-      label:
-        t("nav.profile" as any) === "My Profile"
-          ? "Profile"
-          : t("nav.profile" as any) || "Profile",
-      icon: User,
-      isActive: pathname === "/profile",
     },
   ];
 
