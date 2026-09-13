@@ -673,14 +673,14 @@ export const ReportDetailView = ({ report }: ReportDetailViewProps) => {
                     <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all duration-700 ${
-                          verifyResult.compliance_score >= 75 ? "bg-emerald-500" :
-                          verifyResult.compliance_score >= 50 ? "bg-amber-400" : "bg-red-500"
+                          verifyResult.compliance_score >= 60 ? "bg-emerald-500" :
+                          verifyResult.compliance_score >= 40 ? "bg-amber-400" : "bg-red-500"
                         }`}
                         style={{ width: `${verifyResult.compliance_score}%` }}
                       />
                     </div>
                     <div className="flex justify-between font-sans text-[10px] text-gray-400 mt-1">
-                      <span>0</span><span>50 (Warning)</span><span>75 (Good)</span><span>100</span>
+                      <span>0</span><span>40 (Warning)</span><span>60 (Verified)</span><span>100</span>
                     </div>
                   </div>
 

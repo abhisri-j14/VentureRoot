@@ -719,6 +719,27 @@ const SECTOR_COMPETITOR_TEMPLATES = {
     },
     // 10–20 km District Catchment Competitors
     {
+      nameSuffix: "Sub-District Multi-Specialty Referral Hospital",
+      type: "Direct",
+      sectorType: "Private Sector",
+      ownership: "Private",
+      facilityType: "Multi-Specialty Hospital",
+      source: "State Clinical Establishments Act Registry",
+      dlat: 0.078,
+      dlon: 0.065,
+      distKm: 12.4,
+      pricing: "₹500 OPD / ₹3,200/day IPD Bed",
+      strengths: [
+        "Secondary surgical care with laparoscopic OT",
+        "Tie-ups with private health insurers and TPAs"
+      ],
+      weaknesses: [
+        "Distance friction for emergency nighttime transport from rural talukas"
+      ],
+      positioning: "Offer localized primary admissions and immediate emergency stabilization.",
+      businessImpact: "Draws non-critical elective surgical patients from our catchment."
+    },
+    {
       nameSuffix: "District Government Medical College & Apex Civil Hospital",
       type: "Indirect",
       sectorType: "Govt / Public Sector",
@@ -741,6 +762,28 @@ const SECTOR_COMPETITOR_TEMPLATES = {
       businessImpact: "Acts as ultimate public safety net for catastrophic illness; high elective waitlists drive insured patients to private centers within 10–15km."
     },
     {
+      nameSuffix: "Regional Cardiac & Critical Care Super-Specialty Hospital",
+      type: "Direct",
+      sectorType: "Private Sector",
+      ownership: "Private",
+      facilityType: "Super-Specialty Hospital",
+      source: "NABH Accredited Hospitals Directory",
+      dlat: -0.108,
+      dlon: 0.095,
+      distKm: 16.5,
+      pricing: "Corporate Super-Specialty Tariffs",
+      strengths: [
+        "Advanced interventional cardiology and neuro-critical ICU",
+        "24x7 emergency cardiac ambulance fleet"
+      ],
+      weaknesses: [
+        "High expense barriers for lower-income rural households",
+        "Highway corridor location away from village centers"
+      ],
+      positioning: "Complement as affordable community primary and secondary healthcare provider.",
+      businessImpact: "Captures high-complexity tertiary referrals across the district."
+    },
+    {
       nameSuffix: "Apex Comprehensive Cancer & Multi-Organ Institute",
       type: "Direct",
       sectorType: "Private Sector",
@@ -749,7 +792,7 @@ const SECTOR_COMPETITOR_TEMPLATES = {
       source: "NABH Accredited Hospitals Directory",
       dlat: -0.112,
       dlon: 0.104,
-      distKm: 17.2,
+      distKm: 18.2,
       pricing: "Corporate Super-Specialty Tariffs",
       strengths: [
         "State-of-the-art linear accelerator, PET-CT, and robotic surgery suites",
@@ -959,6 +1002,22 @@ function generateRealWorldCompetitors(category, location, m2) {
       },
       // 10–20 km District Catchment Competitors
       {
+        nameSuffix: `${district} Regional Wholesale Distribution Center`,
+        type: "Indirect",
+        sectorType: "Govt / Public Sector",
+        ownership: "Cooperative Apex Federation",
+        facilityType: "Wholesale Depot",
+        source: "State Cooperative Marketing Federation",
+        dlat: 0.075,
+        dlon: 0.062,
+        distKm: 11.8,
+        pricing: "Wholesale Bulk Trade Pricing",
+        strengths: ["High-tonnage aggregation and multi-district supply logistics"],
+        weaknesses: ["Requires minimum bulk consignment volumes", "Inflexible ordering schedules"],
+        positioning: "Regional Supply Anchor — Leverage as institutional supplier or offload surplus volume.",
+        businessImpact: "Sets baseline wholesale bulk procurement pricing across the district.",
+      },
+      {
         nameSuffix: `Central District Principal Mandi & Food Park Terminal`,
         type: "Indirect",
         sectorType: "Govt / Public Sector",
@@ -975,6 +1034,22 @@ function generateRealWorldCompetitors(category, location, m2) {
         businessImpact: "Defines district-wide wholesale commodity floor across the 20km trade zone.",
       },
       {
+        nameSuffix: `${subdistrict} Automated Processing & Packaging Hub`,
+        type: "Direct",
+        sectorType: "Private Sector",
+        ownership: "Private",
+        facilityType: "Private Enterprise",
+        source: "Udyam Portal / Web Scraped",
+        dlat: -0.106,
+        dlon: 0.092,
+        distKm: 16.5,
+        pricing: "Commercial Market Parity",
+        strengths: ["Automated packaging line and cold chain warehousing"],
+        weaknesses: ["Higher distribution overhead to peripheral rural blocks"],
+        positioning: "Regional Private Benchmark — Win local village market share through fresher stock and direct relationships.",
+        businessImpact: "Direct benchmark for regional retail pricing and packaging standards.",
+      },
+      {
         nameSuffix: `State Industrial Mega Processing & Logistics Park`,
         type: "Direct",
         sectorType: "Private Sector",
@@ -983,7 +1058,7 @@ function generateRealWorldCompetitors(category, location, m2) {
         source: "State Industrial Development Corporation (SIDC)",
         dlat: -0.105,
         dlon: 0.098,
-        distKm: 16.8,
+        distKm: 18.8,
         pricing: "Corporate Contract Pricing",
         strengths: ["Multi-acre automated warehousing", "National export contracts"],
         weaknesses: ["Zero focus on small-scale hyper-local sales", "High minimum batch volumes"],

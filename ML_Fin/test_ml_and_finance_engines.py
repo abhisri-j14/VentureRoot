@@ -19,7 +19,11 @@ import sys
 import os
 import json
 import time
+import warnings
 from pathlib import Path
+
+# Suppress sklearn unpickling version warnings and deprecations in test output
+warnings.filterwarnings("ignore")
 
 # Force UTF-8 on standard outputs for Windows PowerShell compatibility
 if hasattr(sys.stdout, "reconfigure"):
@@ -36,14 +40,25 @@ sys.path.insert(0, str(WORKSPACE_ROOT))
 sys.path.insert(0, str(ML_FIN_DIR))
 sys.path.insert(0, str(WEB_SCRAPING_DIR))
 
-from data_intelligence.adapters import (
-    Model1Adapter,
-    Model2Adapter,
-    Model3Adapter,
-    FinanceEngineAdapter,
-)
-from data_intelligence.pipeline import VentureRootPipeline
-from data_intelligence.schemas import UserBusinessInput, ComponentStatus
+try:
+    from data_intelligence.adapters import (
+        Model1Adapter,
+        Model2Adapter,
+        Model3Adapter,
+        FinanceEngineAdapter,
+    )
+    from data_intelligence.pipeline import VentureRootPipeline
+    from data_intelligence.schemas import UserBusinessInput, ComponentStatus
+except ImportError:
+    from web_scrapping.data_intelligence.adapters import (
+        Model1Adapter,
+        Model2Adapter,
+        Model3Adapter,
+        FinanceEngineAdapter,
+    )
+    from web_scrapping.data_intelligence.pipeline import VentureRootPipeline
+    from web_scrapping.data_intelligence.schemas import UserBusinessInput, ComponentStatus
+
 from web_scrapping.api import get_location_statistics, load_population_df, load_housing_df
 
 # Summary collector

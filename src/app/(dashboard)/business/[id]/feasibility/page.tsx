@@ -201,6 +201,12 @@ export default function FeasibilityPage() {
                 businessName={(businessDetails as any)?.name || "Your Venture"}
                 category={businessCategory}
                 locationName={locationName}
+                competitorRadar={
+                  (fetchedFeasibility as any)?.competitorRadar ||
+                  (fetchedFeasibility as any)?.feasibility?.competitorRadar ||
+                  (feasibilityData as any)?.competitorRadar ||
+                  null
+                }
               />
             </div>
 

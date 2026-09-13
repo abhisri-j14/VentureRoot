@@ -113,7 +113,7 @@ Promoter Margin  : ₹{int(margin):,}
 {regulations_block}
 
 ═══════════════════════════════════════════════════════════════
-🎯 VERIFICATION INSTRUCTIONS
+🎯 VERIFICATION INSTRUCTIONS & VERDICT RULES
 ═══════════════════════════════════════════════════════════════
 Analyze each ML prediction against the retrieved regulations above. For each prediction:
 
@@ -122,6 +122,11 @@ Analyze each ML prediction against the retrieved regulations above. For each pre
 3. **OPERATIONAL REGULATIONS** — Are there any mandatory licensing, registration, or compliance requirements the prediction should account for (Udyam, FSSAI, trade license, etc.)?
 4. **RISK FLAGS** — Identify any regulatory risks, cap violations, or missing compliance steps.
 5. **CITATIONS** — For every finding, cite the exact source document and section name from the retrieved regulations.
+
+CRITICAL VERDICT & SCORING RULES:
+- **VERIFIED** (Compliance Score 60-100): Assigned when business parameters satisfy scheme limits, financial caps, and margin rules with NO direct statutory violations. Routine operational steps (e.g., Udyam Registration, FSSAI Category, State PCB NOC, Municipal Trade License) are standard administrative prerequisites and MUST NOT downgrade the verdict to FLAG_WARNING if market/financial compliance is proper.
+- **FLAG_WARNING** (Compliance Score 40-59): Assigned ONLY when there are actual near-cap overruns, questionable scheme eligibility, or significant financial risk flags.
+- **REJECTED** (Compliance Score 0-39): Assigned ONLY when there is a direct statutory contradiction, illegal parameter allocation, or total scheme ineligibility.
 
 ═══════════════════════════════════════════════════════════════
 📝 OUTPUT FORMAT (REQUIRED — Professional Audit Markdown)
@@ -274,6 +279,24 @@ def run_verification(
     score_match = re.search(r"Compliance Score:\s*(\d+)\s*/\s*100", verification_text)
     if score_match:
         compliance_score = int(score_match.group(1))
+
+    # Safeguard: If market/financial compliance is proper (compliance_score >= 60)
+    # and zero direct statutory violations exist, verdict MUST be VERIFIED.
+    has_no_violations = (
+        "zero direct statutory violation" in verification_text.lower()
+        or "no direct violation" in verification_text.lower()
+        or "zero violations" in verification_text.lower()
+        or "no direct statutory contradiction" in verification_text.lower()
+        or "### ❌ violations (if any)\n* **zero" in verification_text.lower()
+    )
+    if compliance_score >= 60 and verdict == "FLAG_WARNING" and has_no_violations:
+        verdict = "VERIFIED"
+        verification_text = re.sub(
+            r"\*\*VERDICT:\s*FLAG_WARNING\*\*",
+            "**VERDICT: VERIFIED**",
+            verification_text,
+            flags=re.IGNORECASE
+        )
 
     # ── Step 6: Build citations list ─────────────────────────────────────
     citations = [

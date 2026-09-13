@@ -29,7 +29,9 @@ export async function getFeasibilityController(
         // The FeasibilityData is spread at the top level of the feasibility object
         // so the frontend hook can extract it as res.data.feasibility.feasibility
         feasibility: context.feasibility,
+        competitorRadar: context.competitorRadar || null,
       },
+      competitorRadar: context.competitorRadar || null,
     },
   };
 }

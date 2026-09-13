@@ -3,6 +3,7 @@ import { mapMlPredictionToFeasibility } from "@/utils/feasibility.mapper";
 import * as financeClient from "@/integrations/finance.client";
 import { chatWithAi } from "@/integrations/ai.client";
 import { generateTailoredRoadmapAndCompetitors } from "@/services/ai-roadmap.service";
+import { fetchCompetitorsByRadius } from "@/services/competitor-radar.service";
 import { successResponse } from "@/utils/api-response";
 import { handleError } from "@/utils/error-handler";
 import { INDIAN_LOCATIONS_MASTER } from "@/services/location-search.service";
@@ -147,12 +148,30 @@ export async function POST(request) {
       console.warn("[feasibility/instant] AI Advisor warning:", err.message);
     }
 
-    // 5. Generate Tailored 12-Month Roadmap & Competitor Intelligence (Gemini + Domain Models)
+    // 5. Fetch real local competitors via Overpass API (OSM) + Gemini enrichment
+    let competitorRadarData = null;
+    try {
+      competitorRadarData = await fetchCompetitorsByRadius({
+        lat: latitude,
+        lon: longitude,
+        category,
+        district,
+        state,
+      });
+    } catch (err) {
+      console.warn("[feasibility/instant] Competitor radar warning:", err.message);
+    }
+
+    // 6. Generate Tailored 12-Month Roadmap & Competitor Intelligence (Gemini + Domain Models)
     let roadmapData = null;
     try {
+      const osmCompetitors = [
+        ...(competitorRadarData?.within10km || []),
+        ...(competitorRadarData?.within20km || []),
+      ];
       roadmapData = await generateTailoredRoadmapAndCompetitors({
         business: businessObj,
-        competitors: feasibilityData?.competition?.competitors || [],
+        competitors: osmCompetitors.length > 0 ? osmCompetitors : (feasibilityData?.competition?.competitors || []),
         finance: financeData,
       });
     } catch (err) {
@@ -191,6 +210,17 @@ export async function POST(request) {
         roadmap: roadmapData?.roadmap || null,
         roadmapActions: roadmapData?.actionItems || [],
         competitorInsights: roadmapData?.competitorInsights || null,
+        // Real competitor radar: OSM-scraped + Gemini-enriched
+        competitorRadar: competitorRadarData
+          ? {
+              within10km: competitorRadarData.within10km || [],
+              within20km: competitorRadarData.within20km || [],
+              total: competitorRadarData.total || 0,
+              source: competitorRadarData.source,
+              aiEnriched: competitorRadarData.aiEnriched,
+              fetchedAt: competitorRadarData.fetchedAt,
+            }
+          : null,
         rawMl: {
           model1: mlResult?.model1 || null,
           model2: mlResult?.model2 || null,
