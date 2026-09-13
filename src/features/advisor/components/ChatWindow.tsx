@@ -165,38 +165,38 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
   ];
 
   return (
-    <div className="flex flex-col h-[calc(100vh-220px)] min-h-[460px] md:h-[75vh] md:min-h-[560px] bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm relative">
+    <div className="flex flex-col h-[calc(100vh-220px)] min-h-[460px] md:h-[75vh] md:min-h-[560px] bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm relative w-full min-w-0">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 sm:p-4 border-b border-slate-200 bg-slate-50/90 backdrop-blur-sm">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-[#1E6702]/15 flex items-center justify-center text-[#1E6702]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 p-3 sm:p-4 border-b border-slate-200 bg-slate-50/90 backdrop-blur-sm min-w-0">
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+          <div className="w-8 h-8 rounded-full bg-[#1E6702]/15 flex items-center justify-center text-[#1E6702] shrink-0">
             <Sparkles className="w-4 h-4" />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-secondary">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="font-heading text-[14px] sm:text-[16px] font-bold text-secondary break-words">
                 VentureRoot AI Advisor
               </h3>
-              <span className="text-[10px] bg-[#1E6702]/10 text-[#1E6702] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+              <span className="text-[10px] bg-[#1E6702]/10 text-[#1E6702] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shrink-0">
                 Gemini 2.5
               </span>
             </div>
-            <p className="font-sans text-[12px] text-secondary-muted truncate max-w-[220px] sm:max-w-none">
+            <p className="font-sans text-[11px] sm:text-[12px] text-secondary-muted break-words leading-tight mt-0.5">
               Answers grounded in your exact capital, location & venture inputs
             </p>
           </div>
         </div>
 
         {/* Right Header Controls */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap justify-end shrink-0">
           {/* Active Business Switcher */}
           {businesses && businesses.length > 0 && (
-            <div className="relative">
+            <div className="relative max-w-[160px] min-[400px]:max-w-[200px] sm:max-w-xs">
               <select
                 aria-label="Select Active Business"
                 value={selectedBusinessId}
                 onChange={(e) => setSelectedBusinessId(e.target.value)}
-                className="text-[12px] font-semibold text-[#200813] bg-white border border-slate-200 hover:border-[#1E6702]/40 rounded-xl px-2.5 py-1.5 pr-7 appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#1E6702] shadow-xs"
+                className="w-full text-[11px] sm:text-[12px] font-semibold text-[#200813] bg-white border border-slate-200 hover:border-[#1E6702]/40 rounded-xl px-2.5 py-1.5 pr-7 appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#1E6702] shadow-xs truncate"
               >
                 {businesses.map((b) => (
                   <option key={b.id} value={b.id}>
@@ -211,14 +211,14 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
           {/* Gemini Key Config Button */}
           <button
             onClick={() => setShowKeyModal(true)}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-[12px] font-semibold transition-all shadow-xs ${
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-[11px] sm:text-[12px] font-semibold transition-all shadow-xs shrink-0 ${
               geminiApiKey
                 ? "bg-[#1E6702]/10 border-[#1E6702]/30 text-[#1E6702] hover:bg-[#1E6702]/15"
                 : "bg-white border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-300"
             }`}
             title="Configure Gemini API Key"
           >
-            <Key className="w-3.5 h-3.5" />
+            <Key className="w-3.5 h-3.5 shrink-0" />
             <span className="hidden sm:inline">{geminiApiKey ? "API Key Set" : "Add Key"}</span>
             {geminiApiKey && <span className="w-1.5 h-1.5 rounded-full bg-[#1E6702]" />}
           </button>
@@ -226,7 +226,7 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
           {/* Clear Chat */}
           <button
             onClick={clearChat}
-            className="p-2 text-secondary-muted hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            className="p-1.5 sm:p-2 text-secondary-muted hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors shrink-0"
             title="Clear Conversation"
           >
             <Trash2 className="w-4 h-4" />
@@ -236,70 +236,72 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
 
       {/* Active Business Context Banner */}
       {activeBusiness && (
-        <div className="bg-[#FFFBE7] border-b border-[#200813]/5 px-4 py-1.5 flex items-center justify-between text-xs text-[#200813]/80">
-          <div className="flex items-center gap-2 truncate">
-            <Building2 className="w-3.5 h-3.5 text-[#1E6702] shrink-0" />
-            <span className="font-semibold text-[#1E6702] truncate">
-              {activeBusiness.name || activeBusiness.category}
-            </span>
-            <span className="text-slate-400">•</span>
-            <span className="truncate">
+        <div className="bg-[#FFFBE7] border-b border-[#200813]/5 px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-1.5 text-xs text-[#200813]/80 min-w-0">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0 flex-1">
+            <div className="flex items-center gap-1.5 shrink-0">
+              <Building2 className="w-3.5 h-3.5 text-[#1E6702] shrink-0" />
+              <span className="font-semibold text-[#1E6702] break-words">
+                {activeBusiness.name || activeBusiness.category}
+              </span>
+            </div>
+            <span className="text-slate-400 hidden min-[400px]:inline">•</span>
+            <span className="break-words">
               📍 {activeBusiness.location?.district || "India"}, {activeBusiness.location?.state || ""}
             </span>
             {activeBusiness.availableMargin != null && (
               <>
-                <span className="text-slate-400">•</span>
-                <span>Margin: ₹{Number(activeBusiness.availableMargin).toLocaleString("en-IN")}</span>
+                <span className="text-slate-400 hidden min-[400px]:inline">•</span>
+                <span className="break-words">Margin: ₹{Number(activeBusiness.availableMargin).toLocaleString("en-IN")}</span>
               </>
             )}
           </div>
-          <span className="text-[10px] text-[#1E6702] font-bold uppercase tracking-wider hidden sm:inline">
+          <span className="text-[10px] text-[#1E6702] font-bold uppercase tracking-wider shrink-0">
             Active Context
           </span>
         </div>
       )}
 
       {/* Message Area */}
-      <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-5">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-4 flex flex-col gap-4 sm:gap-5 min-w-0">
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`flex gap-3.5 max-w-[92%] sm:max-w-[85%] ${
+            className={`flex gap-2.5 sm:gap-3.5 w-full max-w-[95%] sm:max-w-[85%] min-w-0 ${
               msg.role === "user" ? "self-end flex-row-reverse" : "self-start"
             }`}
           >
             {/* Avatar */}
             <div className="shrink-0 mt-1">
               {msg.role === "user" ? (
-                <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-700">
-                  <User className="w-4 h-4" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-700">
+                  <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
               ) : (
-                <div className="w-8 h-8 rounded-full bg-[#1E6702] text-white flex items-center justify-center shadow-xs">
-                  <Bot className="w-4 h-4" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#1E6702] text-white flex items-center justify-center shadow-xs">
+                  <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
               )}
             </div>
 
             {/* Content Bubble */}
-            <div className="flex flex-col gap-2 max-w-full">
+            <div className="flex flex-col gap-2 min-w-0 flex-1 overflow-hidden">
               <div
-                className={`p-4 rounded-2xl ${
+                className={`p-3 sm:p-4 rounded-2xl break-words [overflow-wrap:anywhere] ${
                   msg.role === "user"
                     ? "bg-[#1E6702] text-white rounded-tr-sm shadow-xs"
                     : "bg-slate-50 text-[#200813] rounded-tl-sm border border-slate-200/80 shadow-xs"
                 }`}
               >
-                <div className="whitespace-pre-wrap font-sans text-[13.5px] sm:text-[14px] leading-relaxed break-words">
+                <div className="whitespace-pre-wrap font-sans text-[13px] sm:text-[14px] leading-relaxed break-words [overflow-wrap:anywhere]">
                   {msg.content}
                 </div>
               </div>
 
               {/* Evidence Rendering */}
               {msg.evidence && (
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs flex flex-col gap-2">
-                  <div className="flex items-center justify-between">
-                    <span className="font-sans text-[12px] font-semibold text-secondary-muted">
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 sm:p-3 text-xs flex flex-col gap-2 min-w-0 overflow-hidden">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <span className="font-sans text-[11px] sm:text-[12px] font-semibold text-secondary-muted break-words">
                       Grounding Context & Confidence
                     </span>
                     <EvidenceBadge
@@ -308,9 +310,9 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
                     />
                   </div>
                   {msg.evidence.sources && msg.evidence.sources.length > 0 && (
-                    <ul className="list-disc list-inside font-sans text-[11px] text-secondary-muted space-y-0.5">
+                    <ul className="list-disc list-inside font-sans text-[11px] text-secondary-muted space-y-0.5 break-words [overflow-wrap:anywhere]">
                       {msg.evidence.sources.map((src, i) => (
-                        <li key={i}>{src}</li>
+                        <li key={i} className="break-words">{src}</li>
                       ))}
                     </ul>
                   )}
@@ -321,13 +323,13 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
         ))}
 
         {isStreaming && (
-          <div className="flex gap-3 max-w-[85%] self-start">
+          <div className="flex gap-2.5 sm:gap-3 w-full max-w-[95%] sm:max-w-[85%] self-start min-w-0">
             <div className="shrink-0 mt-1">
-              <div className="w-8 h-8 rounded-full bg-[#1E6702] text-white flex items-center justify-center shadow-xs animate-pulse">
-                <Bot className="w-4 h-4" />
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#1E6702] text-white flex items-center justify-center shadow-xs animate-pulse">
+                <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </div>
             </div>
-            <div className="bg-slate-50 text-secondary rounded-2xl rounded-tl-sm border border-slate-200 p-4 flex gap-1.5 items-center">
+            <div className="bg-slate-50 text-secondary rounded-2xl rounded-tl-sm border border-slate-200 p-3 sm:p-4 flex gap-1.5 items-center min-w-0">
               <span className="text-xs font-semibold text-[#1E6702] mr-1">Gemini is analyzing</span>
               <div className="w-1.5 h-1.5 bg-[#1E6702] rounded-full animate-bounce" />
               <div className="w-1.5 h-1.5 bg-[#1E6702] rounded-full animate-bounce [animation-delay:150ms]" />
@@ -339,13 +341,13 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
       </div>
 
       {/* Quick Prompt Chips (Swipeable on Mobile) */}
-      <div className="px-4 py-2 bg-slate-50/70 border-t border-slate-100 flex gap-2 overflow-x-auto no-scrollbar">
+      <div className="px-3 sm:px-4 py-2 bg-slate-50/70 border-t border-slate-100 flex gap-2 overflow-x-auto no-scrollbar w-full min-w-0">
         {QUICK_PROMPTS.map((prompt, i) => (
           <button
             key={i}
             onClick={() => sendQuery(prompt)}
             disabled={isStreaming}
-            className="whitespace-nowrap px-3 py-1.5 rounded-full border border-slate-200 bg-white font-sans text-[12px] font-medium text-slate-700 hover:border-[#1E6702] hover:text-[#1E6702] hover:bg-[#1E6702]/5 transition-colors shrink-0 disabled:opacity-50"
+            className="whitespace-normal sm:whitespace-nowrap px-3 py-1.5 rounded-full border border-slate-200 bg-white font-sans text-[11px] sm:text-[12px] font-medium text-slate-700 hover:border-[#1E6702] hover:text-[#1E6702] hover:bg-[#1E6702]/5 transition-colors shrink-0 disabled:opacity-50 text-left"
           >
             {prompt}
           </button>
@@ -353,7 +355,7 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
       </div>
 
       {/* Input Area */}
-      <div className="p-3.5 sm:p-4 border-t border-slate-200 bg-white">
+      <div className="p-3 sm:p-4 border-t border-slate-200 bg-white w-full min-w-0">
         {showVoiceRecorder ? (
           <VoiceRecorder
             onTranscriptConfirm={(transcript) => {
@@ -366,7 +368,7 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
           <form
             id="chat-form"
             onSubmit={handleSend}
-            className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl p-1.5 focus-within:ring-2 focus-within:ring-[#1E6702]/20 focus-within:border-[#1E6702] transition-all"
+            className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl p-1.5 focus-within:ring-2 focus-within:ring-[#1E6702]/20 focus-within:border-[#1E6702] transition-all w-full min-w-0"
           >
             <button
               type="button"
@@ -380,8 +382,8 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about local demand, PMEGP/MUDRA subsidies, cost breakdown..."
-              className="flex-1 bg-transparent border-none focus:ring-0 px-2 py-1.5 font-sans text-[13.5px] sm:text-[14px] text-secondary outline-none"
+              placeholder="Ask about local demand, PMEGP/MUDRA subsidies..."
+              className="flex-1 min-w-0 bg-transparent border-none focus:ring-0 px-2 py-1.5 font-sans text-[13px] sm:text-[14px] text-secondary outline-none break-words"
               disabled={isStreaming}
             />
             <button
@@ -397,29 +399,29 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
 
       {/* API Key Modal */}
       {showKeyModal && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-9 h-9 rounded-full bg-[#1E6702]/10 text-[#1E6702] flex items-center justify-center">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-4 sm:p-6 animate-in fade-in zoom-in-95 duration-200 min-w-0 overflow-hidden">
+            <div className="flex items-center gap-3 mb-3 min-w-0">
+              <div className="w-9 h-9 rounded-full bg-[#1E6702]/10 text-[#1E6702] flex items-center justify-center shrink-0">
                 <Key className="w-5 h-5" />
               </div>
-              <div>
-                <h4 className="font-heading font-bold text-[16px] text-secondary">
+              <div className="min-w-0 flex-1">
+                <h4 className="font-heading font-bold text-[15px] sm:text-[16px] text-secondary break-words">
                   Configure Gemini API Key
                 </h4>
-                <p className="text-[12px] text-slate-500">
+                <p className="text-[11px] sm:text-[12px] text-slate-500 break-words">
                   Google Gemini powers the VentureRoot AI Advisory Engine
                 </p>
               </div>
             </div>
 
-            <p className="text-[13px] text-slate-600 mb-4 leading-relaxed">
-              You can set your Gemini API key in your server&apos;s <code className="bg-slate-100 px-1.5 py-0.5 rounded text-[11px] font-mono">.env.local</code> (or Vercel environment variables), or save it directly in your browser session below.
+            <p className="text-[12px] sm:text-[13px] text-slate-600 mb-4 leading-relaxed break-words">
+              You can set your Gemini API key in your server&apos;s <code className="bg-slate-100 px-1.5 py-0.5 rounded text-[11px] font-mono break-all">.env.local</code> (or Vercel environment variables), or save it directly in your browser session below.
             </p>
 
-            <form onSubmit={handleSaveKey} className="flex flex-col gap-4">
-              <div>
-                <label className="block text-[12px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            <form onSubmit={handleSaveKey} className="flex flex-col gap-4 min-w-0">
+              <div className="min-w-0">
+                <label className="block text-[11px] sm:text-[12px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                   Gemini API Key
                 </label>
                 <input
@@ -427,15 +429,15 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
                   value={apiKeyInput}
                   onChange={(e) => setApiKeyInput(e.target.value)}
                   placeholder="AIzaSy..."
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-secondary font-mono focus:outline-none focus:ring-2 focus:ring-[#1E6702]/20 focus:border-[#1E6702]"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-secondary font-mono focus:outline-none focus:ring-2 focus:ring-[#1E6702]/20 focus:border-[#1E6702]"
                 />
-                <p className="text-[11px] text-slate-400 mt-1">
+                <p className="text-[11px] text-slate-400 mt-1 break-words">
                   Don&apos;t have a key? Get one free at{" "}
                   <a
                     href="https://aistudio.google.com/app/apikey"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[#1E6702] underline font-semibold"
+                    className="text-[#1E6702] underline font-semibold break-all"
                   >
                     Google AI Studio
                   </a>
@@ -472,4 +474,5 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
     </div>
   );
 };
+
 

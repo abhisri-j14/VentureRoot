@@ -65,7 +65,7 @@ export const VoiceRecorder = ({ onTranscriptConfirm, onCancel }: VoiceRecorderPr
   };
 
   return (
-    <div className="w-full bg-white border border-primary/30 rounded-xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2">
+    <div className="w-full bg-white border border-primary/30 rounded-xl p-3 sm:p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 min-w-0 overflow-hidden">
       
       {currentState === "IDLE" && (
         <div className="flex flex-col items-center justify-center py-6 gap-4">
@@ -100,32 +100,32 @@ export const VoiceRecorder = ({ onTranscriptConfirm, onCancel }: VoiceRecorderPr
       )}
 
       {currentState === "STOPPED" && (
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between mb-1">
+        <div className="flex flex-col gap-4 min-w-0">
+          <div className="flex items-center justify-between mb-1 gap-2 flex-wrap">
             <h4 className="text-sm font-semibold text-secondary flex items-center gap-2">
-              <Mic className="w-4 h-4 text-primary" /> {t("voice.edit" as any)}
+              <Mic className="w-4 h-4 text-primary shrink-0" /> {t("voice.edit" as any)}
             </h4>
-            <span className="text-xs font-mono text-secondary-muted bg-slate-100 px-2 rounded-md">{formatTime(timer)}</span>
+            <span className="text-xs font-mono text-secondary-muted bg-slate-100 px-2 py-0.5 rounded-md">{formatTime(timer)}</span>
           </div>
           
           <textarea
             value={transcript}
             onChange={(e) => setTranscript(e.target.value)}
-            className="w-full h-24 p-3 text-sm text-secondary bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none"
+            className="w-full h-24 p-3 text-sm text-secondary bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none break-words"
             placeholder="Transcript will appear here..."
           />
           
-          <div className="flex items-center justify-between pt-2">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
+            <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={retryRecording}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-md transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-md transition-colors"
               >
-                <RefreshCw className="w-4 h-4" /> Retry
+                <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Retry
               </button>
               <button
                 onClick={onCancel}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
               >
                 <Trash2Icon /> {t("voice.discard" as any)}
               </button>
@@ -134,9 +134,9 @@ export const VoiceRecorder = ({ onTranscriptConfirm, onCancel }: VoiceRecorderPr
             <button
               onClick={confirmTranscript}
               disabled={!transcript.trim()}
-              className="flex items-center gap-1.5 px-4 py-2 text-sm font-bold text-white bg-primary rounded-lg hover:bg-primary-light disabled:opacity-50 transition-colors shadow-sm"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-bold text-white bg-primary rounded-lg hover:bg-primary-light disabled:opacity-50 transition-colors shadow-sm shrink-0"
             >
-              <Check className="w-4 h-4" /> {t("voice.confirm" as any)}
+              <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> {t("voice.confirm" as any)}
             </button>
           </div>
         </div>
