@@ -409,9 +409,9 @@ export default function DashboardPage() {
           <div className="flex-1 flex flex-col justify-between my-3">
             <div className="space-y-1.5 text-xs text-slate-600 leading-relaxed bg-slate-50/90 backdrop-blur-xs p-3 rounded-xl border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]">
               <p className="line-clamp-3 sm:line-clamp-none">{feasibilitySummary.why}</p>
-              <div className="pt-2 border-t border-slate-200/60 flex items-center gap-1.5 font-medium text-emerald-800 text-[11px]">
-                <Sparkles className="w-3 h-3 text-emerald-600 shrink-0" />
-                <span className="truncate">Moat: {feasibilitySummary.keyMoat}</span>
+              <div className="pt-2 border-t border-slate-200/60 flex items-start gap-1.5 font-medium text-emerald-800 text-[11px]">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                <span className="break-words leading-tight">Moat: {feasibilitySummary.keyMoat}</span>
               </div>
             </div>
           </div>
@@ -444,7 +444,7 @@ export default function DashboardPage() {
                 <Landmark className="w-3.5 h-3.5 text-sky-600" />
                 Capital & Financing
               </span>
-              <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug line-clamp-2">
+              <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug">
                 Structured ₹{totalCapex}L Outlay (80% Debt Eligible)
               </h3>
             </div>
@@ -502,7 +502,7 @@ export default function DashboardPage() {
                 <MapPin className="w-3.5 h-3.5 text-amber-600" />
                 Demographic Reach
               </span>
-              <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug line-clamp-2">
+              <h3 className="font-heading text-[15px] sm:text-[16px] font-bold text-slate-900 leading-snug">
                 ~{pop5km >= 100000 ? `${(pop5km / 100000).toFixed(2)}L` : pop5km.toLocaleString("en-IN")} Pop. in 5km Core
               </h3>
             </div>
@@ -526,7 +526,7 @@ export default function DashboardPage() {
                 <span className="text-slate-500">20km District Reach:</span>
                 <span className="font-bold text-slate-900">~{pop20km.toLocaleString("en-IN")}</span>
               </div>
-              <div className="pt-1.5 border-t border-slate-200/60 text-[11px] text-slate-500 font-medium truncate">
+              <div className="pt-1.5 border-t border-slate-200/60 text-[11px] text-slate-500 font-medium break-words leading-tight">
                 Density: <span className="font-bold text-slate-800">{density} /km²</span> in {activeBusiness?.location?.district || "District"}
               </div>
             </div>
