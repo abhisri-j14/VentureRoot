@@ -127,46 +127,46 @@ export default function FeasibilityPage() {
           {/* Stats Banner */}
           {/* Stats Banner (Mobile Responsive Grid) */}
           <div className="bg-[#81cc87] rounded-2xl p-3.5 sm:p-5 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-2.5 sm:gap-3.5 mb-6 shadow-xs">
-            <div className="flex flex-col gap-0.5 bg-black/5 p-3 rounded-xl min-w-0">
-              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider truncate">5KM Population</span>
-              <div className="font-sans text-xl sm:text-2xl font-bold text-[#f9faeb] truncate">{feasibilityData.market?.reach?.radius5km?.toLocaleString()}</div>
+            <div className="flex flex-col gap-0.5 bg-[#3c8a45] p-3 rounded-xl min-w-0 shadow-xs">
+              <span className="font-sans text-[11px] font-bold text-white uppercase tracking-wider truncate">5KM Population</span>
+              <div className="font-sans text-xl sm:text-2xl font-bold text-white truncate">{feasibilityData.market?.reach?.radius5km?.toLocaleString()}</div>
             </div>
 
-            <div className="flex flex-col gap-0.5 bg-black/5 p-3 rounded-xl min-w-0">
-              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider truncate">10KM Population</span>
-              <div className="font-sans text-xl sm:text-2xl font-bold text-[#f9faeb] truncate">{feasibilityData.market?.reach?.radius10km?.toLocaleString()}</div>
+            <div className="flex flex-col gap-0.5 bg-[#3c8a45] p-3 rounded-xl min-w-0 shadow-xs">
+              <span className="font-sans text-[11px] font-bold text-white uppercase tracking-wider truncate">10KM Population</span>
+              <div className="font-sans text-xl sm:text-2xl font-bold text-white truncate">{feasibilityData.market?.reach?.radius10km?.toLocaleString()}</div>
             </div>
 
-            <div className="flex flex-col gap-0.5 bg-black/5 p-3 rounded-xl min-w-0">
-              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider truncate">20KM Population</span>
-              <div className="font-sans text-xl sm:text-2xl font-bold text-[#f9faeb] truncate">
+            <div className="flex flex-col gap-0.5 bg-[#3c8a45] p-3 rounded-xl min-w-0 shadow-xs">
+              <span className="font-sans text-[11px] font-bold text-white uppercase tracking-wider truncate">20KM Population</span>
+              <div className="font-sans text-xl sm:text-2xl font-bold text-white truncate">
                 {feasibilityData.market?.reach?.radius20km
                   ? feasibilityData.market.reach.radius20km.toLocaleString()
                   : (feasibilityData.market?.reach?.radius10km ? Math.round(feasibilityData.market.reach.radius10km * 4.0).toLocaleString() : "—")}
               </div>
             </div>
 
-            <div className="flex flex-col gap-0.5 bg-black/5 p-3 rounded-xl min-w-0">
-              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider truncate">Observed Price</span>
-              <div className="font-sans text-xl sm:text-2xl font-bold text-[#f9faeb] truncate flex items-baseline gap-1">
-                ₹{feasibilityData.pricing?.observedMarketPrice} <span className="font-sans text-[11px] text-[#f9faeb]/80 font-medium">/unit</span>
+            <div className="flex flex-col gap-0.5 bg-[#3c8a45] p-3 rounded-xl min-w-0 shadow-xs">
+              <span className="font-sans text-[11px] font-bold text-white uppercase tracking-wider truncate">Observed Price</span>
+              <div className="font-sans text-xl sm:text-2xl font-bold text-white truncate flex items-baseline gap-1">
+                ₹{feasibilityData.pricing?.observedMarketPrice} <span className="font-sans text-[11px] text-white/90 font-medium">/unit</span>
               </div>
             </div>
 
-            <div className="flex flex-col gap-0.5 bg-black/5 p-3 rounded-xl min-w-0">
-              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider truncate">Expected Price</span>
-              <div className="font-sans text-xl sm:text-2xl font-bold text-[#f9faeb] truncate flex items-center gap-1">
+            <div className="flex flex-col gap-0.5 bg-[#3c8a45] p-3 rounded-xl min-w-0 shadow-xs">
+              <span className="font-sans text-[11px] font-bold text-white uppercase tracking-wider truncate">Expected Price</span>
+              <div className="font-sans text-xl sm:text-2xl font-bold text-white truncate flex items-center gap-1">
                 <span>₹{feasibilityData.pricing?.expectedLocalPrice}</span>
-                <span className="font-sans text-[9px] font-bold uppercase tracking-wider bg-white text-[#81cc87] rounded-full px-1.5 py-0.5 shrink-0">
+                <span className="font-sans text-[9px] font-bold uppercase tracking-wider bg-white text-[#3c8a45] rounded-full px-1.5 py-0.5 shrink-0">
                   ▲
                 </span>
               </div>
             </div>
 
-            <div className="flex flex-col gap-0.5 bg-black/5 p-3 rounded-xl min-w-0 col-span-2 sm:col-span-1">
-              <span className="font-sans text-[11px] font-bold text-[#f9faeb]/80 uppercase tracking-wider truncate">Confidence</span>
-              <div className="font-sans text-xl sm:text-2xl font-bold text-[#f9faeb] flex items-baseline gap-1">
-                {compositeConfidence} <span className="font-sans text-[11px] text-[#f9faeb]/80 font-medium">/100</span>
+            <div className="flex flex-col gap-0.5 bg-[#3c8a45] p-3 rounded-xl min-w-0 col-span-2 sm:col-span-1 shadow-xs">
+              <span className="font-sans text-[11px] font-bold text-white uppercase tracking-wider truncate">Confidence</span>
+              <div className="font-sans text-xl sm:text-2xl font-bold text-white flex items-baseline gap-1">
+                {compositeConfidence} <span className="font-sans text-[11px] text-white/90 font-medium">/100</span>
               </div>
             </div>
           </div>
