@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send, User, Bot, Trash2, Mic, Key, Check, ChevronDown, Building2, Sparkles, AlertCircle } from "lucide-react";
+import { Send, User, Bot, Trash2, Mic, ChevronDown, Building2, Sparkles } from "lucide-react";
 import { EvidenceBadge } from "@/components/evidence/EvidenceBadge";
 import { ChatMessage, advisorApi } from "../api/advisorApi";
 import { VoiceRecorder } from "@/features/voice/components/VoiceRecorder";
@@ -25,10 +25,6 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [showVoiceRecorder, setShowVoiceRecorder] = useState(false);
-  const [showKeyModal, setShowKeyModal] = useState(false);
-  const [apiKeyInput, setApiKeyInput] = useState("");
-  const [geminiApiKey, setGeminiApiKey] = useState("");
-  const [keySavedToast, setKeySavedToast] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Set default business when loaded
@@ -37,17 +33,6 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
       setSelectedBusinessId(businesses[0].id);
     }
   }, [businesses, selectedBusinessId]);
-
-  // Load saved API key from localStorage if user added one via browser
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("ventureroot_gemini_api_key");
-      if (saved) {
-        setGeminiApiKey(saved);
-        setApiKeyInput(saved);
-      }
-    }
-  }, []);
 
   // Handle external query prefill
   useEffect(() => {
@@ -65,20 +50,6 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isStreaming]);
-
-  const handleSaveKey = (e: React.FormEvent) => {
-    e.preventDefault();
-    const cleanKey = apiKeyInput.trim();
-    setGeminiApiKey(cleanKey);
-    if (cleanKey) {
-      localStorage.setItem("ventureroot_gemini_api_key", cleanKey);
-    } else {
-      localStorage.removeItem("ventureroot_gemini_api_key");
-    }
-    setShowKeyModal(false);
-    setKeySavedToast(true);
-    setTimeout(() => setKeySavedToast(false), 3000);
-  };
 
   const sendQuery = async (queryText: string) => {
     if (!queryText.trim() || isStreaming) return;
@@ -101,7 +72,6 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
         businessId: selectedBusinessId || undefined,
         context: {
           history,
-          geminiApiKey: geminiApiKey || undefined,
         },
       });
 
@@ -217,20 +187,6 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
             </div>
           )}
 
-          {/* Gemini Key Config Button */}
-          <button
-            onClick={() => setShowKeyModal(true)}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-[11px] sm:text-[12px] font-semibold transition-all shadow-xs shrink-0 ${
-              geminiApiKey
-                ? "bg-[#1E6702]/10 border-[#1E6702]/30 text-[#1E6702] hover:bg-[#1E6702]/15"
-                : "bg-white border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-300"
-            }`}
-            title="Configure Gemini API Key"
-          >
-            <Key className="w-3.5 h-3.5 shrink-0" />
-            <span className="hidden sm:inline">{geminiApiKey ? "API Key Set" : "Add Key"}</span>
-            {geminiApiKey && <span className="w-1.5 h-1.5 rounded-full bg-[#1E6702]" />}
-          </button>
 
           {/* Clear Chat */}
           <button
@@ -407,80 +363,7 @@ export const ChatWindow = ({ initialQuery }: ChatWindowProps) => {
         )}
       </div>
 
-      {/* API Key Modal */}
-      {showKeyModal && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-4 sm:p-6 animate-in fade-in zoom-in-95 duration-200 min-w-0 overflow-hidden">
-            <div className="flex items-center gap-3 mb-3 min-w-0">
-              <div className="w-9 h-9 rounded-full bg-[#1E6702]/10 text-[#1E6702] flex items-center justify-center shrink-0">
-                <Key className="w-5 h-5" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <h4 className="font-heading font-bold text-[15px] sm:text-[16px] text-secondary break-words">
-                  Configure Gemini API Key
-                </h4>
-                <p className="text-[11px] sm:text-[12px] text-slate-500 break-words">
-                  Google Gemini powers the VentureRoot AI Advisory Engine
-                </p>
-              </div>
-            </div>
 
-            <p className="text-[12px] sm:text-[13px] text-slate-600 mb-4 leading-relaxed break-words">
-              You can set your Gemini API key in your server&apos;s <code className="bg-slate-100 px-1.5 py-0.5 rounded text-[11px] font-mono break-all">.env.local</code> (or Vercel environment variables), or save it directly in your browser session below.
-            </p>
-
-            <form onSubmit={handleSaveKey} className="flex flex-col gap-4 min-w-0">
-              <div className="min-w-0">
-                <label className="block text-[11px] sm:text-[12px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Gemini API Key
-                </label>
-                <input
-                  type="password"
-                  value={apiKeyInput}
-                  onChange={(e) => setApiKeyInput(e.target.value)}
-                  placeholder="AIzaSy..."
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-secondary font-mono focus:outline-none focus:ring-2 focus:ring-[#1E6702]/20 focus:border-[#1E6702]"
-                />
-                <p className="text-[11px] text-slate-400 mt-1 break-words">
-                  Don&apos;t have a key? Get one free at{" "}
-                  <a
-                    href="https://aistudio.google.com/app/apikey"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-[#1E6702] underline font-semibold break-all"
-                  >
-                    Google AI Studio
-                  </a>
-                </p>
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => setShowKeyModal(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#1E6702] text-white hover:bg-[#155201] transition-colors cursor-pointer shadow-xs"
-                >
-                  Save Key
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Toast Notification */}
-      {keySavedToast && (
-        <div className="absolute top-4 right-4 z-50 bg-[#1E6702] text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
-          <Check className="w-4 h-4" />
-          <span>Gemini API Key updated successfully</span>
-        </div>
-      )}
     </div>
   );
 };
