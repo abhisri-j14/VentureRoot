@@ -62,73 +62,81 @@ export const ActionCard = ({ action }: ActionCardProps) => {
   const isCompleted = localStatus === "COMPLETED";
 
   return (
-    <div className={`bg-white border rounded-2xl transition-all ${isExpanded ? 'shadow-soft border-primary' : 'hover:shadow-sm hover:border-primary/50 border-slate-200'} ${isCompleted ? 'opacity-75' : ''}`}>
+    <div className={`bg-white border rounded-2xl transition-all w-full min-w-0 overflow-hidden ${isExpanded ? 'shadow-soft border-primary' : 'hover:shadow-sm hover:border-primary/50 border-slate-200'} ${isCompleted ? 'opacity-75' : ''}`}>
       {/* Header section (Always visible) */}
       <div 
-        className="p-5 flex items-start gap-4 cursor-pointer select-none"
+        className="p-3.5 sm:p-5 flex items-start gap-2.5 sm:gap-4 cursor-pointer select-none w-full min-w-0"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="shrink-0 flex flex-col items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-sans text-[14px] font-bold text-slate-500">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 flex items-center justify-center font-sans text-xs sm:text-[14px] font-bold text-slate-600 shrink-0">
             {action.order}
           </div>
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-1">
-            <h3 className={`font-sans text-[16px] md:text-[18px] font-bold leading-tight transition-colors group-hover:text-primary ${isCompleted ? 'text-slate-500 line-through' : 'text-gray-900'}`}>
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1.5 sm:gap-2 mb-1">
+            <h3 className={`font-sans text-[15px] sm:text-[16px] md:text-[18px] font-bold leading-snug transition-colors group-hover:text-primary break-words min-w-0 ${isCompleted ? 'text-slate-500 line-through' : 'text-gray-900'}`}>
               {action.title}
             </h3>
             
-            <div className="flex items-center gap-2 shrink-0">
-              <span className={`px-2 py-1 font-sans text-[11px] font-bold uppercase tracking-wider rounded border ${getPriorityColor(action.priority)}`}>
+            <div className="flex items-center gap-2 shrink-0 self-start">
+              <span className={`px-2 py-0.5 sm:py-1 font-sans text-[10px] sm:text-[11px] font-bold uppercase tracking-wider rounded border shrink-0 ${getPriorityColor(action.priority)}`}>
                 {t(getPriorityKey(action.priority) as any) || action.priority}
               </span>
             </div>
           </div>
           
-          <p className="font-sans text-[14px] text-secondary-muted line-clamp-2 pr-8">
+          <p className="font-sans text-xs sm:text-[14px] text-secondary-muted line-clamp-2 pr-0 sm:pr-4 break-words leading-relaxed">
             {action.description}
           </p>
 
-          <div className="mt-3 flex items-center gap-4 font-sans text-[12px] font-medium text-slate-500">
-            <div className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5" />
-              <span>{action.timeframe}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Target className="w-3.5 h-3.5" />
-              <span>{t(`roadmap.category.${action.category.toLowerCase()}` as any) || action.category}</span>
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 sm:gap-4 font-sans text-[11px] sm:text-[12px] font-medium text-slate-500 w-full">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3.5">
+              <div className="flex items-center gap-1 shrink-0">
+                <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <span className="whitespace-nowrap">{action.timeframe}</span>
+              </div>
+              <div className="flex items-center gap-1 shrink-0">
+                <Target className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <span className="truncate max-w-[110px] sm:max-w-none">{t(`roadmap.category.${action.category.toLowerCase()}` as any) || action.category}</span>
+              </div>
             </div>
             
             <button 
               onClick={handleStatusToggle}
-              className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-md hover:bg-slate-100 transition-colors border border-transparent hover:border-slate-200"
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-slate-100 transition-colors border text-[11px] sm:text-xs font-semibold shrink-0 select-none ${
+                localStatus === "COMPLETED"
+                  ? "bg-green-50/80 border-green-200 text-green-700"
+                  : localStatus === "IN_PROGRESS"
+                  ? "bg-blue-50/80 border-blue-200 text-blue-700"
+                  : "bg-slate-50 border-slate-200 text-slate-600"
+              }`}
             >
               {getStatusIcon(localStatus)}
-              <span className={localStatus === "COMPLETED" ? "text-green-700" : localStatus === "IN_PROGRESS" ? "text-blue-700" : ""}>
+              <span className="whitespace-nowrap">
                 {t(getStatusLabelKey(localStatus) as any) || localStatus}
               </span>
             </button>
           </div>
         </div>
 
-        <div className="shrink-0 mt-1 text-slate-400">
+        <div className="shrink-0 mt-0.5 text-slate-400">
           {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
         </div>
       </div>
 
       {/* Expanded Details section */}
       {isExpanded && (
-        <div className="border-t border-slate-100 p-5 bg-slate-50/50 rounded-b-2xl flex flex-col gap-6 animate-in slide-in-from-top-2 duration-200">
+        <div className="border-t border-slate-100 p-3.5 sm:p-5 bg-slate-50/50 rounded-b-2xl flex flex-col gap-5 sm:gap-6 animate-in slide-in-from-top-2 duration-200">
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <div>
               <h4 className="font-sans text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                 <AlertTriangle className="w-3.5 h-3.5" />
                 {t("roadmap.whatToDo") || "What to do"}
               </h4>
-              <p className="font-sans text-[14px] text-secondary leading-relaxed bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+              <p className="font-sans text-xs sm:text-[14px] text-secondary leading-relaxed bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200 shadow-sm break-words whitespace-normal">
                 {action.whatToDo}
               </p>
             </div>
@@ -138,7 +146,7 @@ export const ActionCard = ({ action }: ActionCardProps) => {
                 <Target className="w-3.5 h-3.5" />
                 {t("roadmap.expectedOutcome") || "Expected Outcome"}
               </h4>
-              <p className="font-sans text-[14px] text-secondary leading-relaxed bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+              <p className="font-sans text-xs sm:text-[14px] text-secondary leading-relaxed bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200 shadow-sm break-words whitespace-normal">
                 {action.expectedOutcome}
               </p>
             </div>

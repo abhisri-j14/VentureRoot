@@ -258,76 +258,76 @@ export default function ActionRoadmapPage() {
   const phases = roadmap.phases || getDefaultSectorPhases(roadmap.businessName, roadmap.location || "District");
 
   return (
-    <div className="w-full min-h-screen bg-[#f4fce8]">
-      <div className="w-full max-w-[1400px] mx-auto flex flex-col py-8 px-6 md:px-10 lg:px-14">
+    <div className="w-full min-h-screen bg-[#f4fce8] max-w-full overflow-x-hidden">
+      <div className="w-full max-w-[1400px] mx-auto flex flex-col py-4 sm:py-8 px-3.5 sm:px-6 md:px-10 lg:px-14 min-w-0">
         {/* Navigation Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
           <Link 
             href={`/business/${businessId}`}
-            className="inline-flex items-center gap-2 font-sans text-[14px] font-medium text-secondary-muted hover:text-secondary transition-colors"
+            className="inline-flex items-center gap-2 font-sans text-xs sm:text-[14px] font-medium text-secondary-muted hover:text-secondary transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4 shrink-0" />
             {t("finance.backToBusiness") || "Back to Business Details"}
           </Link>
           
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <Link
               href={`/reports/${businessId}`}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#301608] text-white font-medium rounded-xl hover:bg-[#301608]/90 transition-colors shadow-xs font-sans text-[13px]"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-[#301608] text-white font-medium rounded-xl hover:bg-[#301608]/90 transition-colors shadow-xs font-sans text-xs sm:text-[13px]"
             >
-              <FileText className="w-4 h-4 text-[#f9fadc]" />
+              <FileText className="w-4 h-4 text-[#f9fadc] shrink-0" />
               View DPR Report
             </Link>
             <Link
               href={`/business/${businessId}/feasibility`}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-secondary font-medium rounded-xl hover:bg-slate-50 transition-colors shadow-xs font-sans text-[13px]"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-white border border-slate-200 text-secondary font-medium rounded-xl hover:bg-slate-50 transition-colors shadow-xs font-sans text-xs sm:text-[13px]"
             >
-              <Compass className="w-4 h-4 text-slate-500" />
+              <Compass className="w-4 h-4 text-slate-500 shrink-0" />
               {t("roadmap.viewReport") || "Feasibility Analysis"}
             </Link>
           </div>
         </div>
 
         {/* Header Context */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 mb-8 shadow-xs relative overflow-hidden">
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 relative z-10">
-            <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold mb-3">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+        <div className="bg-white border border-slate-200 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 shadow-xs relative overflow-hidden">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 sm:gap-6 relative z-10">
+            <div className="min-w-0 flex-1">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] sm:text-xs font-bold mb-2 sm:mb-3">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                 <span>Sector-Specific 12-Month Execution Roadmap</span>
               </div>
 
-              <h1 className="font-heading text-[28px] sm:text-[32px] md:text-[36px] font-bold text-[#301608] leading-tight mb-2">
+              <h1 className="font-heading text-2xl sm:text-[32px] md:text-[36px] font-bold text-[#301608] leading-tight mb-2 break-words">
                 {t("roadmap.title") || "Enterprise Action Roadmap"}
               </h1>
-              <p className="font-sans text-[15px] text-secondary-muted max-w-2xl">
+              <p className="font-sans text-xs sm:text-[15px] text-secondary-muted max-w-2xl break-words">
                 Statutory clearances, machinery procurement, bank loan drawdowns, and revenue milestones engineered for your specific business.
               </p>
               
-              <div className="flex flex-wrap items-center gap-4 mt-5 font-sans text-[14px] font-medium text-secondary">
-                <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
-                  <Briefcase className="w-4 h-4 text-[#1E6702]" />
-                  <span className="font-bold text-slate-800">{roadmap.businessName || "My Business Venture"}</span>
+              <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 mt-4 sm:mt-5 font-sans text-xs sm:text-[14px] font-medium text-secondary">
+                <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 sm:px-3 py-1.5 rounded-lg border border-slate-200 min-w-0">
+                  <Briefcase className="w-4 h-4 text-[#1E6702] shrink-0" />
+                  <span className="font-bold text-slate-800 truncate">{roadmap.businessName || "My Business Venture"}</span>
                 </div>
-                <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
-                  <MapPin className="w-4 h-4 text-slate-500" />
-                  <span>{roadmap.location || "Catchment Area"}</span>
+                <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 sm:px-3 py-1.5 rounded-lg border border-slate-200 min-w-0">
+                  <MapPin className="w-4 h-4 text-slate-500 shrink-0" />
+                  <span className="truncate">{roadmap.location || "Catchment Area"}</span>
                 </div>
               </div>
             </div>
             
-            <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100 min-w-[220px] shrink-0">
+            <div className="bg-slate-50 rounded-2xl p-4 sm:p-5 border border-slate-100 w-full md:w-auto md:min-w-[220px] shrink-0">
               <div className="flex items-center gap-2 mb-2">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                <span className="font-sans text-[13px] font-bold text-secondary">{t("roadmap.progress") || "Execution Progress"}</span>
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                <span className="font-sans text-xs sm:text-[13px] font-bold text-secondary">{t("roadmap.progress") || "Execution Progress"}</span>
               </div>
-              <div className="font-sans text-[28px] font-bold text-[#1E6702] mb-2">
+              <div className="font-sans text-2xl sm:text-[28px] font-bold text-[#1E6702] mb-2">
                 {progressPercent}%
               </div>
               <div className="w-full bg-slate-200 rounded-full h-2">
                 <div className="bg-[#1E6702] h-2 rounded-full transition-all" style={{ width: `${progressPercent}%` }}></div>
               </div>
-              <p className="font-sans text-[12px] text-secondary-muted mt-2">
+              <p className="font-sans text-[11px] sm:text-[12px] text-secondary-muted mt-2">
                 {completedActions} of {totalActions} foundation milestones completed
               </p>
             </div>
@@ -336,14 +336,14 @@ export default function ActionRoadmapPage() {
 
         {/* Competitor Insights & Strategic Guidance Banner */}
         {competitorInsights && (
-          <div className="bg-white border border-emerald-200/80 rounded-3xl p-6 sm:p-8 mb-8 shadow-xs space-y-4">
-            <div className="flex items-center gap-2 text-emerald-950 font-bold text-base border-b border-emerald-100 pb-3">
-              <Target className="w-5 h-5 text-[#1E6702]" />
+          <div className="bg-white border border-emerald-200/80 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 shadow-xs space-y-4">
+            <div className="flex items-center gap-2 text-emerald-950 font-bold text-sm sm:text-base border-b border-emerald-100 pb-3">
+              <Target className="w-5 h-5 text-[#1E6702] shrink-0" />
               <span>Strategic Competitor Analysis & Market Differentiation Suggestions</span>
             </div>
 
             {competitorInsights.marketGap && (
-              <div className="p-4 bg-emerald-50/60 rounded-2xl border border-emerald-100 text-xs leading-relaxed text-emerald-950">
+              <div className="p-3 sm:p-4 bg-emerald-50/60 rounded-xl sm:rounded-2xl border border-emerald-100 text-xs leading-relaxed text-emerald-950 break-words">
                 <strong className="block text-emerald-900 font-bold mb-1">Observed Local Market Gap:</strong>
                 {competitorInsights.marketGap}
               </div>
@@ -354,7 +354,7 @@ export default function ActionRoadmapPage() {
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-700">Recommended Business Differentiation Strategies:</span>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {competitorInsights.differentiationStrategy.map((strat: string, idx: number) => (
-                    <div key={idx} className="p-3.5 bg-slate-50 rounded-xl border border-slate-200/70 text-xs text-slate-800 flex items-start gap-2.5">
+                    <div key={idx} className="p-3 sm:p-3.5 bg-slate-50 rounded-xl border border-slate-200/70 text-xs text-slate-800 flex items-start gap-2.5 break-words">
                       <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">
                         {idx + 1}
                       </span>
@@ -366,7 +366,7 @@ export default function ActionRoadmapPage() {
             )}
 
             {competitorInsights.pricingTactics && (
-              <div className="p-3.5 bg-amber-50/70 border border-amber-200/70 rounded-xl text-xs text-amber-950 flex items-start gap-2.5">
+              <div className="p-3 sm:p-3.5 bg-amber-50/70 border border-amber-200/70 rounded-xl text-xs text-amber-950 flex items-start gap-2.5 break-words">
                 <Compass className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
                 <div>
                   <strong className="font-bold">Competitive Pricing Recommendation: </strong>
@@ -378,29 +378,29 @@ export default function ActionRoadmapPage() {
         )}
 
         {/* ── ROADMAP VIEW TOGGLE TABS ────────────────────────────── */}
-        <div className="flex items-center justify-between gap-4 mb-6">
-          <div className="inline-flex p-1.5 bg-slate-200/80 rounded-2xl border border-slate-300/60 shadow-inner">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6">
+          <div className="grid grid-cols-2 p-1 sm:p-1.5 bg-slate-200/80 rounded-xl sm:rounded-2xl border border-slate-300/60 shadow-inner w-full sm:w-auto max-w-full">
             <button
               onClick={() => setActiveView("phases")}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-sans text-[13px] font-bold transition-all ${
+              className={`flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-sans text-xs sm:text-[13px] font-bold transition-all text-center leading-tight ${
                 activeView === "phases"
                   ? "bg-white text-[#1E6702] shadow-xs"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              <Calendar className="w-4 h-4" />
-              12-Month Strategic Phases ({phases.length})
+              <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <span className="truncate">12-Month Phases ({phases.length})</span>
             </button>
             <button
               onClick={() => setActiveView("tasks")}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-sans text-[13px] font-bold transition-all ${
+              className={`flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-sans text-xs sm:text-[13px] font-bold transition-all text-center leading-tight ${
                 activeView === "tasks"
                   ? "bg-white text-[#1E6702] shadow-xs"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              <Layers className="w-4 h-4" />
-              Actionable Task Checklist ({totalActions})
+              <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <span className="truncate">Task Checklist ({totalActions})</span>
             </button>
           </div>
           <span className="font-sans text-[12px] text-slate-500 font-medium hidden sm:inline">
