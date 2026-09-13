@@ -389,7 +389,7 @@ export const BusinessComparison = () => {
   };
 
   const handleRemove = (id: string) => {
-    setSelectedIds((prev) => prev.length > 1 ? prev.filter((s) => s !== id) : prev);
+    setSelectedIds((prev) => (prev.length > 1 ? prev.filter((s) => s !== id) : prev));
   };
 
   const handleAdd = () => {
@@ -398,25 +398,25 @@ export const BusinessComparison = () => {
   };
 
   const cols = activeBiz.length;
-  const gridColTemplate = `minmax(180px, 240px) repeat(${cols}, minmax(180px, 1fr))`;
+  const gridColTemplate = `minmax(125px, 190px) repeat(${cols}, minmax(140px, 1fr))`;
 
   return (
-    <div className="w-full h-full flex flex-col gap-6" onClick={() => setDropdownOpen(false)}>
+    <div className="w-full h-full flex flex-col gap-5 sm:gap-6">
 
       {/* ── PAGE HEADER ─────────────────────────────────────────── */}
-      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-3 sm:gap-4">
         <div>
-          <h1 className="font-heading text-[28px] sm:text-[32px] font-bold text-[#242424] tracking-tight leading-tight">
+          <h1 className="font-heading text-2xl sm:text-[32px] font-bold text-[#242424] tracking-tight leading-tight break-words">
             Compare Business Opportunities
           </h1>
-          <p className="font-sans text-[14px] text-slate-500 font-medium mt-1">
+          <p className="font-sans text-xs sm:text-[14px] text-slate-500 font-medium mt-1 leading-normal break-words">
             Evaluate your enterprise against alternative ventures with verified financial, statutory, and market viability metrics.
           </p>
         </div>
-        <div className="flex items-center gap-2 opacity-80 shrink-0">
-          <Leaf className="w-6 h-6 text-[#1E6702]" />
-          <span className="font-heading italic text-[14px] text-gray-500 text-right leading-snug">
-            "Compare today,<br />prosper tomorrow"
+        <div className="flex items-center gap-2 opacity-80 shrink-0 self-start md:self-auto">
+          <Leaf className="w-5 h-5 sm:w-6 sm:h-6 text-[#1E6702]" />
+          <span className="font-heading italic text-xs sm:text-[14px] text-gray-500 text-left md:text-right leading-snug">
+            "Compare today,<br className="hidden md:inline" /> prosper tomorrow"
           </span>
         </div>
       </div>
@@ -433,16 +433,16 @@ export const BusinessComparison = () => {
       </div>
 
       {/* ── RADAR COMPARISON CHART ───────────────────────────────── */}
-      <div className="bg-[#fffff5] rounded-2xl border border-gray-900/10 shadow-xs p-6 transition-all duration-300">
+      <div className="bg-[#fffff5] rounded-2xl border border-gray-900/10 shadow-xs p-4 sm:p-6 transition-all duration-300">
         <div className="flex items-center gap-2 mb-4">
           <BarChart2 className="w-5 h-5 text-[#234670]" />
-          <span className="font-heading text-[18px] font-bold text-gray-900 tracking-tight">Multi-Dimensional Viability Spider Matrix</span>
+          <span className="font-heading text-base sm:text-[18px] font-bold text-gray-900 tracking-tight">Multi-Dimensional Viability Spider Matrix</span>
           <span className="font-sans text-[12px] text-gray-500 font-medium ml-2 hidden md:inline">
             Visual comparison across feasibility, demand, competitive moat, and capital efficiency.
           </span>
         </div>
         <div className="flex flex-col lg:flex-row gap-6 items-center">
-          <div className="w-full lg:w-[420px] h-[280px] shrink-0">
+          <div className="w-full lg:w-[420px] h-[260px] sm:h-[280px] shrink-0">
             <EditorialRadarChart
               data={[
                 { metric: "Feasibility Score", subject: activeBiz[0]?.radar.feasibility || 0, comparison: activeBiz[1]?.radar.feasibility || 0 },
@@ -459,7 +459,7 @@ export const BusinessComparison = () => {
           </div>
           <div className="flex flex-col gap-3 flex-1 w-full">
             <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Active Comparison Legend:</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
               {activeBiz.map((b, idx) => (
                 <div key={b.id} className="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200/80 bg-white shadow-2xs">
                   <div className="w-3.5 h-3.5 rounded-full shrink-0" style={{ backgroundColor: b.dot }} />
@@ -470,9 +470,9 @@ export const BusinessComparison = () => {
                 </div>
               ))}
             </div>
-            <div className="mt-2 bg-[#f9faeb] rounded-xl p-3.5 border border-[#81cc87]/20 flex items-center gap-3">
+            <div className="mt-2 bg-[#f9faeb] rounded-xl p-3 sm:p-3.5 border border-[#81cc87]/20 flex items-center gap-3">
               <Compass className="w-4 h-4 text-[#1E6702] shrink-0" />
-              <p className="font-sans text-[12px] text-slate-700 leading-snug">
+              <p className="font-sans text-[11px] sm:text-[12px] text-slate-700 leading-snug break-words">
                 Radar chart compares primary candidate <strong className="text-gray-900">{activeBiz[0]?.name}</strong> (Green) directly against <strong className="text-gray-900">{activeBiz[1]?.name || "Sector Benchmark"}</strong> (Secondary).
               </p>
             </div>
@@ -481,259 +481,317 @@ export const BusinessComparison = () => {
       </div>
 
       {/* ── FULL-WIDTH COMPARISON TABLE ───────────────────────────── */}
-      <div className="w-full overflow-x-auto pb-6">
-        <div
-          className="min-w-[850px] w-full rounded-2xl overflow-hidden shadow-sm border border-gray-900/10 bg-white"
-        >
+      <div className="w-full">
+        {/* Mobile Swipe Hint */}
+        <div className="flex items-center justify-between px-1 text-xs text-slate-500 font-medium sm:hidden mb-2.5">
+          <span className="flex items-center gap-1.5">
+            <Compass className="w-3.5 h-3.5 text-[#1E6702]" />
+            <span>Swipe left / right to compare all</span>
+          </span>
+          <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100/70 px-2 py-0.5 rounded-full border border-emerald-200">
+            {cols} ventures
+          </span>
+        </div>
 
-          {/* ── HEADER ROW: Business Names & Winner Badges ── */}
+        <div className="w-full overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-slate-300">
           <div
-            className="grid border-b-2 border-slate-200 bg-slate-50/70"
-            style={{ gridTemplateColumns: gridColTemplate }}
+            className="w-full rounded-2xl overflow-hidden shadow-sm border border-gray-900/10 bg-white"
+            style={{ minWidth: `${125 + cols * 140}px` }}
           >
-            <div className="p-5 flex flex-col justify-end">
-              <span className="font-sans text-[12px] font-bold uppercase tracking-wider text-slate-700">Comparative Parameter</span>
-            </div>
-            {activeBiz.map((b) => (
-              <div
-                key={b.id}
-                className="flex flex-col items-center justify-center p-5 border-l border-slate-200 text-center"
-              >
-                {b.badgeWinner && (
-                  <span className="font-sans text-[10px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full mb-2 border border-emerald-200 shadow-2xs">
-                    {b.badgeWinner}
-                  </span>
-                )}
-                <h3 className="font-sans text-[16px] font-bold text-gray-950 leading-snug">{b.name}</h3>
-                <div className="mt-1 flex items-center gap-1.5">
-                  <span className="text-xs font-bold text-emerald-700">Score: {b.score}/100</span>
-                  <span className="text-[10px] text-slate-500 uppercase tracking-tight">({b.viability})</span>
+
+            {/* ── HEADER ROW: Business Names & Winner Badges ── */}
+            <div
+              className="grid border-b-2 border-slate-200 bg-slate-50/70"
+              style={{ gridTemplateColumns: gridColTemplate }}
+            >
+              <div className="sticky left-0 z-20 bg-slate-100 p-3 sm:p-5 flex flex-col justify-end border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)]">
+                <span className="font-sans text-[10px] sm:text-[12px] font-bold uppercase tracking-wider text-slate-700 leading-tight">
+                  Comparative Parameter
+                </span>
+              </div>
+              {activeBiz.map((b) => (
+                <div
+                  key={b.id}
+                  className="flex flex-col items-center justify-center p-3 sm:p-5 border-l border-slate-200 text-center"
+                >
+                  {b.badgeWinner && (
+                    <span className="font-sans text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full mb-1.5 border border-emerald-200 shadow-2xs break-words text-center">
+                      {b.badgeWinner}
+                    </span>
+                  )}
+                  <h3 className="font-sans text-xs sm:text-[15px] font-bold text-gray-950 leading-snug break-words text-center">
+                    {b.name}
+                  </h3>
+                  <div className="mt-1 flex flex-wrap items-center justify-center gap-1">
+                    <span className="text-[11px] sm:text-xs font-bold text-emerald-700">Score: {b.score}/100</span>
+                    <span className="text-[9px] sm:text-[10px] text-slate-500 uppercase tracking-tight">({b.viability})</span>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-
-          {/* ── SECTION 1: FINANCIAL ARCHITECTURE ── */}
-          <div
-            className="grid bg-[#234670]/10 border-b border-slate-200"
-            style={{ gridTemplateColumns: gridColTemplate }}
-          >
-            <div className="px-5 py-2.5 flex items-center gap-2">
-              <Landmark className="w-4 h-4 text-[#234670]" />
-              <span className="font-sans text-[12px] font-bold uppercase tracking-wider text-[#234670]">1. Financial Architecture</span>
+              ))}
             </div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="border-l border-slate-200/80" />
-            ))}
-          </div>
 
-          {/* Row: Project Capex */}
-          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
-            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Total Project Capex</div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[14px] font-bold text-gray-900">
-                {b.financials.projectCost}
+            {/* ── SECTION 1: FINANCIAL ARCHITECTURE ── */}
+            <div
+              className="grid bg-[#234670]/10 border-b border-slate-200"
+              style={{ gridTemplateColumns: gridColTemplate }}
+            >
+              <div className="sticky left-0 z-20 bg-[#e4edf5] px-3 sm:px-5 py-2.5 flex items-center gap-2 border-r border-slate-200/80 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)]">
+                <Landmark className="w-4 h-4 text-[#234670] shrink-0" />
+                <span className="font-sans text-[11px] sm:text-[12px] font-bold uppercase tracking-wider text-[#234670]">
+                  1. Financial Architecture
+                </span>
               </div>
-            ))}
-          </div>
-
-          {/* Row: Promoter Margin Equity */}
-          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
-            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">10-15% Promoter Equity</div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[14px] font-medium text-slate-900">
-                {b.financials.margin10}
-              </div>
-            ))}
-          </div>
-
-          {/* Row: Term Loan Requirement */}
-          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
-            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Bank Term Loan (up to 90%)</div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[14px] font-medium text-slate-900">
-                {b.financials.termLoan}
-              </div>
-            ))}
-          </div>
-
-          {/* Row: Govt Subsidy Grant */}
-          <div className="grid border-b border-slate-200 bg-emerald-50/30" style={{ gridTemplateColumns: gridColTemplate }}>
-            <div className="px-5 py-3.5 font-sans text-[13px] font-bold text-emerald-900">Govt Subsidy Eligibility</div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[13px] font-bold text-emerald-800">
-                {b.financials.subsidy}
-              </div>
-            ))}
-          </div>
-
-          {/* ── SECTION 2: PROFITABILITY & CASHFLOW ── */}
-          <div
-            className="grid bg-[#234670]/10 border-b border-slate-200"
-            style={{ gridTemplateColumns: gridColTemplate }}
-          >
-            <div className="px-5 py-2.5 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-[#234670]" />
-              <span className="font-sans text-[12px] font-bold uppercase tracking-wider text-[#234670]">2. Profitability & Returns</span>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="border-l border-slate-200/80" />
+              ))}
             </div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="border-l border-slate-200/80" />
-            ))}
-          </div>
 
-          {/* Row: Net Profit Margin */}
-          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
-            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Net Profit Margin (%)</div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[16px] font-bold text-emerald-700">
-                {b.netProfitMargin}
+            {/* Row: Project Capex */}
+            <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+              <div className="sticky left-0 z-20 bg-slate-50 px-3 sm:px-5 py-2.5 sm:py-3.5 font-sans text-xs sm:text-[13px] font-semibold text-slate-700 border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)] break-words whitespace-normal">
+                Total Project Capex
               </div>
-            ))}
-          </div>
-
-          {/* Row: Monthly Net Cashflow */}
-          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
-            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Projected Monthly Net Profit</div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[14px] font-bold text-gray-900">
-                {b.monthlyProfit}
-              </div>
-            ))}
-          </div>
-
-          {/* Row: Break-Even Horizon */}
-          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
-            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Break-Even Horizon</div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[14px] font-bold text-gray-900">
-                {b.breakEven}
-              </div>
-            ))}
-          </div>
-
-          {/* Row: 3-Year Projected IRR */}
-          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
-            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">3-Year Projected IRR / ROI</div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[14px] font-bold text-indigo-700">
-                {b.projectedIrr}
-              </div>
-            ))}
-          </div>
-
-          {/* ── SECTION 3: MARKET & COMPETITION ── */}
-          <div
-            className="grid bg-[#234670]/10 border-b border-slate-200"
-            style={{ gridTemplateColumns: gridColTemplate }}
-          >
-            <div className="px-5 py-2.5 flex items-center gap-2">
-              <Users className="w-4 h-4 text-[#234670]" />
-              <span className="font-sans text-[12px] font-bold uppercase tracking-wider text-[#234670]">3. Market & Catchment</span>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="px-3 sm:px-5 py-2.5 sm:py-3.5 border-l border-slate-200 font-sans text-xs sm:text-[14px] font-bold text-gray-900 break-words whitespace-normal">
+                  {b.financials.projectCost}
+                </div>
+              ))}
             </div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="border-l border-slate-200/80" />
-            ))}
-          </div>
 
-          {/* Row: Catchment Reach */}
-          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
-            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Catchment Population (5km / 10km)</div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[13px] font-medium text-slate-800">
-                {b.catchment}
+            {/* Row: Promoter Margin Equity */}
+            <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+              <div className="sticky left-0 z-20 bg-slate-50 px-3 sm:px-5 py-2.5 sm:py-3.5 font-sans text-xs sm:text-[13px] font-semibold text-slate-700 border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)] break-words whitespace-normal">
+                10-15% Promoter Equity
               </div>
-            ))}
-          </div>
-
-          {/* Row: Competitor Density */}
-          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
-            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Competitor Density</div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[13px] font-medium text-slate-800">
-                {b.competitionDensity}
-              </div>
-            ))}
-          </div>
-
-          {/* Row: Local Saturation */}
-          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
-            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Local Market Saturation</div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[13px] font-medium text-slate-800">
-                {b.localSaturation}
-              </div>
-            ))}
-          </div>
-
-          {/* ── SECTION 4: STATUTORY & OPERATIONAL BURDEN ── */}
-          <div
-            className="grid bg-[#234670]/10 border-b border-slate-200"
-            style={{ gridTemplateColumns: gridColTemplate }}
-          >
-            <div className="px-5 py-2.5 flex items-center gap-2">
-              <FileText className="w-4 h-4 text-[#234670]" />
-              <span className="font-sans text-[12px] font-bold uppercase tracking-wider text-[#234670]">4. Clearances & Complexity</span>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="px-3 sm:px-5 py-2.5 sm:py-3.5 border-l border-slate-200 font-sans text-xs sm:text-[14px] font-medium text-slate-900 break-words whitespace-normal">
+                  {b.financials.margin10}
+                </div>
+              ))}
             </div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="border-l border-slate-200/80" />
-            ))}
-          </div>
 
-          {/* Row: Statutory Licenses */}
-          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
-            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Required Clearances & Licenses</div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[12px] font-semibold text-slate-800 leading-snug">
-                {b.licenses}
+            {/* Row: Term Loan Requirement */}
+            <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+              <div className="sticky left-0 z-20 bg-slate-50 px-3 sm:px-5 py-2.5 sm:py-3.5 font-sans text-xs sm:text-[13px] font-semibold text-slate-700 border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)] break-words whitespace-normal">
+                Bank Term Loan (up to 90%)
               </div>
-            ))}
-          </div>
-
-          {/* Row: Technical Complexity */}
-          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
-            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Operational Complexity</div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[13px] font-medium text-slate-800">
-                {b.operationalComplexity}
-              </div>
-            ))}
-          </div>
-
-          {/* ── SECTION 5: RISK & FINAL VERDICT ── */}
-          <div
-            className="grid bg-[#234670]/10 border-b border-slate-200"
-            style={{ gridTemplateColumns: gridColTemplate }}
-          >
-            <div className="px-5 py-2.5 flex items-center gap-2">
-              <ShieldAlert className="w-4 h-4 text-[#234670]" />
-              <span className="font-sans text-[12px] font-bold uppercase tracking-wider text-[#234670]">5. Risk & Recommendation</span>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="px-3 sm:px-5 py-2.5 sm:py-3.5 border-l border-slate-200 font-sans text-xs sm:text-[14px] font-medium text-slate-900 break-words whitespace-normal">
+                  {b.financials.termLoan}
+                </div>
+              ))}
             </div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="border-l border-slate-200/80" />
-            ))}
-          </div>
 
-          {/* Row: Critical Risk & Hedge */}
-          <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
-            <div className="px-5 py-3.5 bg-slate-50/50 font-sans text-[13px] font-semibold text-slate-700">Critical Risk & Mitigation</div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-3.5 border-l border-slate-200 font-sans text-[12px] leading-relaxed">
-                <p className="text-red-800 font-medium">{b.keyLocalRisk}</p>
-                <p className="text-emerald-900 mt-1 font-semibold">Hedge: {b.riskMitigation}</p>
+            {/* Row: Govt Subsidy Grant */}
+            <div className="grid border-b border-slate-200 bg-emerald-50/30" style={{ gridTemplateColumns: gridColTemplate }}>
+              <div className="sticky left-0 z-20 bg-[#eef7ee] px-3 sm:px-5 py-2.5 sm:py-3.5 font-sans text-xs sm:text-[13px] font-bold text-emerald-900 border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)] break-words whitespace-normal">
+                Govt Subsidy Eligibility
               </div>
-            ))}
-          </div>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="px-3 sm:px-5 py-2.5 sm:py-3.5 border-l border-slate-200 font-sans text-xs sm:text-[13px] font-bold text-emerald-800 break-words whitespace-normal">
+                  {b.financials.subsidy}
+                </div>
+              ))}
+            </div>
 
-          {/* Row: Best Suited For */}
-          <div className="grid bg-slate-50/40" style={{ gridTemplateColumns: gridColTemplate }}>
-            <div className="px-5 py-4 font-sans text-[13px] font-bold text-slate-900">Recommended Verdict</div>
-            {activeBiz.map((b) => (
-              <div key={b.id} className="px-5 py-4 border-l border-slate-200 font-sans text-[12px] text-slate-800 font-medium leading-snug">
-                {b.bestSuitedFor}
+            {/* ── SECTION 2: PROFITABILITY & CASHFLOW ── */}
+            <div
+              className="grid bg-[#234670]/10 border-b border-slate-200"
+              style={{ gridTemplateColumns: gridColTemplate }}
+            >
+              <div className="sticky left-0 z-20 bg-[#e4edf5] px-3 sm:px-5 py-2.5 flex items-center gap-2 border-r border-slate-200/80 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)]">
+                <TrendingUp className="w-4 h-4 text-[#234670] shrink-0" />
+                <span className="font-sans text-[11px] sm:text-[12px] font-bold uppercase tracking-wider text-[#234670]">
+                  2. Profitability & Returns
+                </span>
               </div>
-            ))}
-          </div>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="border-l border-slate-200/80" />
+              ))}
+            </div>
 
+            {/* Row: Net Profit Margin */}
+            <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+              <div className="sticky left-0 z-20 bg-slate-50 px-3 sm:px-5 py-2.5 sm:py-3.5 font-sans text-xs sm:text-[13px] font-semibold text-slate-700 border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)] break-words whitespace-normal">
+                Net Profit Margin (%)
+              </div>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="px-3 sm:px-5 py-2.5 sm:py-3.5 border-l border-slate-200 font-sans text-xs sm:text-[16px] font-bold text-emerald-700 break-words whitespace-normal">
+                  {b.netProfitMargin}
+                </div>
+              ))}
+            </div>
+
+            {/* Row: Monthly Net Cashflow */}
+            <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+              <div className="sticky left-0 z-20 bg-slate-50 px-3 sm:px-5 py-2.5 sm:py-3.5 font-sans text-xs sm:text-[13px] font-semibold text-slate-700 border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)] break-words whitespace-normal">
+                Projected Monthly Net Profit
+              </div>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="px-3 sm:px-5 py-2.5 sm:py-3.5 border-l border-slate-200 font-sans text-xs sm:text-[14px] font-bold text-gray-900 break-words whitespace-normal">
+                  {b.monthlyProfit}
+                </div>
+              ))}
+            </div>
+
+            {/* Row: Break-Even Horizon */}
+            <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+              <div className="sticky left-0 z-20 bg-slate-50 px-3 sm:px-5 py-2.5 sm:py-3.5 font-sans text-xs sm:text-[13px] font-semibold text-slate-700 border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)] break-words whitespace-normal">
+                Break-Even Horizon
+              </div>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="px-3 sm:px-5 py-2.5 sm:py-3.5 border-l border-slate-200 font-sans text-xs sm:text-[14px] font-bold text-gray-900 break-words whitespace-normal">
+                  {b.breakEven}
+                </div>
+              ))}
+            </div>
+
+            {/* Row: 3-Year Projected IRR */}
+            <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+              <div className="sticky left-0 z-20 bg-slate-50 px-3 sm:px-5 py-2.5 sm:py-3.5 font-sans text-xs sm:text-[13px] font-semibold text-slate-700 border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)] break-words whitespace-normal">
+                3-Year Projected IRR / ROI
+              </div>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="px-3 sm:px-5 py-2.5 sm:py-3.5 border-l border-slate-200 font-sans text-xs sm:text-[14px] font-bold text-indigo-700 break-words whitespace-normal">
+                  {b.projectedIrr}
+                </div>
+              ))}
+            </div>
+
+            {/* ── SECTION 3: MARKET & COMPETITION ── */}
+            <div
+              className="grid bg-[#234670]/10 border-b border-slate-200"
+              style={{ gridTemplateColumns: gridColTemplate }}
+            >
+              <div className="sticky left-0 z-20 bg-[#e4edf5] px-3 sm:px-5 py-2.5 flex items-center gap-2 border-r border-slate-200/80 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)]">
+                <Users className="w-4 h-4 text-[#234670] shrink-0" />
+                <span className="font-sans text-[11px] sm:text-[12px] font-bold uppercase tracking-wider text-[#234670]">
+                  3. Market & Catchment
+                </span>
+              </div>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="border-l border-slate-200/80" />
+              ))}
+            </div>
+
+            {/* Row: Catchment Reach */}
+            <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+              <div className="sticky left-0 z-20 bg-slate-50 px-3 sm:px-5 py-2.5 sm:py-3.5 font-sans text-xs sm:text-[13px] font-semibold text-slate-700 border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)] break-words whitespace-normal">
+                Catchment Population (5km / 10km)
+              </div>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="px-3 sm:px-5 py-2.5 sm:py-3.5 border-l border-slate-200 font-sans text-xs sm:text-[13px] font-medium text-slate-800 break-words whitespace-normal">
+                  {b.catchment}
+                </div>
+              ))}
+            </div>
+
+            {/* Row: Competitor Density */}
+            <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+              <div className="sticky left-0 z-20 bg-slate-50 px-3 sm:px-5 py-2.5 sm:py-3.5 font-sans text-xs sm:text-[13px] font-semibold text-slate-700 border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)] break-words whitespace-normal">
+                Competitor Density
+              </div>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="px-3 sm:px-5 py-2.5 sm:py-3.5 border-l border-slate-200 font-sans text-xs sm:text-[13px] font-medium text-slate-800 break-words whitespace-normal">
+                  {b.competitionDensity}
+                </div>
+              ))}
+            </div>
+
+            {/* Row: Local Saturation */}
+            <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+              <div className="sticky left-0 z-20 bg-slate-50 px-3 sm:px-5 py-2.5 sm:py-3.5 font-sans text-xs sm:text-[13px] font-semibold text-slate-700 border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)] break-words whitespace-normal">
+                Local Market Saturation
+              </div>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="px-3 sm:px-5 py-2.5 sm:py-3.5 border-l border-slate-200 font-sans text-xs sm:text-[13px] font-medium text-slate-800 break-words whitespace-normal">
+                  {b.localSaturation}
+                </div>
+              ))}
+            </div>
+
+            {/* ── SECTION 4: STATUTORY & OPERATIONAL BURDEN ── */}
+            <div
+              className="grid bg-[#234670]/10 border-b border-slate-200"
+              style={{ gridTemplateColumns: gridColTemplate }}
+            >
+              <div className="sticky left-0 z-20 bg-[#e4edf5] px-3 sm:px-5 py-2.5 flex items-center gap-2 border-r border-slate-200/80 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)]">
+                <FileText className="w-4 h-4 text-[#234670] shrink-0" />
+                <span className="font-sans text-[11px] sm:text-[12px] font-bold uppercase tracking-wider text-[#234670]">
+                  4. Clearances & Complexity
+                </span>
+              </div>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="border-l border-slate-200/80" />
+              ))}
+            </div>
+
+            {/* Row: Statutory Licenses */}
+            <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+              <div className="sticky left-0 z-20 bg-slate-50 px-3 sm:px-5 py-2.5 sm:py-3.5 font-sans text-xs sm:text-[13px] font-semibold text-slate-700 border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)] break-words whitespace-normal">
+                Required Clearances & Licenses
+              </div>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="px-3 sm:px-5 py-2.5 sm:py-3.5 border-l border-slate-200 font-sans text-[11px] sm:text-[12px] font-semibold text-slate-800 leading-snug break-words whitespace-normal">
+                  {b.licenses}
+                </div>
+              ))}
+            </div>
+
+            {/* Row: Technical Complexity */}
+            <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+              <div className="sticky left-0 z-20 bg-slate-50 px-3 sm:px-5 py-2.5 sm:py-3.5 font-sans text-xs sm:text-[13px] font-semibold text-slate-700 border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)] break-words whitespace-normal">
+                Operational Complexity
+              </div>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="px-3 sm:px-5 py-2.5 sm:py-3.5 border-l border-slate-200 font-sans text-xs sm:text-[13px] font-medium text-slate-800 break-words whitespace-normal">
+                  {b.operationalComplexity}
+                </div>
+              ))}
+            </div>
+
+            {/* ── SECTION 5: RISK & FINAL VERDICT ── */}
+            <div
+              className="grid bg-[#234670]/10 border-b border-slate-200"
+              style={{ gridTemplateColumns: gridColTemplate }}
+            >
+              <div className="sticky left-0 z-20 bg-[#e4edf5] px-3 sm:px-5 py-2.5 flex items-center gap-2 border-r border-slate-200/80 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)]">
+                <ShieldAlert className="w-4 h-4 text-[#234670] shrink-0" />
+                <span className="font-sans text-[11px] sm:text-[12px] font-bold uppercase tracking-wider text-[#234670]">
+                  5. Risk & Recommendation
+                </span>
+              </div>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="border-l border-slate-200/80" />
+              ))}
+            </div>
+
+            {/* Row: Critical Risk & Hedge */}
+            <div className="grid border-b border-slate-200" style={{ gridTemplateColumns: gridColTemplate }}>
+              <div className="sticky left-0 z-20 bg-slate-50 px-3 sm:px-5 py-2.5 sm:py-3.5 font-sans text-xs sm:text-[13px] font-semibold text-slate-700 border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)] break-words whitespace-normal">
+                Critical Risk & Mitigation
+              </div>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="px-3 sm:px-5 py-2.5 sm:py-3.5 border-l border-slate-200 font-sans text-[11px] sm:text-[12px] leading-relaxed break-words whitespace-normal">
+                  <p className="text-red-800 font-medium break-words whitespace-normal">{b.keyLocalRisk}</p>
+                  <p className="text-emerald-900 mt-1 font-semibold break-words whitespace-normal">Hedge: {b.riskMitigation}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Row: Best Suited For */}
+            <div className="grid bg-slate-50/40" style={{ gridTemplateColumns: gridColTemplate }}>
+              <div className="sticky left-0 z-20 bg-slate-100 px-3 sm:px-5 py-3 sm:py-4 font-sans text-xs sm:text-[13px] font-bold text-slate-900 border-r border-slate-200 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)] break-words whitespace-normal">
+                Recommended Verdict
+              </div>
+              {activeBiz.map((b) => (
+                <div key={b.id} className="px-3 sm:px-5 py-3 sm:py-4 border-l border-slate-200 font-sans text-[11px] sm:text-[12px] text-slate-800 font-medium leading-snug break-words whitespace-normal">
+                  {b.bestSuitedFor}
+                </div>
+              ))}
+            </div>
+
+          </div>
         </div>
       </div>
 
